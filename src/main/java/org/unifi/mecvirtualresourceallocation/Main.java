@@ -40,5 +40,7 @@ public class Main {
         ConflictGraph graph = hyperGraph.getConflictGraph();
 
         graph.showGraph();
+
+        hyperGraph.printPlacementMatrix();
     }
 }

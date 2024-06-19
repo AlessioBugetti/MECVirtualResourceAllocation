@@ -178,6 +178,17 @@ public class HyperGraph {
         return placementMatrix;
     }
 
+    public void printPlacementMatrix() {
+        int[][] placementMatrix = getPlacementMatrix();
+
+        for (int[] vector : placementMatrix) {
+            for (int element : vector) {
+                System.out.print(element + " ");
+            }
+            System.out.println();
+        }
+    }
+
 
     @Override
     public String toString() {

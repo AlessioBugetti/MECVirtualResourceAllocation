@@ -98,9 +98,7 @@ public class HyperGraphTest {
         verticesForMatrix.add(new Vertex("5", 5));
         verticesForMatrix.add(new Vertex("6", 6));
 
-        assertThrows(IllegalArgumentException.class, () -> {
-            new HyperGraph(placementMatrix, verticesForMatrix);
-        });
+        assertThrows(IllegalArgumentException.class, () -> new HyperGraph(placementMatrix, verticesForMatrix));
     }
 
     @Test
