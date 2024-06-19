@@ -24,7 +24,7 @@ public class Main {
         HyperGraph hyperGraph = new HyperGraph(vertices, edges);
 
         System.out.println(hyperGraph);
-        System.out.println(hyperGraph.generateConflictGraph());
+        System.out.println(hyperGraph.getConflictGraph());
 
         int[][] placementMatrix = {
                 {1, 0, 0, 1, 0, 1},
@@ -37,7 +37,7 @@ public class Main {
 
         System.out.println(new HyperGraph(placementMatrix, vertices));
 
-        ConflictGraph graph = hyperGraph.generateConflictGraph();
+        ConflictGraph graph = hyperGraph.getConflictGraph();
 
         graph.showGraph();
     }

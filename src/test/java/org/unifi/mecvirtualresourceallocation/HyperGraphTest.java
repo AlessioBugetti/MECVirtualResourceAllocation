@@ -29,6 +29,7 @@ public class HyperGraphTest {
         hyperGraph = new HyperGraph(vertices, edges);
     }
 
+
     @Test
     public void testGetEdges() {
         assertEquals(edges, hyperGraph.getEdges());
@@ -75,6 +76,7 @@ public class HyperGraphTest {
         HyperGraph hyperGraphFromMatrix = new HyperGraph(placementMatrix, verticesForMatrix);
 
         assertEquals(6, hyperGraphFromMatrix.getEdges().size());
+        assertEquals(verticesForMatrix, hyperGraphFromMatrix.getVertices());
     }
 
     @Test
@@ -100,5 +102,13 @@ public class HyperGraphTest {
             new HyperGraph(placementMatrix, verticesForMatrix);
         });
     }
+
+    @Test
+    void testGetPlacementMatrix() {
+        int[][] resultMatrix = hyperGraph.getPlacementMatrix();
+        assertEquals(1, resultMatrix[0][0]);
+        assertEquals(1, resultMatrix[1][0]);
+    }
+
 
 }

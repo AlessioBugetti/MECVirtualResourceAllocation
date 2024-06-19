@@ -91,7 +91,22 @@ public class HyperGraph {
         return edges;
     }
 
+    private void addVertex(Vertex vertex) {
+        for (Vertex v : vertices) {
+            if (v.getId().equals(vertex.getId())) {
+                throw new IllegalArgumentException("Duplicate Vertex ID found: " + vertex.getId());
+            }
+        }
+        vertices.add(vertex);
+    }
+
     public void addEdge(HyperEdge edge) {
+        for (Vertex vertex : vertices) {
+            if (!vertices.contains(vertex)) {
+                addVertex(vertex);
+            }
+        }
+
         if (edge.getVertices().isEmpty()) {
             throw new IllegalArgumentException("Cannot add an HyperEdge with no vertices: " + edge.getId());
         }
@@ -103,7 +118,7 @@ public class HyperGraph {
         edges.add(edge);
     }
 
-    public ConflictGraph generateConflictGraph(){
+    public ConflictGraph getConflictGraph(){
         ConflictGraph conflictGraph = new ConflictGraph();
 
         for (HyperEdge edge : edges) {
@@ -132,6 +147,37 @@ public class HyperGraph {
         }
         return false;
     }
+
+    /**
+     * Generates and returns a placement matrix based on the current hypergraph.
+     *
+     * @return the placement matrix where rows represent vertices and columns represent hyperedges
+     *         Each element is 1 if the corresponding vertex is part of the hyperedge, otherwise 0.
+     */
+    public int[][] getPlacementMatrix() {
+        int numVertices = vertices.size();
+        int numHyperEdges = edges.size();
+
+        int[][] placementMatrix = new int[numVertices][numHyperEdges];
+
+        for (int edgeIndex = 0; edgeIndex < numHyperEdges; edgeIndex++) {
+            HyperEdge edge = edges.get(edgeIndex);
+            List<Vertex> verticesInHyperEdge = edge.getVertices();
+
+            for (int vertexIndex = 0; vertexIndex < numVertices; vertexIndex++) {
+                Vertex vertex = vertices.get(vertexIndex);
+
+                if (verticesInHyperEdge.contains(vertex)) {
+                    placementMatrix[vertexIndex][edgeIndex] = 1;
+                } else {
+                    placementMatrix[vertexIndex][edgeIndex] = 0;
+                }
+            }
+        }
+
+        return placementMatrix;
+    }
+
 
     @Override
     public String toString() {
