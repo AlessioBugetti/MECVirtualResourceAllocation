@@ -25,6 +25,54 @@ public class HyperGraph {
     }
 
     /**
+     * Constructs a hypergraph from a placement matrix.
+     * The order of vertices in the provided list must correspond to the order
+     * of vertices in the rows of the placement matrix.
+     *
+     * @param placementMatrix the placement matrix where rows represent vertices and columns represent hyperedges
+     *                       Each element should be 1 if the corresponding vertex is part of the hyperedge, otherwise 0.
+     * @param vertices the list of vertices. The order of vertices must match the order of rows in the placement matrix.
+     * @throws IllegalArgumentException if the number of vertices in the list does not match the number of rows in the placement matrix
+     */
+    public HyperGraph(int[][] placementMatrix, List<Vertex> vertices) {
+        this.vertices = vertices;
+        this.edges = new ArrayList<>();
+
+        validatePlacementMatrix(placementMatrix);
+
+        if (placementMatrix.length != vertices.size()) {
+            throw new IllegalArgumentException("Mismatch between number of vertices and placement matrix rows");
+        }
+
+        for (int j = 0; j < placementMatrix[0].length; j++) {
+            List<Vertex> verticesInHyperEdge = new ArrayList<>();
+            for (int i = 0; i < placementMatrix.length; i++) {
+                if (placementMatrix[i][j] == 1) {
+                    verticesInHyperEdge.add(vertices.get(i));
+                }
+            }
+            HyperEdge edge = new HyperEdge(Integer.toString(j + 1), verticesInHyperEdge);
+            this.addEdge(edge);
+        }
+    }
+
+    /**
+     * Validates the placement matrix to ensure it contains only 0s and 1s.
+     *
+     * @param placementMatrix the placement matrix to validate
+     * @throws IllegalArgumentException if any element in the matrix is not 0 or 1
+     */
+    private void validatePlacementMatrix(int[][] placementMatrix) {
+        for (int[] matrix : placementMatrix) {
+            for (int i : matrix) {
+                if (i != 0 && i != 1) {
+                    throw new IllegalArgumentException("Placement matrix must contain only 0 or 1 values");
+                }
+            }
+        }
+    }
+
+    /**
      * Gets the vertices of the hypergraph.
      *
      * @return the vertices

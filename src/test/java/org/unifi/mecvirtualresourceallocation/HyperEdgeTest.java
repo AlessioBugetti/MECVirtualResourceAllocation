@@ -7,8 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class HyperEdgeTest {
 
@@ -51,9 +49,4 @@ public class HyperEdgeTest {
         assertEquals(3, hyperEdge.getWeight(), 0);
     }
 
-
-    @Test
-    public void testHyperEdgeConstructor() {
-        assertNotNull(new HyperEdge("2", vertices));
-    }
 }

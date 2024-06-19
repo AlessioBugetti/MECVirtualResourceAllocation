@@ -8,8 +8,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class VertexTest {
 
     private Vertex vertex;
-    private String id = "1";
-    private int weight = 1;
+    private final String id = "1";
+    private final int weight = 1;
 
     @BeforeEach
     public void setUp() {

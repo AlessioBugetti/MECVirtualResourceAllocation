@@ -3,11 +3,12 @@ package org.unifi.mecvirtualresourceallocation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class HyperGraphTest {
@@ -23,7 +24,7 @@ public class HyperGraphTest {
         vertices = Arrays.asList(v1, v2);
 
         HyperEdge e1 = new HyperEdge("1", Arrays.asList(v1, v2));
-        edges = Arrays.asList(e1);
+        edges = Collections.singletonList(e1);
 
         hyperGraph = new HyperGraph(vertices, edges);
     }
@@ -40,24 +41,64 @@ public class HyperGraphTest {
 
 
     @Test
-    public void testHyperGraphConstructor() {
-        assertNotNull(new HyperGraph(vertices, edges));
-    }
-
-    @Test
     public void testDuplicateEdgeId() {
         Vertex v3 = new Vertex("3", 3);
-        HyperEdge e2 = new HyperEdge("1", Arrays.asList(v3));
-        assertThrows(IllegalArgumentException.class, () -> {
-            hyperGraph.addEdge(e2);
-        });
+        HyperEdge e2 = new HyperEdge("1", Collections.singletonList(v3));
+        assertThrows(IllegalArgumentException.class, () -> hyperGraph.addEdge(e2));
     }
 
     @Test
     public void testEmptyHyperEdge() {
         HyperEdge emptyEdge = new HyperEdge("2");
+        assertThrows(IllegalArgumentException.class, () -> hyperGraph.addEdge(emptyEdge));
+    }
+
+    @Test
+    public void testValidPlacementMatrix() {
+        int[][] validMatrix = {
+                {1, 0, 0, 1, 0, 1},
+                {1, 1, 0, 0, 0, 0},
+                {1, 0, 1, 0, 1, 0},
+                {0, 1, 0, 0, 0, 1},
+                {0, 0, 0, 1, 1, 0},
+                {0, 0, 1, 0, 1, 0}
+        };
+
+        List<Vertex> verticesForMatrix = new ArrayList<>();
+        verticesForMatrix.add(new Vertex("1", 1));
+        verticesForMatrix.add(new Vertex("2", 2));
+        verticesForMatrix.add(new Vertex("3", 3));
+        verticesForMatrix.add(new Vertex("4", 4));
+        verticesForMatrix.add(new Vertex("5", 5));
+        verticesForMatrix.add(new Vertex("6", 6));
+
+        HyperGraph hyperGraphFromMatrix = new HyperGraph(validMatrix, verticesForMatrix);
+
+        assertEquals(6, hyperGraphFromMatrix.getEdges().size());
+    }
+
+    @Test
+    public void testInvalidPlacementMatrix() {
+        int[][] invalidMatrix = {
+                {1, 0, 0, 1, 0, 2},
+                {1, 1, 0, 0, 0, 0},
+                {1, 0, 1, 0, 1, 0},
+                {0, 1, 0, 0, 0, 1},
+                {0, 0, 0, 1, 1, 0},
+                {0, 0, 1, 0, 1, 0}
+        };
+
+        List<Vertex> verticesForMatrix = new ArrayList<>();
+        verticesForMatrix.add(new Vertex("1", 1));
+        verticesForMatrix.add(new Vertex("2", 2));
+        verticesForMatrix.add(new Vertex("3", 3));
+        verticesForMatrix.add(new Vertex("4", 4));
+        verticesForMatrix.add(new Vertex("5", 5));
+        verticesForMatrix.add(new Vertex("6", 6));
+
         assertThrows(IllegalArgumentException.class, () -> {
-            hyperGraph.addEdge(emptyEdge);
+            new HyperGraph(invalidMatrix, verticesForMatrix);
         });
     }
+
 }
