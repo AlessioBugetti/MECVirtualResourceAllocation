@@ -1,5 +1,6 @@
 package org.unifi.mecvirtualresourceallocation;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -145,5 +146,13 @@ public class HyperGraph {
         }
         sb.append("}");
         return sb.toString();
+    }
+
+    public void showGraph() {
+        JFrame frame = new JFrame("HyperGraph");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800, 600);
+        frame.add(new HyperGraphPanel(this));
+        frame.setVisible(true);
     }
 }

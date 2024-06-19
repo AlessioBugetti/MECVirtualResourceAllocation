@@ -55,7 +55,7 @@ public class HyperGraphTest {
 
     @Test
     public void testValidPlacementMatrix() {
-        int[][] validMatrix = {
+        int[][] placementMatrix = {
                 {1, 0, 0, 1, 0, 1},
                 {1, 1, 0, 0, 0, 0},
                 {1, 0, 1, 0, 1, 0},
@@ -72,14 +72,14 @@ public class HyperGraphTest {
         verticesForMatrix.add(new Vertex("5", 5));
         verticesForMatrix.add(new Vertex("6", 6));
 
-        HyperGraph hyperGraphFromMatrix = new HyperGraph(validMatrix, verticesForMatrix);
+        HyperGraph hyperGraphFromMatrix = new HyperGraph(placementMatrix, verticesForMatrix);
 
         assertEquals(6, hyperGraphFromMatrix.getEdges().size());
     }
 
     @Test
     public void testInvalidPlacementMatrix() {
-        int[][] invalidMatrix = {
+        int[][] placementMatrix = {
                 {1, 0, 0, 1, 0, 2},
                 {1, 1, 0, 0, 0, 0},
                 {1, 0, 1, 0, 1, 0},
@@ -97,7 +97,7 @@ public class HyperGraphTest {
         verticesForMatrix.add(new Vertex("6", 6));
 
         assertThrows(IllegalArgumentException.class, () -> {
-            new HyperGraph(invalidMatrix, verticesForMatrix);
+            new HyperGraph(placementMatrix, verticesForMatrix);
         });
     }
 

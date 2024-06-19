@@ -30,8 +30,8 @@ public class ConflictGraph {
         vertices.add(vertex);
     }
 
-    public void addEdge(Vertex v1, Vertex v2) {
-        edges.add(new Edge(v1, v2));
+    public void addEdge(Vertex vertex1, Vertex vertex2) {
+        edges.add(new Edge(vertex1, vertex2));
     }
 
     public Set<Edge> getEdges() {
@@ -62,7 +62,7 @@ public class ConflictGraph {
         JFrame frame = new JFrame("Conflict Graph");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
-        frame.add(new GraphPanel(this));
+        frame.add(new ConflictGraphPanel(this));
         frame.setVisible(true);
     }
 

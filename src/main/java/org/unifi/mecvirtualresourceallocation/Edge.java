@@ -1,24 +1,24 @@
 package org.unifi.mecvirtualresourceallocation;
 
 public class Edge {
-    private Vertex v1;
-    private Vertex v2;
+    private Vertex vertex1;
+    private Vertex vertex2;
 
-    public Edge(Vertex v1, Vertex v2) {
-        this.v1 = v1;
-        this.v2 = v2;
+    public Edge(Vertex vertex1, Vertex vertex2) {
+        this.vertex1 = vertex1;
+        this.vertex2 = vertex2;
     }
 
-    public Vertex getV1() {
-        return v1;
+    public Vertex getVertex1() {
+        return vertex1;
     }
 
-    public Vertex getV2() {
-        return v2;
+    public Vertex getVertex2() {
+        return vertex2;
     }
 
     @Override
     public String toString() {
-        return "Edge{vertices=" + v1 + ", " + v2 + "}";
+        return "Edge{vertices=" + vertex1 + ", " + vertex2 + "}";
     }
 }
