@@ -36,5 +36,9 @@ public class Main {
         };
 
         System.out.println(new HyperGraph(placementMatrix, vertices));
+
+        ConflictGraph graph = hyperGraph.generateConflictGraph();
+
+        graph.showGraph();
     }
 }

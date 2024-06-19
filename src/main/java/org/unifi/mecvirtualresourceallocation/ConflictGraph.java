@@ -1,5 +1,6 @@
 package org.unifi.mecvirtualresourceallocation;
 
+import javax.swing.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -56,4 +57,13 @@ public class ConflictGraph {
 
         return sb.toString();
     }
+
+    public void showGraph() {
+        JFrame frame = new JFrame("Conflict Graph");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800, 600);
+        frame.add(new GraphPanel(this));
+        frame.setVisible(true);
+    }
+
 }
