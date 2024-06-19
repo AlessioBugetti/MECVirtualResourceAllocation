@@ -1,9 +1,9 @@
 package org.unifi.mecvirtualresourceallocation;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.*;
 
 /**
  * Base class for panels visualizing graphs with vertices and edges.
@@ -12,51 +12,53 @@ import java.util.Map;
  */
 public abstract class GraphPanel extends JPanel {
 
-    /**
-     * Map to store positions of vertices.
-     */
-    protected final Map<Vertex, Point> vertexPositions;
+  /**
+   * Map to store positions of vertices.
+   */
+  protected final Map<Vertex, Point> vertexPositions;
 
-    /**
-     * Constructs a GraphPanel initializing vertexPositions as an empty HashMap.
-     */
-    public GraphPanel() {
-        this.vertexPositions = new HashMap<>();
-    }
+  /**
+   * Constructs a GraphPanel initializing vertexPositions as an empty HashMap.
+   */
+  public GraphPanel() { this.vertexPositions = new HashMap<>(); }
 
-    /**
-     * Abstract method to be implemented by subclasses for calculating vertex positions.
-     */
-    protected abstract void calculateVertexPositions();
+  /**
+   * Abstract method to be implemented by subclasses for calculating vertex
+   * positions.
+   */
+  protected abstract void calculateVertexPositions();
 
-    /**
-     * Abstract method to be implemented by subclasses for drawing edges between vertices.
-     *
-     * @param g2d The Graphics2D context used for drawing.
-     */
-    protected abstract void drawEdges(Graphics2D g2d);
+  /**
+   * Abstract method to be implemented by subclasses for drawing edges between
+   * vertices.
+   *
+   * @param g2d The Graphics2D context used for drawing.
+   */
+  protected abstract void drawEdges(Graphics2D g2d);
 
-    /**
-     * Abstract method to be implemented by subclasses for drawing vertices with labels.
-     *
-     * @param g2d The Graphics2D context used for drawing.
-     */
-    protected abstract void drawVertices(Graphics2D g2d);
+  /**
+   * Abstract method to be implemented by subclasses for drawing vertices with
+   * labels.
+   *
+   * @param g2d The Graphics2D context used for drawing.
+   */
+  protected abstract void drawVertices(Graphics2D g2d);
 
-    /**
-     * Overrides JPanel's paintComponent method to draw the graph.
-     *
-     * @param graphics The Graphics context used for painting.
-     */
-    @Override
-    protected void paintComponent(Graphics graphics) {
-        super.paintComponent(graphics);
+  /**
+   * Overrides JPanel's paintComponent method to draw the graph.
+   *
+   * @param graphics The Graphics context used for painting.
+   */
+  @Override
+  protected void paintComponent(Graphics graphics) {
+    super.paintComponent(graphics);
 
-        Graphics2D g2d = (Graphics2D) graphics;
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    Graphics2D g2d = (Graphics2D)graphics;
+    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                         RenderingHints.VALUE_ANTIALIAS_ON);
 
-        calculateVertexPositions();
-        drawEdges(g2d);
-        drawVertices(g2d);
-    }
+    calculateVertexPositions();
+    drawEdges(g2d);
+    drawVertices(g2d);
+  }
 }
