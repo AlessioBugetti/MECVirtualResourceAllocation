@@ -52,4 +52,12 @@ public class HyperGraphTest {
             hyperGraph.addEdge(e2);
         });
     }
+
+    @Test
+    public void testEmptyHyperEdge() {
+        HyperEdge emptyEdge = new HyperEdge("2");
+        assertThrows(IllegalArgumentException.class, () -> {
+            hyperGraph.addEdge(emptyEdge);
+        });
+    }
 }

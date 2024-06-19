@@ -43,9 +43,14 @@ public class HyperGraph {
     }
 
     public void addEdge(HyperEdge edge) {
+        if (edge.getVertices().isEmpty()) {
+            throw new IllegalArgumentException("Cannot add an HyperEdge with no vertices: " + edge.getId());
+        }
+
         if (edges.stream().anyMatch(e -> e.getId().equals(edge.getId()))) {
             throw new IllegalArgumentException("Duplicate HyperEdge ID found: " + edge.getId());
         }
+
         edges.add(edge);
     }
 

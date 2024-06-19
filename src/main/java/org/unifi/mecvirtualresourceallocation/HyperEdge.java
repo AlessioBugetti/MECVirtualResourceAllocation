@@ -1,5 +1,6 @@
 package org.unifi.mecvirtualresourceallocation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,6 +12,12 @@ public class HyperEdge {
     private List<Vertex> vertices;
     private double weight;
 
+    public HyperEdge(String id) {
+        this.id = id;
+        this.vertices = new ArrayList<>();
+        this.weight = 0;
+    }
+
     /**
      * Constructs a hyperedge with the specified vertices and weight.
      *
@@ -20,10 +27,15 @@ public class HyperEdge {
     public HyperEdge(String id, List<Vertex> vertices) {
         this.id = id;
         this.vertices = vertices;
-        this.weight = 0;
+        this.weight = calculateWeight();
+    }
+
+    private double calculateWeight() {
+        double totalWeight = 0;
         for (Vertex vertex : vertices) {
-            this.weight += vertex.getWeight();
+            totalWeight += vertex.getWeight();
         }
+        return totalWeight;
     }
 
     /**
@@ -38,14 +50,13 @@ public class HyperEdge {
     /**
      * Sets the vertices of the hyperedge.
      *
-     * @param vertices the new vertices
+     * @param vertex the new vertex
      */
-    public void setVertices(List<Vertex> vertices) {
-        this.vertices = vertices;
-        this.weight = 0; // TODO: Implementare addVertix()
-        for (Vertex vertex : vertices) {
-            this.weight += vertex.getWeight();
+    public void addVertex(Vertex vertex) {
+        if (this.vertices == null) {
+            this.vertices = new ArrayList<>();
         }
+        this.vertices.add(vertex);
     }
 
     public String getId() {
