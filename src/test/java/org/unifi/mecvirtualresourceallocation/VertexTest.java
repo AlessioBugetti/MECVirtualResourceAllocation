@@ -9,10 +9,11 @@ public class VertexTest {
 
     private Vertex vertex;
     private String id = "1";
+    private int weight = 1;
 
     @BeforeEach
     public void setUp() {
-        vertex = new Vertex(id);
+        vertex = new Vertex(id, weight);
     }
 
     @Test
@@ -29,6 +30,6 @@ public class VertexTest {
 
     @Test
     public void testVertexConstructor() {
-        assertEquals(id, new Vertex(id).getId());
+        assertEquals(id, new Vertex(id, weight).getId());
     }
 }

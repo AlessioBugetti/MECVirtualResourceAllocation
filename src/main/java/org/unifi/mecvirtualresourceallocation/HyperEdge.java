@@ -7,18 +7,23 @@ import java.util.List;
  * A hyperedge is an edge that can connect more than two vertices.
  */
 public class HyperEdge {
+    private String id;
     private List<Vertex> vertices;
     private double weight;
 
     /**
      * Constructs a hyperedge with the specified vertices and weight.
      *
+     * @param id the id of the hyperedge
      * @param vertices the vertices of the hyperedge
-     * @param weight the weight of the hyperedge
      */
-    public HyperEdge(List<Vertex> vertices, double weight) {
+    public HyperEdge(String id, List<Vertex> vertices) {
+        this.id = id;
         this.vertices = vertices;
-        this.weight = weight;
+        this.weight = 0;
+        for (Vertex vertex : vertices) {
+            this.weight += vertex.getWeight();
+        }
     }
 
     /**
@@ -37,6 +42,14 @@ public class HyperEdge {
      */
     public void setVertices(List<Vertex> vertices) {
         this.vertices = vertices;
+        this.weight = 0; // TODO: Implementare addVertix()
+        for (Vertex vertex : vertices) {
+            this.weight += vertex.getWeight();
+        }
+    }
+
+    public String getId() {
+        return id;
     }
 
     /**
@@ -48,13 +61,10 @@ public class HyperEdge {
         return weight;
     }
 
-    /**
-     * Sets the weight of the hyperedge.
-     *
-     * @param weight the new weight
-     */
-    public void setWeight(double weight) {
-        this.weight = weight;
+    @Override
+    public String toString() {
+        return "HyperEdge{vertices=" + vertices + ", weight=" + weight + "}";
     }
+
 }
 

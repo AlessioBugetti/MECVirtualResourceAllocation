@@ -8,6 +8,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class HyperGraphTest {
 
@@ -17,11 +18,11 @@ public class HyperGraphTest {
 
     @BeforeEach
     public void setUp() {
-        Vertex v1 = new Vertex("1");
-        Vertex v2 = new Vertex("2");
+        Vertex v1 = new Vertex("1", 1);
+        Vertex v2 = new Vertex("2", 2);
         vertices = Arrays.asList(v1, v2);
 
-        HyperEdge e1 = new HyperEdge(Arrays.asList(v1, v2), 10.0);
+        HyperEdge e1 = new HyperEdge("1", Arrays.asList(v1, v2));
         edges = Arrays.asList(e1);
 
         hyperGraph = new HyperGraph(vertices, edges);
@@ -33,31 +34,22 @@ public class HyperGraphTest {
     }
 
     @Test
-    public void testSetEdges() {
-        Vertex v3 = new Vertex("3");
-        HyperEdge e2 = new HyperEdge(Arrays.asList(v3), 5.0);
-        List<HyperEdge> newEdges = Arrays.asList(e2);
-
-        hyperGraph.setEdges(newEdges);
-        assertEquals(newEdges, hyperGraph.getEdges());
-    }
-
-    @Test
     public void testGetVertices() {
         assertEquals(vertices, hyperGraph.getVertices());
     }
 
-    @Test
-    public void testSetVertices() {
-        Vertex v3 = new Vertex("3");
-        List<Vertex> newVertices = Arrays.asList(v3);
-
-        hyperGraph.setVertices(newVertices);
-        assertEquals(newVertices, hyperGraph.getVertices());
-    }
 
     @Test
     public void testHyperGraphConstructor() {
         assertNotNull(new HyperGraph(vertices, edges));
+    }
+
+    @Test
+    public void testDuplicateEdgeId() {
+        Vertex v3 = new Vertex("3", 3);
+        HyperEdge e2 = new HyperEdge("1", Arrays.asList(v3));
+        assertThrows(IllegalArgumentException.class, () -> {
+            hyperGraph.addEdge(e2);
+        });
     }
 }

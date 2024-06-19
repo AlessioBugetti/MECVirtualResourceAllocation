@@ -13,15 +13,14 @@ public class HyperEdgeTest {
 
     private HyperEdge hyperEdge;
     private List<Vertex> vertices;
-    private double weight = 10.0;
 
     @BeforeEach
     public void setUp() {
-        Vertex v1 = new Vertex("1");
-        Vertex v2 = new Vertex("2");
+        Vertex v1 = new Vertex("1", 1);
+        Vertex v2 = new Vertex("2", 2);
         vertices = Arrays.asList(v1, v2);
 
-        hyperEdge = new HyperEdge(vertices, weight);
+        hyperEdge = new HyperEdge("1", vertices);
     }
 
     @Test
@@ -31,7 +30,7 @@ public class HyperEdgeTest {
 
     @Test
     public void testSetVertices() {
-        Vertex v3 = new Vertex("3");
+        Vertex v3 = new Vertex("3", 3);
         List<Vertex> newVertices = Arrays.asList(v3);
 
         hyperEdge.setVertices(newVertices);
@@ -40,18 +39,12 @@ public class HyperEdgeTest {
 
     @Test
     public void testGetWeight() {
-        assertEquals(weight, hyperEdge.getWeight(), 0);
+        assertEquals(3, hyperEdge.getWeight(), 0);
     }
 
-    @Test
-    public void testSetWeight() {
-        double newWeight = 5.0;
-        hyperEdge.setWeight(newWeight);
-        assertEquals(newWeight, hyperEdge.getWeight(), 0);
-    }
 
     @Test
     public void testHyperEdgeConstructor() {
-        assertNotNull(new HyperEdge(vertices, weight));
+        assertNotNull(new HyperEdge("2", vertices));
     }
 }
