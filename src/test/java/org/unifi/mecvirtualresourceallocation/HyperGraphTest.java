@@ -12,8 +12,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class HyperGraphTest {
 
     private HyperGraph hyperGraph;
-    private List<HyperEdge> edges;
     private List<Vertex> vertices;
+    private List<HyperEdge> edges;
 
     @BeforeEach
     public void setUp() {
@@ -24,7 +24,7 @@ public class HyperGraphTest {
         HyperEdge e1 = new HyperEdge(Arrays.asList(v1, v2), 10.0);
         edges = Arrays.asList(e1);
 
-        hyperGraph = new HyperGraph(edges, vertices);
+        hyperGraph = new HyperGraph(vertices, edges);
     }
 
     @Test
@@ -58,6 +58,6 @@ public class HyperGraphTest {
 
     @Test
     public void testHyperGraphConstructor() {
-        assertNotNull(new HyperGraph(edges, vertices));
+        assertNotNull(new HyperGraph(vertices, edges));
     }
 }
