@@ -1,12 +1,15 @@
 package org.unifi.mecvirtualresourceallocation;
 
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.Point;
 import java.util.Map;
 
 /**
- * Panel for visualizing a conflict graph with vertices and edges.
- * Extends GraphPanel and implements methods for specific conflict graph
- * visualization.
+ * Panel for visualizing a conflict graph with vertices and edges. Extends GraphPanel and implements
+ * methods for specific conflict graph visualization.
  */
 public class ConflictGraphPanel extends GraphPanel {
 
@@ -15,17 +18,13 @@ public class ConflictGraphPanel extends GraphPanel {
   /**
    * Constructs a ConflictGraphPanel with the specified ConflictGraph.
    *
-   * @param conflictGraph The ConflictGraph object representing the graph to
-   *     visualize.
+   * @param conflictGraph The ConflictGraph object representing the graph to visualize.
    */
   public ConflictGraphPanel(ConflictGraph conflictGraph) {
     this.conflictGraph = conflictGraph;
   }
 
-  /**
-   * Calculates positions of vertices around a circle for ConflictGraph
-   * visualization.
-   */
+  /** Calculates positions of vertices around a circle for ConflictGraph visualization. */
   @Override
   protected void calculateVertexPositions() {
     vertexPositions.clear();
@@ -37,8 +36,8 @@ public class ConflictGraphPanel extends GraphPanel {
     int i = 0;
     for (Vertex vertex : conflictGraph.getVertices()) {
       double angle = 2 * Math.PI * i / vertexCount;
-      int x = (int)(centerX + radius * Math.cos(angle));
-      int y = (int)(centerY + radius * Math.sin(angle));
+      int x = (int) (centerX + radius * Math.cos(angle));
+      int y = (int) (centerY + radius * Math.sin(angle));
       vertexPositions.put(vertex, new Point(x, y));
       i++;
     }
@@ -83,8 +82,7 @@ public class ConflictGraphPanel extends GraphPanel {
       String vertexLabel = "p" + entry.getKey().getId();
       int textWidth = fm.stringWidth(vertexLabel);
       int textHeight = fm.getAscent();
-      g2d.drawString(vertexLabel, point.x - textWidth / 2,
-                     point.y + textHeight / 2);
+      g2d.drawString(vertexLabel, point.x - textWidth / 2, point.y + textHeight / 2);
 
       g2d.setColor(Color.decode("#71c5ce"));
     }

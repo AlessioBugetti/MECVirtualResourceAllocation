@@ -5,15 +5,16 @@ import java.util.List;
 import java.util.Set;
 
 public abstract class AllocationStrategy {
+
   public abstract Set<Vertex> allocate(HyperGraph hyperGraph);
 
-  public Set<HyperEdge> getHyperEdges(HyperGraph hyperGraph, Set<Vertex> vertices){
+  public Set<HyperEdge> getHyperEdges(HyperGraph hyperGraph, Set<Vertex> vertices) {
     Set<HyperEdge> resultingHyperEdges = new HashSet<>();
-    List<HyperEdge> hyperEdges = hyperGraph.getEdges();
+    List<HyperEdge> hyperEdges = hyperGraph.getHyperEdges();
 
     for (Vertex vertex : vertices) {
-      for(HyperEdge hyperedge: hyperEdges){
-        if(vertex.getId().equals(hyperedge.getId())){
+      for (HyperEdge hyperedge : hyperEdges) {
+        if (vertex.getId().equals(hyperedge.getId())) {
           resultingHyperEdges.add(hyperedge);
         }
       }
@@ -21,13 +22,12 @@ public abstract class AllocationStrategy {
     return resultingHyperEdges;
   }
 
-  protected Set<Vertex> findAdjacentVertices(Vertex vertex,
-                                             ConflictGraph conflictGraph) {
+  protected Set<Vertex> findAdjacentVertices(Vertex vertex, ConflictGraph conflictGraph) {
     Set<Vertex> adjacentVertices = new HashSet<>();
     for (Edge edge : conflictGraph.getEdges()) {
-      if (edge.getVertex1().getId().equals(vertex.getId())) {
+      if (edge.getVertex1().equals(vertex)) {
         adjacentVertices.add(edge.getVertex2());
-      } else if (edge.getVertex2().getId().equals(vertex.getId())) {
+      } else if (edge.getVertex2().equals(vertex)) {
         adjacentVertices.add(edge.getVertex1());
       }
     }

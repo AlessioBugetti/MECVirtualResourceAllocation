@@ -1,50 +1,52 @@
 package org.unifi.mecvirtualresourceallocation;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import javax.swing.*;
+import java.util.Set;
+import javax.swing.JFrame;
 
 /**
- * This class represents a hypergraph, which consists of a set of hyperedges and
- * vertices. In the context of Mobile Edge Computing (MEC), a hypergraph is used
- * to model the complex relationships between virtual machine (VM) instances and
- * physical machines (PMs). Each hyperedge connects multiple vertices (VMs).
+ * This class represents a hypergraph, which consists of a set of hyperedges and vertices. In the
+ * context of Mobile Edge Computing (MEC), a hypergraph is used to model the complex relationships
+ * between virtual machine (VM) instances and physical machines (PMs). Each hyperedge connects
+ * multiple vertices (VMs).
  */
 public class HyperGraph {
+
   private List<Vertex> vertices;
-  private List<HyperEdge> edges;
+  private List<HyperEdge> hyperEdges;
 
   /**
    * Constructs a hypergraph with the specified vertices and hyperedges.
    *
    * @param vertices the vertices of the hypergraph.
-   * @param edges    the hyperedges of the hypergraph.
+   * @param hyperEdges the hyperedges of the hypergraph.
    */
-  public HyperGraph(List<Vertex> vertices, List<HyperEdge> edges) {
+  public HyperGraph(List<Vertex> vertices, List<HyperEdge> hyperEdges) {
     this.vertices = vertices;
-    this.edges = new ArrayList<>();
-    for (HyperEdge edge : edges) {
-      addEdge(edge);
+    this.hyperEdges = new ArrayList<>();
+    for (HyperEdge hyperEdge : hyperEdges) {
+      addEdge(hyperEdge);
     }
+    validate();
   }
 
   /**
-   * Constructs a hypergraph from a placement matrix.
-   * The order of vertices in the provided list must correspond to the order of
-   * vertices in the rows of the placement matrix.
+   * Constructs a hypergraph from a placement matrix. The order of vertices in the provided list
+   * must correspond to the order of vertices in the rows of the placement matrix.
    *
-   * @param placementMatrix the placement matrix where rows represent vertices
-   *     and columns represent hyperedges.
-   *                        Each element should be 1 if the corresponding vertex
-   * is part of the hyperedge, otherwise 0.
-   * @param vertices        the list of vertices. The order of vertices must
-   *     match the order of rows in the placement matrix.
-   * @throws IllegalArgumentException if the number of vertices in the list does
-   *     not match the number of rows in the placement matrix.
+   * @param placementMatrix the placement matrix where rows represent vertices and columns represent
+   *     hyperedges. Each element should be 1 if the corresponding vertex is part of the hyperedge,
+   *     otherwise 0.
+   * @param vertices the list of vertices. The order of vertices must match the order of rows in the
+   *     placement matrix.
+   * @throws IllegalArgumentException if the number of vertices in the list does not match the
+   *     number of rows in the placement matrix.
    */
   public HyperGraph(int[][] placementMatrix, List<Vertex> vertices) {
     this.vertices = vertices;
-    this.edges = new ArrayList<>();
+    this.hyperEdges = new ArrayList<>();
 
     validatePlacementMatrix(placementMatrix);
 
@@ -60,9 +62,31 @@ public class HyperGraph {
           verticesInHyperEdge.add(vertices.get(i));
         }
       }
-      HyperEdge edge =
-          new HyperEdge(Integer.toString(j + 1), verticesInHyperEdge);
-      this.addEdge(edge);
+      HyperEdge hyperEdge = new HyperEdge(Integer.toString(j + 1), verticesInHyperEdge);
+      this.addEdge(hyperEdge);
+    }
+    validate();
+  }
+
+  /**
+   * Validates that the union of all hyperedges exactly match the set of vertices.
+   *
+   * @throws IllegalArgumentException if the union of all hyperedges do not exactly match the set of
+   *     vertices.
+   */
+  private void validate() {
+    Set<Vertex> allUniqueVertices = new HashSet<>();
+
+    for (HyperEdge hyperEdge : hyperEdges) {
+      List<Vertex> verticesInEdge = hyperEdge.getVertices();
+      allUniqueVertices.addAll(verticesInEdge);
+    }
+
+    Set<Vertex> vertexSet = new HashSet<>(vertices);
+
+    if (!allUniqueVertices.equals(vertexSet)) {
+      throw new IllegalArgumentException(
+          "The union of all hyperedges do not " + "exactly match the set of vertices.");
     }
   }
 
@@ -70,15 +94,13 @@ public class HyperGraph {
    * Validates the placement matrix to ensure it contains only 0s and 1s.
    *
    * @param placementMatrix the placement matrix to validate.
-   * @throws IllegalArgumentException if any element in the matrix is not 0
-   *     or 1.
+   * @throws IllegalArgumentException if any element in the matrix is not 0 or 1.
    */
   private void validatePlacementMatrix(int[][] placementMatrix) {
     for (int[] matrix : placementMatrix) {
       for (int i : matrix) {
         if (i != 0 && i != 1) {
-          throw new IllegalArgumentException(
-              "Placement matrix must contain only 0 or 1 values");
+          throw new IllegalArgumentException("Placement matrix must contain only 0 or 1 values");
         }
       }
     }
@@ -89,14 +111,18 @@ public class HyperGraph {
    *
    * @return the vertices.
    */
-  public List<Vertex> getVertices() { return vertices; }
+  public List<Vertex> getVertices() {
+    return vertices;
+  }
 
   /**
    * Gets the hyperedges of the hypergraph.
    *
    * @return the hyperedges.
    */
-  public List<HyperEdge> getEdges() { return edges; }
+  public List<HyperEdge> getHyperEdges() {
+    return hyperEdges;
+  }
 
   /**
    * Adds a vertex to the hypergraph, ensuring no duplicate vertex IDs exist.
@@ -106,63 +132,59 @@ public class HyperGraph {
   private void addVertex(Vertex vertex) {
     for (Vertex v : vertices) {
       if (v.getId().equals(vertex.getId())) {
-        throw new IllegalArgumentException("Duplicate Vertex ID found: " +
-                                           vertex.getId());
+        throw new IllegalArgumentException("Duplicate Vertex ID found: " + vertex.getId());
       }
     }
     vertices.add(vertex);
   }
 
   /**
-   * Adds a hyperedge to the hypergraph, ensuring no duplicate hyperedge IDs
-   * exist. The vertices of the hyperedge are also added to the hypergraph if
-   * not already present.
+   * Adds a hyperedge to the hypergraph, ensuring no duplicate hyperedge IDs exist. The vertices of
+   * the hyperedge are also added to the hypergraph if not already present.
    *
-   * @param edge the hyperedge to be added.
-   * @throws IllegalArgumentException if the hyperedge has no vertices or if
-   *     there are duplicate IDs.
+   * @param hyperEdge the hyperedge to be added.
+   * @throws IllegalArgumentException if the hyperedge has no vertices or if there are duplicate
+   *     IDs.
    */
-  public void addEdge(HyperEdge edge) {
-    for (Vertex vertex : vertices) {
+  public void addEdge(HyperEdge hyperEdge) {
+    if (hyperEdge.getVertices().isEmpty()) {
+      throw new IllegalArgumentException(
+          "Cannot add an HyperEdge with no vertices: " + hyperEdge.getId());
+    }
+
+    if (hyperEdges.stream().anyMatch(e -> e.getId().equals(hyperEdge.getId()))) {
+      throw new IllegalArgumentException("Duplicate HyperEdge ID found: " + hyperEdge.getId());
+    }
+
+    for (Vertex vertex : hyperEdge.getVertices()) {
       if (!vertices.contains(vertex)) {
         addVertex(vertex);
       }
     }
 
-    if (edge.getVertices().isEmpty()) {
-      throw new IllegalArgumentException(
-          "Cannot add an HyperEdge with no vertices: " + edge.getId());
-    }
-
-    if (edges.stream().anyMatch(e -> e.getId().equals(edge.getId()))) {
-      throw new IllegalArgumentException("Duplicate HyperEdge ID found: " +
-                                         edge.getId());
-    }
-
-    edges.add(edge);
+    hyperEdges.add(hyperEdge);
   }
 
   /**
-   * Generates a conflict graph based on the hypergraph. The conflict graph
-   * represents conflicts between hyperedges where conflicts are defined by the
-   * presence of common vertices.
+   * Generates a conflict graph based on the hypergraph. The conflict graph represents conflicts
+   * between hyperedges where conflicts are defined by the presence of common vertices.
    *
    * @return the generated conflict graph.
    */
   public ConflictGraph getConflictGraph() {
     ConflictGraph conflictGraph = new ConflictGraph();
 
-    for (HyperEdge edge : edges) {
-      conflictGraph.addVertex(new Vertex(edge.getId(), edge.getWeight()));
+    for (HyperEdge hyperEdge : hyperEdges) {
+      conflictGraph.addVertex(new Vertex(hyperEdge.getId(), hyperEdge.getWeight()));
     }
 
-    for (int i = 0; i < edges.size(); i++) {
-      for (int j = i + 1; j < edges.size(); j++) {
-        HyperEdge edge1 = edges.get(i);
-        HyperEdge edge2 = edges.get(j);
-        if (hasIntersection(edge1, edge2)) {
-          Vertex v1 = conflictGraph.getVertexFromId(edge1.getId());
-          Vertex v2 = conflictGraph.getVertexFromId(edge2.getId());
+    for (int i = 0; i < hyperEdges.size(); i++) {
+      for (int j = i + 1; j < hyperEdges.size(); j++) {
+        HyperEdge hyperEdge1 = hyperEdges.get(i);
+        HyperEdge hyperEdge2 = hyperEdges.get(j);
+        if (hasIntersection(hyperEdge1, hyperEdge2)) {
+          Vertex v1 = conflictGraph.getVertexFromId(hyperEdge1.getId());
+          Vertex v2 = conflictGraph.getVertexFromId(hyperEdge2.getId());
           conflictGraph.addEdge(v1, v2);
         }
       }
@@ -173,13 +195,13 @@ public class HyperGraph {
   /**
    * Checks if two hyperedges have at least one vertex in common.
    *
-   * @param edge1 the first hyperedge.
-   * @param edge2 the second hyperedge.
+   * @param hyperEdge1 the first hyperedge.
+   * @param hyperEdge2 the second hyperedge.
    * @return true if there is an intersection; false otherwise.
    */
-  private boolean hasIntersection(HyperEdge edge1, HyperEdge edge2) {
-    for (Vertex v : edge1.getVertices()) {
-      if (edge2.getVertices().contains(v)) {
+  private boolean hasIntersection(HyperEdge hyperEdge1, HyperEdge hyperEdge2) {
+    for (Vertex v : hyperEdge1.getVertices()) {
+      if (hyperEdge2.getVertices().contains(v)) {
         return true;
       }
     }
@@ -189,20 +211,18 @@ public class HyperGraph {
   /**
    * Generates and returns a placement matrix based on the current hypergraph.
    *
-   * @return the placement matrix where rows represent vertices and columns
-   *     represent hyperedges.
-   * Each element is 1 if the corresponding vertex is part of the hyperedge,
-   * otherwise 0.
+   * @return the placement matrix where rows represent vertices and columns represent hyperedges.
+   *     Each element is 1 if the corresponding vertex is part of the hyperedge, otherwise 0.
    */
   public int[][] getPlacementMatrix() {
     int numVertices = vertices.size();
-    int numHyperEdges = edges.size();
+    int numHyperEdges = hyperEdges.size();
 
     int[][] placementMatrix = new int[numVertices][numHyperEdges];
 
     for (int edgeIndex = 0; edgeIndex < numHyperEdges; edgeIndex++) {
-      HyperEdge edge = edges.get(edgeIndex);
-      List<Vertex> verticesInHyperEdge = edge.getVertices();
+      HyperEdge hyperEdge = hyperEdges.get(edgeIndex);
+      List<Vertex> verticesInHyperEdge = hyperEdge.getVertices();
 
       for (int vertexIndex = 0; vertexIndex < numVertices; vertexIndex++) {
         Vertex vertex = vertices.get(vertexIndex);
@@ -218,9 +238,7 @@ public class HyperGraph {
     return placementMatrix;
   }
 
-  /**
-   * Prints the placement matrix to the console.
-   */
+  /** Prints the placement matrix to the console. */
   public void printPlacementMatrix() {
     int[][] placementMatrix = getPlacementMatrix();
 
@@ -233,8 +251,7 @@ public class HyperGraph {
   }
 
   /**
-   * Returns a string representation of the hypergraph, including its vertices
-   * and hyperedges.
+   * Returns a string representation of the hypergraph, including its vertices and hyperedges.
    *
    * @return a string representation of the hypergraph.
    */
@@ -246,16 +263,14 @@ public class HyperGraph {
       sb.append(vertex).append("\n");
     }
     sb.append("HyperEdges:\n");
-    for (HyperEdge edge : edges) {
-      sb.append(edge).append("\n");
+    for (HyperEdge hyperEdge : hyperEdges) {
+      sb.append(hyperEdge).append("\n");
     }
     sb.append("}");
     return sb.toString();
   }
 
-  /**
-   * Displays the hypergraph using a graphical user interface.
-   */
+  /** Displays the hypergraph using a graphical user interface. */
   public void showGraph() {
     JFrame frame = new JFrame("HyperGraph");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

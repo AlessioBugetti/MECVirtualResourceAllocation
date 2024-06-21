@@ -30,7 +30,7 @@ public class HyperGraphTest {
 
   @Test
   public void testGetEdges() {
-    assertEquals(edges, hyperGraph.getEdges());
+    assertEquals(edges, hyperGraph.getHyperEdges());
   }
 
   @Test
@@ -48,15 +48,19 @@ public class HyperGraphTest {
   @Test
   public void testEmptyHyperEdge() {
     HyperEdge emptyEdge = new HyperEdge("2");
-    assertThrows(IllegalArgumentException.class,
-                 () -> hyperGraph.addEdge(emptyEdge));
+    assertThrows(IllegalArgumentException.class, () -> hyperGraph.addEdge(emptyEdge));
   }
 
   @Test
   public void testValidPlacementMatrix() {
-    int[][] placementMatrix = {{1, 0, 0, 1, 0, 1}, {1, 1, 0, 0, 0, 0},
-                               {1, 0, 1, 0, 1, 0}, {0, 1, 0, 0, 0, 1},
-                               {0, 0, 0, 1, 1, 0}, {0, 0, 1, 0, 1, 0}};
+    int[][] placementMatrix = {
+      {1, 0, 0, 1, 0, 1},
+      {1, 1, 0, 0, 0, 0},
+      {1, 0, 1, 0, 1, 0},
+      {0, 1, 0, 0, 0, 1},
+      {0, 0, 0, 1, 1, 0},
+      {0, 0, 1, 0, 1, 0}
+    };
 
     List<Vertex> verticesForMatrix = new ArrayList<>();
     verticesForMatrix.add(new Vertex("1", 1));
@@ -66,18 +70,22 @@ public class HyperGraphTest {
     verticesForMatrix.add(new Vertex("5", 5));
     verticesForMatrix.add(new Vertex("6", 6));
 
-    HyperGraph hyperGraphFromMatrix =
-        new HyperGraph(placementMatrix, verticesForMatrix);
+    HyperGraph hyperGraphFromMatrix = new HyperGraph(placementMatrix, verticesForMatrix);
 
-    assertEquals(6, hyperGraphFromMatrix.getEdges().size());
+    assertEquals(6, hyperGraphFromMatrix.getHyperEdges().size());
     assertEquals(verticesForMatrix, hyperGraphFromMatrix.getVertices());
   }
 
   @Test
   public void testInvalidPlacementMatrix() {
-    int[][] placementMatrix = {{1, 0, 0, 1, 0, 2}, {1, 1, 0, 0, 0, 0},
-                               {1, 0, 1, 0, 1, 0}, {0, 1, 0, 0, 0, 1},
-                               {0, 0, 0, 1, 1, 0}, {0, 0, 1, 0, 1, 0}};
+    int[][] placementMatrix = {
+      {1, 0, 0, 1, 0, 2},
+      {1, 1, 0, 0, 0, 0},
+      {1, 0, 1, 0, 1, 0},
+      {0, 1, 0, 0, 0, 1},
+      {0, 0, 0, 1, 1, 0},
+      {0, 0, 1, 0, 1, 0}
+    };
 
     List<Vertex> verticesForMatrix = new ArrayList<>();
     verticesForMatrix.add(new Vertex("1", 1));
@@ -87,8 +95,8 @@ public class HyperGraphTest {
     verticesForMatrix.add(new Vertex("5", 5));
     verticesForMatrix.add(new Vertex("6", 6));
 
-    assertThrows(IllegalArgumentException.class,
-                 () -> new HyperGraph(placementMatrix, verticesForMatrix));
+    assertThrows(
+        IllegalArgumentException.class, () -> new HyperGraph(placementMatrix, verticesForMatrix));
   }
 
   @Test

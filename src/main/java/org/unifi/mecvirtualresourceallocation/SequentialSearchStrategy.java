@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class SequentialSearchStrategy extends AllocationStrategy {
+
   @Override
   public Set<Vertex> allocate(HyperGraph hyperGraph) {
     ConflictGraph conflictGraph = hyperGraph.getConflictGraph();
@@ -11,8 +12,7 @@ public class SequentialSearchStrategy extends AllocationStrategy {
     Set<Vertex> vertices = new HashSet<>(conflictGraph.getVertices());
     while (!vertices.isEmpty()) {
       Vertex maxWeightVertex = findMaxWeightVertex(vertices);
-      Set<Vertex> adjacentVertices =
-          findAdjacentVertices(maxWeightVertex, conflictGraph);
+      Set<Vertex> adjacentVertices = findAdjacentVertices(maxWeightVertex, conflictGraph);
       selectedVertices.add(maxWeightVertex);
       vertices.remove(maxWeightVertex);
       vertices.removeAll(adjacentVertices);

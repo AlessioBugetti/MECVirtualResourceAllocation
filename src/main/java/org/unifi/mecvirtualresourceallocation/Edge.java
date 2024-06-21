@@ -1,9 +1,8 @@
 package org.unifi.mecvirtualresourceallocation;
 
-/**
- * Represents an edge in a conflict graph. Each edge connects two vertices.
- */
+/** Represents an edge in a conflict graph. Each edge connects two vertices. */
 public class Edge {
+
   private Vertex vertex1;
   private Vertex vertex2;
 
@@ -23,18 +22,21 @@ public class Edge {
    *
    * @return the first vertex.
    */
-  public Vertex getVertex1() { return vertex1; }
+  public Vertex getVertex1() {
+    return vertex1;
+  }
 
   /**
    * Gets the second vertex connected by the edge.
    *
    * @return the second vertex.
    */
-  public Vertex getVertex2() { return vertex2; }
+  public Vertex getVertex2() {
+    return vertex2;
+  }
 
   /**
-   * Returns a string representation of the edge, including the IDs of the
-   * connected vertices.
+   * Returns a string representation of the edge, including the IDs of the connected vertices.
    *
    * @return a string representation of the edge.
    */

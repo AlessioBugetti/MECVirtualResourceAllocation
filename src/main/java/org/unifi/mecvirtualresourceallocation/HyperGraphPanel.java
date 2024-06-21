@@ -1,14 +1,17 @@
 package org.unifi.mecvirtualresourceallocation;
 
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.Point;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Panel for visualizing a hypergraph with vertices and hyperedges.
- * Extends GraphPanel and implements methods for specific hypergraph
- * visualization.
+ * Panel for visualizing a hypergraph with vertices and hyperedges. Extends GraphPanel and
+ * implements methods for specific hypergraph visualization.
  */
 public class HyperGraphPanel extends GraphPanel {
 
@@ -18,8 +21,7 @@ public class HyperGraphPanel extends GraphPanel {
   /**
    * Constructs a HyperGraphPanel with the specified HyperGraph.
    *
-   * @param hyperGraph The HyperGraph object representing the hypergraph to
-   *     visualize.
+   * @param hyperGraph The HyperGraph object representing the hypergraph to visualize.
    */
   public HyperGraphPanel(HyperGraph hyperGraph) {
     this.hyperGraph = hyperGraph;
@@ -33,7 +35,7 @@ public class HyperGraphPanel extends GraphPanel {
    */
   private Map<HyperEdge, Color> assignEdgeColors() {
     Map<HyperEdge, Color> colors = new HashMap<>();
-    List<HyperEdge> edges = hyperGraph.getEdges();
+    List<HyperEdge> edges = hyperGraph.getHyperEdges();
     float hueIncrement = 1.0f / edges.size();
     float hue = 0.0f;
 
@@ -45,10 +47,7 @@ public class HyperGraphPanel extends GraphPanel {
     return colors;
   }
 
-  /**
-   * Calculates positions of vertices around a circle for HyperGraph
-   * visualization.
-   */
+  /** Calculates positions of vertices around a circle for HyperGraph visualization. */
   @Override
   protected void calculateVertexPositions() {
     vertexPositions.clear();
@@ -60,8 +59,8 @@ public class HyperGraphPanel extends GraphPanel {
     int i = 0;
     for (Vertex vertex : hyperGraph.getVertices()) {
       double angle = 2 * Math.PI * i / vertexCount;
-      int x = (int)(centerX + radius * Math.cos(angle));
-      int y = (int)(centerY + radius * Math.sin(angle));
+      int x = (int) (centerX + radius * Math.cos(angle));
+      int y = (int) (centerY + radius * Math.sin(angle));
       vertexPositions.put(vertex, new Point(x, y));
       i++;
     }
@@ -74,7 +73,7 @@ public class HyperGraphPanel extends GraphPanel {
    */
   @Override
   protected void drawEdges(Graphics2D g2d) {
-    List<HyperEdge> edges = hyperGraph.getEdges();
+    List<HyperEdge> edges = hyperGraph.getHyperEdges();
     g2d.setStroke(new BasicStroke(2f));
 
     for (HyperEdge edge : edges) {
@@ -116,8 +115,7 @@ public class HyperGraphPanel extends GraphPanel {
       String vertexLabel = "v" + entry.getKey().getId();
       int textWidth = fm.stringWidth(vertexLabel);
       int textHeight = fm.getAscent();
-      g2d.drawString(vertexLabel, point.x - textWidth / 2,
-                     point.y + textHeight / 2);
+      g2d.drawString(vertexLabel, point.x - textWidth / 2, point.y + textHeight / 2);
 
       g2d.setColor(Color.decode("#71c5ce"));
     }
