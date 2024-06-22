@@ -24,9 +24,9 @@ public class SequentialSearchStrategy extends AllocationStrategy {
     Vertex maxVertex = null;
     double maxWeight = Double.NEGATIVE_INFINITY;
     for (Vertex vertex : vertices) {
-      if (vertex.getWeight() > maxWeight) {
+      if (vertex.getNegativeWeight() > maxWeight) {
         maxVertex = vertex;
-        maxWeight = vertex.getWeight();
+        maxWeight = vertex.getNegativeWeight();
       }
     }
     return maxVertex;

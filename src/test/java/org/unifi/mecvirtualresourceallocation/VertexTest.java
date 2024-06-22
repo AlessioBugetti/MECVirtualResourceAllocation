@@ -35,6 +35,11 @@ public class VertexTest {
   }
 
   @Test
+  public void testGetNegativeWeight() {
+    assertEquals(-weight, vertex.getNegativeWeight());
+  }
+
+  @Test
   public void testVertexConstructor() {
     Vertex v = new Vertex(id, weight);
     assertEquals(id, v.getId());

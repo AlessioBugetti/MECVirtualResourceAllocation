@@ -58,7 +58,7 @@ public class HyperEdge {
   private double calculateWeight() {
     double totalWeight = 0;
     for (Vertex vertex : vertices) {
-      totalWeight += vertex.getWeight();
+      totalWeight += vertex.getNegativeWeight();
     }
     return totalWeight;
   }
@@ -85,7 +85,7 @@ public class HyperEdge {
       throw new IllegalArgumentException("Duplicate vertex found: " + vertex.getId());
     }
     this.vertices.add(vertex);
-    this.weight += vertex.getWeight();
+    this.weight += vertex.getNegativeWeight();
   }
 
   /**
@@ -103,6 +103,15 @@ public class HyperEdge {
    * @return the weight of the hyperedge.
    */
   public double getWeight() {
+    return -weight;
+  }
+
+  /**
+   * Gets the negative weight of the hyperedge, which is the sum of the negative weights of its vertices.
+   *
+   * @return the negative weight of the hyperedge.
+   */
+  public double getNegativeWeight() {
     return weight;
   }
 
@@ -113,6 +122,6 @@ public class HyperEdge {
    */
   @Override
   public String toString() {
-    return "HyperEdge{id=" + getId() + ", vertices=" + vertices + ", weight=" + weight + "}";
+    return "HyperEdge{id=" + getId() + ", vertices=" + vertices + ", weight=" + -weight + "}";
   }
 }

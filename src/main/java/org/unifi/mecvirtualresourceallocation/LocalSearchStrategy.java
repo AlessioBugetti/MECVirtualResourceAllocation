@@ -67,7 +67,7 @@ public class LocalSearchStrategy extends AllocationStrategy {
    */
   private List<Vertex> sortVerticesByWeightAscending(Collection<Vertex> vertices) {
     return vertices.stream()
-        .sorted(Comparator.comparing(Vertex::getWeight))
+        .sorted(Comparator.comparing(Vertex::getNegativeWeight))
         .collect(Collectors.toList());
   }
 
@@ -79,7 +79,7 @@ public class LocalSearchStrategy extends AllocationStrategy {
    */
   private List<Vertex> sortVerticesByWeightDescending(Collection<Vertex> vertices) {
     return vertices.stream()
-        .sorted(Comparator.comparing(Vertex::getWeight).reversed())
+        .sorted(Comparator.comparing(Vertex::getNegativeWeight).reversed())
         .collect(Collectors.toList());
   }
 
@@ -280,6 +280,6 @@ public class LocalSearchStrategy extends AllocationStrategy {
    * @return the total weight of the vertices
    */
   private double calculateWeight(Set<Vertex> vertices) {
-    return vertices.stream().mapToDouble(Vertex::getWeight).sum();
+    return vertices.stream().mapToDouble(Vertex::getNegativeWeight).sum();
   }
 }

@@ -58,6 +58,11 @@ public class HyperEdgeTest {
   }
 
   @Test
+  public void testGetNegativeWeight() {
+    assertEquals(-3.0, hyperEdge.getNegativeWeight(), 0);
+  }
+
+  @Test
   public void testConstructorWithDuplicateVertices() {
     Vertex v3 = new Vertex("3", 3.0);
     List<Vertex> verticesWithDuplicates = new ArrayList<>(Arrays.asList(v1, v2, v3, v3));

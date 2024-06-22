@@ -20,7 +20,10 @@ public class Vertex {
    */
   public Vertex(String id, double weight) {
     this.id = id;
-    this.weight = weight;
+    if(weight>0)
+      this.weight = -weight;
+    else
+      this.weight = weight;
   }
 
   /**
@@ -47,6 +50,15 @@ public class Vertex {
    * @return the weight of the vertex.
    */
   public double getWeight() {
+    return -weight;
+  }
+
+  /**
+   * Returns the negative weight of this vertex.
+   *
+   * @return the negative weight of the vertex.
+   */
+  public double getNegativeWeight() {
     return weight;
   }
 
@@ -58,7 +70,7 @@ public class Vertex {
    */
   @Override
   public String toString() {
-    return "Vertex{id=" + id + ", weight=" + weight + "}";
+    return "Vertex{id=" + id + ", weight=" + -weight + "}";
   }
 
   @Override
