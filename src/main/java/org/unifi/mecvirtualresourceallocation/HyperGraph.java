@@ -30,23 +30,28 @@ public class HyperGraph {
   }
 
   /**
-   * Constructs a hypergraph from a placement matrix. The order of vertices in the provided list
-   * must correspond to the order of vertices in the rows of the placement matrix.
+   * Constructs a hypergraph from a placement matrix and vertex weights. The order of vertices is
+   * determined by their corresponding weights in the weights array, which must match the order of
+   * rows in the placement matrix.
    *
    * @param placementMatrix the placement matrix where rows represent vertices and columns represent
    *     hyperedges. Each element should be 1 if the corresponding vertex is part of the hyperedge,
    *     otherwise 0.
-   * @param vertices the list of vertices. The order of vertices must match the order of rows in the
-   *     placement matrix.
-   * @throws IllegalArgumentException if the number of vertices in the list does not match the
-   *     number of rows in the placement matrix.
+   * @param weights the array of weights for the vertices. The order of weights must match the order
+   *     of rows in the placement matrix.
+   * @throws IllegalArgumentException if the number of weights does not match the number of rows in
+   *     the placement matrix.
    */
-  public HyperGraph(int[][] placementMatrix, List<Vertex> vertices) {
+  public HyperGraph(int[][] placementMatrix, double[] weights) {
 
-    List<HyperEdge> tmpHyperEdges = new ArrayList<>();
     validatePlacementMatrix(placementMatrix);
+    List<HyperEdge> tmpHyperEdges = new ArrayList<>();
+    List<Vertex> tmpVertices = new ArrayList<>();
+    for (int i = 0; i < weights.length; i++) {
+      tmpVertices.add(new Vertex(Integer.toString(i + 1), weights[i]));
+    }
 
-    if (placementMatrix.length != vertices.size()) {
+    if (placementMatrix.length != tmpVertices.size()) {
       throw new IllegalArgumentException(
           "Mismatch between number of vertices and placement matrix rows");
     }
@@ -55,14 +60,14 @@ public class HyperGraph {
       List<Vertex> verticesInHyperEdge = new ArrayList<>();
       for (int i = 0; i < placementMatrix.length; i++) {
         if (placementMatrix[i][j] == 1) {
-          verticesInHyperEdge.add(vertices.get(i));
+          verticesInHyperEdge.add(tmpVertices.get(i));
         }
       }
       HyperEdge hyperEdge = new HyperEdge(Integer.toString(j + 1), verticesInHyperEdge);
       tmpHyperEdges.add(hyperEdge);
     }
-    validate(vertices, tmpHyperEdges);
-    this.vertices = vertices;
+    validate(tmpVertices, tmpHyperEdges);
+    this.vertices = tmpVertices;
     this.hyperEdges = tmpHyperEdges;
   }
 

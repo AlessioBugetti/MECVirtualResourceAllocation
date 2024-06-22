@@ -62,18 +62,15 @@ public class HyperGraphTest {
       {0, 0, 1, 0, 1, 0}
     };
 
-    List<Vertex> verticesForMatrix = new ArrayList<>();
-    verticesForMatrix.add(new Vertex("1", 1));
-    verticesForMatrix.add(new Vertex("2", 2));
-    verticesForMatrix.add(new Vertex("3", 3));
-    verticesForMatrix.add(new Vertex("4", 4));
-    verticesForMatrix.add(new Vertex("5", 5));
-    verticesForMatrix.add(new Vertex("6", 6));
+    double[] weights = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0};
 
-    HyperGraph hyperGraphFromMatrix = new HyperGraph(placementMatrix, verticesForMatrix);
+    HyperGraph hyperGraphFromMatrix = new HyperGraph(placementMatrix, weights);
 
     assertEquals(6, hyperGraphFromMatrix.getHyperEdges().size());
-    assertEquals(verticesForMatrix, hyperGraphFromMatrix.getVertices());
+    assertEquals(6, hyperGraphFromMatrix.getVertices().size());
+    for (int i = 0; i < weights.length; i++) {
+      assertEquals(weights[i], hyperGraphFromMatrix.getVertices().get(i).getWeight());
+    }
   }
 
   @Test
@@ -87,16 +84,9 @@ public class HyperGraphTest {
       {0, 0, 1, 0, 1, 0}
     };
 
-    List<Vertex> verticesForMatrix = new ArrayList<>();
-    verticesForMatrix.add(new Vertex("1", 1));
-    verticesForMatrix.add(new Vertex("2", 2));
-    verticesForMatrix.add(new Vertex("3", 3));
-    verticesForMatrix.add(new Vertex("4", 4));
-    verticesForMatrix.add(new Vertex("5", 5));
-    verticesForMatrix.add(new Vertex("6", 6));
+    double[] weights = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0};
 
-    assertThrows(
-        IllegalArgumentException.class, () -> new HyperGraph(placementMatrix, verticesForMatrix));
+    assertThrows(IllegalArgumentException.class, () -> new HyperGraph(placementMatrix, weights));
   }
 
   @Test
@@ -172,12 +162,8 @@ public class HyperGraphTest {
       {1, 2, 0},
       {0, 0, 1}
     };
-    List<Vertex> verticesForMatrix = new ArrayList<>();
-    verticesForMatrix.add(new Vertex("1", 1));
-    verticesForMatrix.add(new Vertex("2", 2));
-    verticesForMatrix.add(new Vertex("3", 3));
-    assertThrows(
-        IllegalArgumentException.class, () -> new HyperGraph(invalidMatrix, verticesForMatrix));
+    double[] weights = {1.0, 2.0, 3.0};
+    assertThrows(IllegalArgumentException.class, () -> new HyperGraph(invalidMatrix, weights));
   }
 
   @Test
@@ -213,12 +199,8 @@ public class HyperGraphTest {
       {1, 0},
       {1, 1}
     };
-    List<Vertex> verticesForMatrix = new ArrayList<>();
-    verticesForMatrix.add(new Vertex("1", 1));
-    verticesForMatrix.add(new Vertex("2", 2));
-    verticesForMatrix.add(new Vertex("3", 3));
-    assertThrows(
-        IllegalArgumentException.class, () -> new HyperGraph(invalidMatrix, verticesForMatrix));
+    double[] weights = {1.0, 2.0, 3.0};
+    assertThrows(IllegalArgumentException.class, () -> new HyperGraph(invalidMatrix, weights));
   }
 
   @Test
