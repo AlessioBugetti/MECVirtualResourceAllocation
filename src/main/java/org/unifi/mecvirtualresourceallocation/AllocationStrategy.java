@@ -22,7 +22,7 @@ public abstract class AllocationStrategy {
     return resultingHyperEdges;
   }
 
-  protected Set<Vertex> findAdjacentVertices(Vertex vertex, ConflictGraph conflictGraph) {
+  protected Set<Vertex> calculateAdjacentVertices(Vertex vertex, ConflictGraph conflictGraph) {
     Set<Vertex> adjacentVertices = new HashSet<>();
     for (Edge edge : conflictGraph.getEdges()) {
       if (edge.getVertex1().equals(vertex)) {

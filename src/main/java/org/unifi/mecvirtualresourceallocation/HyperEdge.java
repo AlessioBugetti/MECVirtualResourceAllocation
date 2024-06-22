@@ -1,7 +1,9 @@
 package org.unifi.mecvirtualresourceallocation;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * This class represents a hyperedge in a hypergraph. A hyperedge is an edge that can connect more
@@ -35,9 +37,17 @@ public class HyperEdge {
    * @param vertices the list of vertices that this hyperedge connects.
    */
   public HyperEdge(String id, List<Vertex> vertices) {
+    if (hasDuplicateVertices(vertices)) {
+      throw new IllegalArgumentException("HyperEdge cannot contain duplicate vertices.");
+    }
     this.id = id;
     this.vertices = vertices;
     this.weight = calculateWeight();
+  }
+
+  private boolean hasDuplicateVertices(List<Vertex> vertices) {
+    Set<Vertex> set = new HashSet<>(vertices);
+    return set.size() != vertices.size();
   }
 
   /**
@@ -68,10 +78,14 @@ public class HyperEdge {
    * @param vertex the vertex to be added to the hyperedge.
    */
   public void addVertex(Vertex vertex) {
-    if (this.vertices == null) {
-      this.vertices = new ArrayList<>();
+    if (vertex == null) {
+      throw new IllegalArgumentException("Trying to add an uninitialized vertex.");
+    }
+    if (vertices.contains(vertex)) {
+      throw new IllegalArgumentException("Duplicate vertex found: " + vertex.getId());
     }
     this.vertices.add(vertex);
+    this.weight += vertex.getWeight();
   }
 
   /**
@@ -99,6 +113,6 @@ public class HyperEdge {
    */
   @Override
   public String toString() {
-    return "HyperEdge{vertices=" + vertices + ", weight=" + weight + "}";
+    return "HyperEdge{id=" + getId() + ", vertices=" + vertices + ", weight=" + weight + "}";
   }
 }

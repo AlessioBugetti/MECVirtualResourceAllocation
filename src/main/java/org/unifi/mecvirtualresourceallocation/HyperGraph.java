@@ -24,12 +24,9 @@ public class HyperGraph {
    * @param hyperEdges the hyperedges of the hypergraph.
    */
   public HyperGraph(List<Vertex> vertices, List<HyperEdge> hyperEdges) {
+    validate(vertices, hyperEdges);
     this.vertices = vertices;
-    this.hyperEdges = new ArrayList<>();
-    for (HyperEdge hyperEdge : hyperEdges) {
-      addEdge(hyperEdge);
-    }
-    validate();
+    this.hyperEdges = hyperEdges;
   }
 
   /**
@@ -45,9 +42,8 @@ public class HyperGraph {
    *     number of rows in the placement matrix.
    */
   public HyperGraph(int[][] placementMatrix, List<Vertex> vertices) {
-    this.vertices = vertices;
-    this.hyperEdges = new ArrayList<>();
 
+    List<HyperEdge> tmpHyperEdges = new ArrayList<>();
     validatePlacementMatrix(placementMatrix);
 
     if (placementMatrix.length != vertices.size()) {
@@ -63,9 +59,11 @@ public class HyperGraph {
         }
       }
       HyperEdge hyperEdge = new HyperEdge(Integer.toString(j + 1), verticesInHyperEdge);
-      this.addEdge(hyperEdge);
+      tmpHyperEdges.add(hyperEdge);
     }
-    validate();
+    validate(vertices, tmpHyperEdges);
+    this.vertices = vertices;
+    this.hyperEdges = tmpHyperEdges;
   }
 
   /**
@@ -74,10 +72,20 @@ public class HyperGraph {
    * @throws IllegalArgumentException if the union of all hyperedges do not exactly match the set of
    *     vertices.
    */
-  private void validate() {
+  private void validate(List<Vertex> vertices, List<HyperEdge> hyperEdges) {
+
     Set<Vertex> allUniqueVertices = new HashSet<>();
+    Set<String> hyperEdgeIds = new HashSet<>();
 
     for (HyperEdge hyperEdge : hyperEdges) {
+      if (hyperEdge.getVertices().isEmpty()) {
+        throw new IllegalArgumentException(
+            "Cannot add an HyperEdge with no vertices: " + hyperEdge.getId());
+      }
+
+      if (!hyperEdgeIds.add(hyperEdge.getId())) {
+        throw new IllegalArgumentException("Duplicate HyperEdge ID found: " + hyperEdge.getId());
+      }
       List<Vertex> verticesInEdge = hyperEdge.getVertices();
       allUniqueVertices.addAll(verticesInEdge);
     }
@@ -125,20 +133,6 @@ public class HyperGraph {
   }
 
   /**
-   * Adds a vertex to the hypergraph, ensuring no duplicate vertex IDs exist.
-   *
-   * @param vertex the vertex to be added.
-   */
-  private void addVertex(Vertex vertex) {
-    for (Vertex v : vertices) {
-      if (v.getId().equals(vertex.getId())) {
-        throw new IllegalArgumentException("Duplicate Vertex ID found: " + vertex.getId());
-      }
-    }
-    vertices.add(vertex);
-  }
-
-  /**
    * Adds a hyperedge to the hypergraph, ensuring no duplicate hyperedge IDs exist. The vertices of
    * the hyperedge are also added to the hypergraph if not already present.
    *
@@ -158,7 +152,7 @@ public class HyperGraph {
 
     for (Vertex vertex : hyperEdge.getVertices()) {
       if (!vertices.contains(vertex)) {
-        addVertex(vertex);
+        vertices.add(vertex);
       }
     }
 
@@ -243,8 +237,11 @@ public class HyperGraph {
     int[][] placementMatrix = getPlacementMatrix();
 
     for (int[] vector : placementMatrix) {
-      for (int element : vector) {
-        System.out.print(element + " ");
+      for (int i = 0; i < vector.length; i++) {
+        System.out.print(vector[i]);
+        if (vector.length > 1 && i < vector.length - 1) {
+          System.out.print(" ");
+        }
       }
       System.out.println();
     }
