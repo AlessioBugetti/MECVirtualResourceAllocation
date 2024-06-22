@@ -20,10 +20,8 @@ public class Vertex {
    */
   public Vertex(String id, double weight) {
     this.id = id;
-    if(weight>0)
-      this.weight = -weight;
-    else
-      this.weight = weight;
+    if (weight > 0) this.weight = -weight;
+    else this.weight = weight;
   }
 
   /**

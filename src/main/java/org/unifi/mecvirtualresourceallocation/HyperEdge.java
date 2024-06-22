@@ -107,7 +107,8 @@ public class HyperEdge {
   }
 
   /**
-   * Gets the negative weight of the hyperedge, which is the sum of the negative weights of its vertices.
+   * Gets the negative weight of the hyperedge, which is the sum of the negative weights of its
+   * vertices.
    *
    * @return the negative weight of the hyperedge.
    */

@@ -169,7 +169,7 @@ public class HyperGraph {
     ConflictGraph conflictGraph = new ConflictGraph();
 
     for (HyperEdge hyperEdge : hyperEdges) {
-      conflictGraph.addVertex(new Vertex(hyperEdge.getId(), hyperEdge.getWeight()));
+      conflictGraph.addVertex(new Vertex(hyperEdge.getId(), hyperEdge.getNegativeWeight()));
     }
 
     for (int i = 0; i < hyperEdges.size(); i++) {
