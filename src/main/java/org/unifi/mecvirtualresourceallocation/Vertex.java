@@ -27,7 +27,7 @@ public class Vertex {
 
   public Vertex(String id, BigDecimal weight) {
     this.id = id;
-    this.weight = weight.compareTo(BigDecimal.valueOf(0.0)) > 0 ? weight.negate() : weight;
+    this.weight = weight.compareTo(BigDecimal.ZERO) > 0 ? weight.negate() : weight;
   }
 
   /**

@@ -27,7 +27,7 @@ public class HyperEdge {
   public HyperEdge(String id) {
     this.id = id;
     this.vertices = new ArrayList<>();
-    this.weight = BigDecimal.valueOf(0.0);
+    this.weight = BigDecimal.ZERO;
   }
 
   /**

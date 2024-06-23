@@ -81,6 +81,6 @@ public class HyperEdgeTest {
     HyperEdge emptyEdge = new HyperEdge("2");
     assertEquals("2", emptyEdge.getId());
     assertEquals(0, emptyEdge.getVertices().size());
-    assertEquals(BigDecimal.valueOf(0.0), emptyEdge.getWeight());
+    assertEquals(BigDecimal.ZERO, emptyEdge.getWeight());
   }
 }
