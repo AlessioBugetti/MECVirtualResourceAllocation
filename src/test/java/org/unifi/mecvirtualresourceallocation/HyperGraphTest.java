@@ -10,6 +10,10 @@ import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.unifi.mecvirtualresourceallocation.graph.ConflictGraph;
+import org.unifi.mecvirtualresourceallocation.graph.HyperEdge;
+import org.unifi.mecvirtualresourceallocation.graph.HyperGraph;
+import org.unifi.mecvirtualresourceallocation.graph.Vertex;
 
 public class HyperGraphTest {
 

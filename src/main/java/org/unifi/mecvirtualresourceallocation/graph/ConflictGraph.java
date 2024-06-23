@@ -1,8 +1,9 @@
-package org.unifi.mecvirtualresourceallocation;
+package org.unifi.mecvirtualresourceallocation.graph;
 
 import java.util.HashSet;
 import java.util.Set;
 import javax.swing.JFrame;
+import org.unifi.mecvirtualresourceallocation.graph.visualization.ConflictGraphPanel;
 
 /**
  * This class represents a conflict graph derived from a hypergraph. The conflict graph is used to

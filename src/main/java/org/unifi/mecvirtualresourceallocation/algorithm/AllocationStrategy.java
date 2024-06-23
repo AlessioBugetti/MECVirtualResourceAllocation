@@ -1,8 +1,13 @@
-package org.unifi.mecvirtualresourceallocation;
+package org.unifi.mecvirtualresourceallocation.algorithm;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.unifi.mecvirtualresourceallocation.graph.ConflictGraph;
+import org.unifi.mecvirtualresourceallocation.graph.Edge;
+import org.unifi.mecvirtualresourceallocation.graph.HyperEdge;
+import org.unifi.mecvirtualresourceallocation.graph.HyperGraph;
+import org.unifi.mecvirtualresourceallocation.graph.Vertex;
 
 public abstract class AllocationStrategy {
 

@@ -1,4 +1,4 @@
-package org.unifi.mecvirtualresourceallocation;
+package org.unifi.mecvirtualresourceallocation.graph;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

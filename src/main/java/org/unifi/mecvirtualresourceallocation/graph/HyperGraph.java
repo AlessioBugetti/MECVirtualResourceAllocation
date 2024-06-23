@@ -1,10 +1,11 @@
-package org.unifi.mecvirtualresourceallocation;
+package org.unifi.mecvirtualresourceallocation.graph;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.swing.JFrame;
+import org.unifi.mecvirtualresourceallocation.graph.visualization.HyperGraphPanel;
 
 /**
  * This class represents a hypergraph, which consists of a set of hyperedges and vertices. In the

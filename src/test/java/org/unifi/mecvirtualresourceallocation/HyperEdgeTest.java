@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.unifi.mecvirtualresourceallocation.graph.HyperEdge;
+import org.unifi.mecvirtualresourceallocation.graph.Vertex;
 
 public class HyperEdgeTest {
 

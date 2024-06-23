@@ -1,4 +1,4 @@
-package org.unifi.mecvirtualresourceallocation;
+package org.unifi.mecvirtualresourceallocation.algorithm;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.unifi.mecvirtualresourceallocation.graph.ConflictGraph;
+import org.unifi.mecvirtualresourceallocation.graph.HyperGraph;
+import org.unifi.mecvirtualresourceallocation.graph.Vertex;
 
 /**
  * The LocalSearchStrategy class implements an allocation strategy based on the (M*)-Perfect

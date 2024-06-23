@@ -1,4 +1,4 @@
-package org.unifi.mecvirtualresourceallocation;
+package org.unifi.mecvirtualresourceallocation.graph.visualization;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -7,6 +7,7 @@ import java.awt.RenderingHints;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JPanel;
+import org.unifi.mecvirtualresourceallocation.graph.Vertex;
 
 /**
  * Base class for panels visualizing graphs with vertices and edges. This is an abstract class and

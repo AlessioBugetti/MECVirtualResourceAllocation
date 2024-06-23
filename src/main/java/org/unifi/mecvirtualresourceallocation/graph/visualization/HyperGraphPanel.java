@@ -1,4 +1,4 @@
-package org.unifi.mecvirtualresourceallocation;
+package org.unifi.mecvirtualresourceallocation.graph.visualization;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -8,6 +8,9 @@ import java.awt.Point;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.unifi.mecvirtualresourceallocation.graph.HyperEdge;
+import org.unifi.mecvirtualresourceallocation.graph.HyperGraph;
+import org.unifi.mecvirtualresourceallocation.graph.Vertex;
 
 /**
  * Panel for visualizing a hypergraph with vertices and hyperedges. Extends GraphPanel and

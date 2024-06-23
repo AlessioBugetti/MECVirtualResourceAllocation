@@ -1,4 +1,4 @@
-package org.unifi.mecvirtualresourceallocation;
+package org.unifi.mecvirtualresourceallocation.graph.visualization;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -6,6 +6,9 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.Map;
+import org.unifi.mecvirtualresourceallocation.graph.ConflictGraph;
+import org.unifi.mecvirtualresourceallocation.graph.Edge;
+import org.unifi.mecvirtualresourceallocation.graph.Vertex;
 
 /**
  * Panel for visualizing a conflict graph with vertices and edges. Extends GraphPanel and implements

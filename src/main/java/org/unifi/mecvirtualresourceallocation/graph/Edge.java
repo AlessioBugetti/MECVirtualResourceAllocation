@@ -1,4 +1,4 @@
-package org.unifi.mecvirtualresourceallocation;
+package org.unifi.mecvirtualresourceallocation.graph;
 
 /** Represents an edge in a conflict graph. Each edge connects two vertices. */
 public class Edge {

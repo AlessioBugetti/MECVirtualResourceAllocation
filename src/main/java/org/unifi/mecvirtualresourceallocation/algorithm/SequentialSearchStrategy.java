@@ -1,7 +1,10 @@
-package org.unifi.mecvirtualresourceallocation;
+package org.unifi.mecvirtualresourceallocation.algorithm;
 
 import java.util.HashSet;
 import java.util.Set;
+import org.unifi.mecvirtualresourceallocation.graph.ConflictGraph;
+import org.unifi.mecvirtualresourceallocation.graph.HyperGraph;
+import org.unifi.mecvirtualresourceallocation.graph.Vertex;
 
 public class SequentialSearchStrategy extends AllocationStrategy {
 
