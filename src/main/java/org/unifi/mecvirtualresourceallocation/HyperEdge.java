@@ -1,5 +1,6 @@
 package org.unifi.mecvirtualresourceallocation;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -15,7 +16,7 @@ public class HyperEdge {
 
   private String id;
   private List<Vertex> vertices;
-  private double weight;
+  private BigDecimal weight;
 
   /**
    * Constructs a hyperedge with the specified id. Initializes an empty list of vertices and sets
@@ -26,7 +27,7 @@ public class HyperEdge {
   public HyperEdge(String id) {
     this.id = id;
     this.vertices = new ArrayList<>();
-    this.weight = 0;
+    this.weight = BigDecimal.valueOf(0.0);
   }
 
   /**
@@ -55,10 +56,10 @@ public class HyperEdge {
    *
    * @return the total weight of the hyperedge.
    */
-  private double calculateWeight() {
-    double totalWeight = 0;
+  private BigDecimal calculateWeight() {
+    BigDecimal totalWeight = BigDecimal.ZERO;
     for (Vertex vertex : vertices) {
-      totalWeight += vertex.getNegativeWeight();
+      totalWeight = totalWeight.add(vertex.getNegativeWeight());
     }
     return totalWeight;
   }
@@ -85,7 +86,7 @@ public class HyperEdge {
       throw new IllegalArgumentException("Duplicate vertex found: " + vertex.getId());
     }
     this.vertices.add(vertex);
-    this.weight += vertex.getNegativeWeight();
+    this.weight = this.weight.add(vertex.getNegativeWeight());
   }
 
   /**
@@ -102,8 +103,8 @@ public class HyperEdge {
    *
    * @return the weight of the hyperedge.
    */
-  public double getWeight() {
-    return -weight;
+  public BigDecimal getWeight() {
+    return weight.negate();
   }
 
   /**
@@ -112,7 +113,7 @@ public class HyperEdge {
    *
    * @return the negative weight of the hyperedge.
    */
-  public double getNegativeWeight() {
+  public BigDecimal getNegativeWeight() {
     return weight;
   }
 
@@ -123,6 +124,12 @@ public class HyperEdge {
    */
   @Override
   public String toString() {
-    return "HyperEdge{id=" + getId() + ", vertices=" + vertices + ", weight=" + -weight + "}";
+    return "HyperEdge{id="
+        + getId()
+        + ", vertices="
+        + vertices
+        + ", weight="
+        + weight.negate()
+        + "}";
   }
 }

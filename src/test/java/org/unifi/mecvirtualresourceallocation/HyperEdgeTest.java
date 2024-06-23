@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -39,7 +40,7 @@ public class HyperEdgeTest {
     List<Vertex> updatedVertices = hyperEdge.getVertices();
     assertEquals(3, updatedVertices.size());
     assertTrue(updatedVertices.contains(v3));
-    assertEquals(6.0, hyperEdge.getWeight(), 0);
+    assertEquals(BigDecimal.valueOf(6.0), hyperEdge.getWeight());
   }
 
   @Test
@@ -54,12 +55,12 @@ public class HyperEdgeTest {
 
   @Test
   public void testGetWeight() {
-    assertEquals(3.0, hyperEdge.getWeight(), 0);
+    assertEquals(BigDecimal.valueOf(3.0), hyperEdge.getWeight());
   }
 
   @Test
   public void testGetNegativeWeight() {
-    assertEquals(-3.0, hyperEdge.getNegativeWeight(), 0);
+    assertEquals(BigDecimal.valueOf(-3.0), hyperEdge.getNegativeWeight());
   }
 
   @Test
@@ -80,6 +81,6 @@ public class HyperEdgeTest {
     HyperEdge emptyEdge = new HyperEdge("2");
     assertEquals("2", emptyEdge.getId());
     assertEquals(0, emptyEdge.getVertices().size());
-    assertEquals(0.0, emptyEdge.getWeight(), 0);
+    assertEquals(BigDecimal.valueOf(0.0), emptyEdge.getWeight());
   }
 }

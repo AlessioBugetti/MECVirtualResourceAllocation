@@ -1,5 +1,6 @@
 package org.unifi.mecvirtualresourceallocation;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -49,9 +50,8 @@ public class LocalSearchStrategy extends AllocationStrategy {
               findAdjacentVertexIndependentSet(claw, independentSet, conflictGraph, adjacencyCache);
           independentSet.removeAll(adjacentVertexIndependentSet);
           independentSet.addAll(claw);
-          sortedIndependentSet =
-              sortVerticesByWeightAscending(independentSet); // Re-sort the updated set
-          index = -1; // Restart the process
+          sortedIndependentSet = sortVerticesByWeightAscending(independentSet);
+          index = -1;
           break;
         }
       }
@@ -270,7 +270,9 @@ public class LocalSearchStrategy extends AllocationStrategy {
    * @return true if the new set has a better weight, false otherwise
    */
   private boolean isWeightImproved(Set<Vertex> newSet, Set<Vertex> oldSet) {
-    return Math.pow(calculateWeight(newSet), 2) < Math.pow(calculateWeight(oldSet), 2);
+    BigDecimal oldWeightSquared = calculateWeight(oldSet).pow(2);
+    BigDecimal newWeightSquared = calculateWeight(newSet).pow(2);
+    return newWeightSquared.compareTo(oldWeightSquared) < 0;
   }
 
   /**
@@ -279,7 +281,9 @@ public class LocalSearchStrategy extends AllocationStrategy {
    * @param vertices the set of vertices
    * @return the total weight of the vertices
    */
-  private double calculateWeight(Set<Vertex> vertices) {
-    return vertices.stream().mapToDouble(Vertex::getNegativeWeight).sum();
+  private BigDecimal calculateWeight(Set<Vertex> vertices) {
+    return vertices.stream()
+        .map(Vertex::getNegativeWeight)
+        .reduce(BigDecimal.ZERO, BigDecimal::add);
   }
 }

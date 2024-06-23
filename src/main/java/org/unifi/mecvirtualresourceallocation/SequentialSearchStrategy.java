@@ -21,14 +21,18 @@ public class SequentialSearchStrategy extends AllocationStrategy {
   }
 
   private Vertex findMaxWeightVertex(Set<Vertex> vertices) {
+    if (vertices == null || vertices.isEmpty()) {
+      throw new IllegalArgumentException("The set of vertices cannot be null or empty.");
+    }
+
     Vertex maxVertex = null;
-    double maxWeight = Double.NEGATIVE_INFINITY;
     for (Vertex vertex : vertices) {
-      if (vertex.getNegativeWeight() > maxWeight) {
+      if (maxVertex == null
+          || vertex.getNegativeWeight().compareTo(maxVertex.getNegativeWeight()) > 0) {
         maxVertex = vertex;
-        maxWeight = vertex.getNegativeWeight();
       }
     }
+
     return maxVertex;
   }
 }

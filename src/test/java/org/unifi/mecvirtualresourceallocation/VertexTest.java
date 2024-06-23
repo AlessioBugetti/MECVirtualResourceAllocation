@@ -3,6 +3,7 @@ package org.unifi.mecvirtualresourceallocation;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+import java.math.BigDecimal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,7 +11,7 @@ public class VertexTest {
 
   private Vertex vertex;
   private final String id = "1";
-  private final double weight = 1.0;
+  private final BigDecimal weight = BigDecimal.valueOf(1.0);
 
   @BeforeEach
   public void setUp() {
@@ -36,7 +37,7 @@ public class VertexTest {
 
   @Test
   public void testGetNegativeWeight() {
-    assertEquals(-weight, vertex.getNegativeWeight());
+    assertEquals(weight.negate(), vertex.getNegativeWeight());
   }
 
   @Test

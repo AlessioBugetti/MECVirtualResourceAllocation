@@ -1,5 +1,6 @@
 package org.unifi.mecvirtualresourceallocation;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
@@ -10,7 +11,7 @@ import java.util.Objects;
 public class Vertex {
 
   private String id;
-  private double weight;
+  private BigDecimal weight;
 
   /**
    * Constructs a new {@code Vertex} with the specified identifier and weight.
@@ -20,8 +21,13 @@ public class Vertex {
    */
   public Vertex(String id, double weight) {
     this.id = id;
-    if (weight > 0) this.weight = -weight;
-    else this.weight = weight;
+    if (weight > 0) this.weight = BigDecimal.valueOf(-weight);
+    else this.weight = BigDecimal.valueOf(weight);
+  }
+
+  public Vertex(String id, BigDecimal weight) {
+    this.id = id;
+    this.weight = weight.compareTo(BigDecimal.valueOf(0.0)) > 0 ? weight.negate() : weight;
   }
 
   /**
@@ -47,8 +53,8 @@ public class Vertex {
    *
    * @return the weight of the vertex.
    */
-  public double getWeight() {
-    return -weight;
+  public BigDecimal getWeight() {
+    return weight.negate();
   }
 
   /**
@@ -56,7 +62,7 @@ public class Vertex {
    *
    * @return the negative weight of the vertex.
    */
-  public double getNegativeWeight() {
+  public BigDecimal getNegativeWeight() {
     return weight;
   }
 
@@ -68,7 +74,7 @@ public class Vertex {
    */
   @Override
   public String toString() {
-    return "Vertex{id=" + id + ", weight=" + -weight + "}";
+    return "Vertex{id=" + id + ", weight=" + weight.negate() + "}";
   }
 
   @Override

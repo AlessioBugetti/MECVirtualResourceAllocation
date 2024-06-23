@@ -3,6 +3,7 @@ package org.unifi.mecvirtualresourceallocation;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -69,7 +70,8 @@ public class HyperGraphTest {
     assertEquals(6, hyperGraphFromMatrix.getHyperEdges().size());
     assertEquals(6, hyperGraphFromMatrix.getVertices().size());
     for (int i = 0; i < weights.length; i++) {
-      assertEquals(weights[i], hyperGraphFromMatrix.getVertices().get(i).getWeight());
+      assertEquals(
+          BigDecimal.valueOf(weights[i]), hyperGraphFromMatrix.getVertices().get(i).getWeight());
     }
   }
 
