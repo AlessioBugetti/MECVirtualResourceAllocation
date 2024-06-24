@@ -14,7 +14,6 @@ import org.unifi.mecvirtualresourceallocation.graph.visualization.HyperGraphPane
  * multiple vertices (VMs).
  */
 public class HyperGraph {
-
   private List<Vertex> vertices;
   private List<HyperEdge> hyperEdges;
 
@@ -82,25 +81,31 @@ public class HyperGraph {
 
     Set<Vertex> allUniqueVertices = new HashSet<>();
     Set<String> hyperEdgeIds = new HashSet<>();
+    Set<Set<Vertex>> uniqueVertexSets = new HashSet<>();
 
     for (HyperEdge hyperEdge : hyperEdges) {
-      if (hyperEdge.getVertices().isEmpty()) {
-        throw new IllegalArgumentException(
-            "Cannot add an HyperEdge with no vertices: " + hyperEdge.getId());
+      List<Vertex> verticesInEdge = hyperEdge.getVertices();
+      if (verticesInEdge.isEmpty()) {
+        throw new IllegalArgumentException("Cannot add a HyperEdge with no vertices.");
       }
 
       if (!hyperEdgeIds.add(hyperEdge.getId())) {
         throw new IllegalArgumentException("Duplicate HyperEdge ID found: " + hyperEdge.getId());
       }
-      List<Vertex> verticesInEdge = hyperEdge.getVertices();
+
       allUniqueVertices.addAll(verticesInEdge);
+
+      Set<Vertex> vertexSetInEdge = new HashSet<>(verticesInEdge);
+      if (!uniqueVertexSets.add(vertexSetInEdge)) {
+        throw new IllegalArgumentException(
+            "Different HyperEdges with the same set of vertices found: " + vertexSetInEdge);
+      }
     }
 
     Set<Vertex> vertexSet = new HashSet<>(vertices);
-
     if (!allUniqueVertices.equals(vertexSet)) {
       throw new IllegalArgumentException(
-          "The union of all hyperedges do not " + "exactly match the set of vertices.");
+          "The union of all hyperedges do not exactly match the set of vertices.");
     }
   }
 
@@ -146,7 +151,7 @@ public class HyperGraph {
    * @throws IllegalArgumentException if the hyperedge has no vertices or if there are duplicate
    *     IDs.
    */
-  public void addEdge(HyperEdge hyperEdge) {
+  public void addHyperEdge(HyperEdge hyperEdge) {
     if (hyperEdge.getVertices().isEmpty()) {
       throw new IllegalArgumentException(
           "Cannot add an HyperEdge with no vertices: " + hyperEdge.getId());
@@ -154,6 +159,15 @@ public class HyperGraph {
 
     if (hyperEdges.stream().anyMatch(e -> e.getId().equals(hyperEdge.getId()))) {
       throw new IllegalArgumentException("Duplicate HyperEdge ID found: " + hyperEdge.getId());
+    }
+
+    Set<Vertex> verticesInNewEdge = new HashSet<>(hyperEdge.getVertices());
+    for (HyperEdge existingEdge : hyperEdges) {
+      Set<Vertex> verticesInExistingEdge = new HashSet<>(existingEdge.getVertices());
+      if (verticesInNewEdge.equals(verticesInExistingEdge)) {
+        throw new IllegalArgumentException(
+            "Duplicate HyperEdge with the same set of vertices found: " + hyperEdge.getId());
+      }
     }
 
     for (Vertex vertex : hyperEdge.getVertices()) {

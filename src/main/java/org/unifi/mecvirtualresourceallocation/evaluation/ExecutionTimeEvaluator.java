@@ -10,43 +10,52 @@ import org.unifi.mecvirtualresourceallocation.evaluation.util.ChartUtils;
 import org.unifi.mecvirtualresourceallocation.evaluation.util.HyperGraphGenerator;
 import org.unifi.mecvirtualresourceallocation.graph.HyperGraph;
 
-public class ExecutionTimeEvaluation implements Evaluation {
+public class ExecutionTimeEvaluator implements Evaluation {
+  private static final int NUM_EXECUTIONS = 100;
+  private static final int MAX_VERTEX_SIZE = 50;
+
   @Override
-  public void run() {
-    runExecutionTimeEvaluation();
+  public void execute() {
+    evaluateExecutionTime();
   }
 
-  private void runExecutionTimeEvaluation() {
-    int[] vertexSizes = new int[50];
-    for (int i = 0; i < vertexSizes.length; i++) {
-      vertexSizes[i] = i + 1;
-    }
-    int numExecutions = 100;
+  private void evaluateExecutionTime() {
+    int[] vertexSizes = generateVertexSizes(MAX_VERTEX_SIZE);
     Map<Integer, Long> avgExecutionTimeSequential = new TreeMap<>();
     Map<Integer, Long> avgExecutionTimeLocal = new TreeMap<>();
-
     Random rand = new Random(42);
+
     for (int size : vertexSizes) {
       long totalExecutionTimeSequential = 0;
       long totalExecutionTimeLocal = 0;
-      for (int i = 0; i < numExecutions; i++) {
+
+      for (int i = 0; i < NUM_EXECUTIONS; i++) {
         HyperGraph hyperGraph = HyperGraphGenerator.generateRandomHyperGraph(size, rand);
         totalExecutionTimeSequential +=
             measureExecutionTime(hyperGraph, new SequentialSearchStrategy());
         totalExecutionTimeLocal += measureExecutionTime(hyperGraph, new LocalSearchStrategy());
+        System.out.println(size + " " + i);
       }
-      avgExecutionTimeSequential.put(size, totalExecutionTimeSequential / numExecutions);
-      avgExecutionTimeLocal.put(size, totalExecutionTimeLocal / numExecutions);
+
+      avgExecutionTimeSequential.put(size, totalExecutionTimeSequential / NUM_EXECUTIONS);
+      avgExecutionTimeLocal.put(size, totalExecutionTimeLocal / NUM_EXECUTIONS);
     }
 
     plotResults(avgExecutionTimeSequential, avgExecutionTimeLocal);
   }
 
+  private int[] generateVertexSizes(int maxSize) {
+    int[] vertexSizes = new int[maxSize];
+    for (int i = 0; i < maxSize; i++) {
+      vertexSizes[i] = i + 1;
+    }
+    return vertexSizes;
+  }
+
   private long measureExecutionTime(HyperGraph hyperGraph, AllocationStrategy strategy) {
     long startTime = System.nanoTime();
     strategy.allocate(hyperGraph);
-    long endTime = System.nanoTime();
-    return endTime - startTime;
+    return System.nanoTime() - startTime;
   }
 
   private void plotResults(

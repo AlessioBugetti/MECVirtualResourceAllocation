@@ -47,13 +47,13 @@ public class HyperGraphTest {
   public void testDuplicateEdgeId() {
     Vertex v3 = new Vertex("3", 3);
     HyperEdge e2 = new HyperEdge("1", Collections.singletonList(v3));
-    assertThrows(IllegalArgumentException.class, () -> hyperGraph.addEdge(e2));
+    assertThrows(IllegalArgumentException.class, () -> hyperGraph.addHyperEdge(e2));
   }
 
   @Test
   public void testEmptyHyperEdge() {
     HyperEdge emptyEdge = new HyperEdge("2");
-    assertThrows(IllegalArgumentException.class, () -> hyperGraph.addEdge(emptyEdge));
+    assertThrows(IllegalArgumentException.class, () -> hyperGraph.addHyperEdge(emptyEdge));
   }
 
   @Test
@@ -105,7 +105,7 @@ public class HyperGraphTest {
   @Test
   void testAddVertex() {
     Vertex v3 = new Vertex("3", 3);
-    hyperGraph.addEdge(new HyperEdge("2", Collections.singletonList(v3)));
+    hyperGraph.addHyperEdge(new HyperEdge("2", Collections.singletonList(v3)));
     assertEquals(3, hyperGraph.getVertices().size());
     assertEquals(v3, hyperGraph.getVertices().get(2));
   }
@@ -114,7 +114,7 @@ public class HyperGraphTest {
   void testAddEdge() {
     Vertex v3 = new Vertex("3", 3);
     HyperEdge e2 = new HyperEdge("2", Collections.singletonList(v3));
-    hyperGraph.addEdge(e2);
+    hyperGraph.addHyperEdge(e2);
     assertEquals(2, hyperGraph.getHyperEdges().size());
     assertEquals(e2, hyperGraph.getHyperEdges().get(1));
   }
@@ -122,7 +122,7 @@ public class HyperGraphTest {
   @Test
   void testAddEdgeWithExistingVertex() {
     HyperEdge e2 = new HyperEdge("2", Collections.singletonList(vertices.get(0)));
-    hyperGraph.addEdge(e2);
+    hyperGraph.addHyperEdge(e2);
     assertEquals(2, hyperGraph.getHyperEdges().size());
     assertEquals(e2, hyperGraph.getHyperEdges().get(1));
   }
@@ -189,7 +189,7 @@ public class HyperGraphTest {
   @Test
   void testAddEdgeWithEmptyVertexList() {
     HyperEdge e2 = new HyperEdge("2", new ArrayList<>());
-    assertThrows(IllegalArgumentException.class, () -> hyperGraph.addEdge(e2));
+    assertThrows(IllegalArgumentException.class, () -> hyperGraph.addHyperEdge(e2));
   }
 
   @Test
@@ -265,7 +265,7 @@ public class HyperGraphTest {
     java.io.ByteArrayOutputStream outContent = new java.io.ByteArrayOutputStream();
     System.setOut(new java.io.PrintStream(outContent));
     Vertex v3 = new Vertex("3", 3.0);
-    hyperGraph.addEdge(new HyperEdge("2", Collections.singletonList(v3)));
+    hyperGraph.addHyperEdge(new HyperEdge("2", Collections.singletonList(v3)));
     hyperGraph.printPlacementMatrix();
 
     String expectedOutput = "1 0\n1 0\n0 1";

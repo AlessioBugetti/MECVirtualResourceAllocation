@@ -13,60 +13,66 @@ import org.unifi.mecvirtualresourceallocation.evaluation.util.HyperGraphGenerato
 import org.unifi.mecvirtualresourceallocation.graph.HyperGraph;
 import org.unifi.mecvirtualresourceallocation.graph.Vertex;
 
-public abstract class EnergyConsumptionEvaluation implements Evaluation {
+public abstract class EnergyConsumptionEvaluator implements Evaluation {
+  private static final int NUM_EXECUTIONS = 100;
+  private static final int MAX_VERTEX_SIZE = 50;
+
   @Override
-  public void run() {
-    runEnergyConsumptionEvaluation();
+  public void execute() {
+    evaluateEnergyConsumption();
   }
 
-  public void runEnergyConsumptionEvaluation() {
-    int[] vertexSizes = new int[50];
-    for (int i = 0; i < vertexSizes.length; i++) {
-      vertexSizes[i] = i + 1;
-    }
-    int numExecutions = 100;
+  private void evaluateEnergyConsumption() {
+    int[] vertexSizes = generateVertexSizes(MAX_VERTEX_SIZE);
     Map<Integer, BigDecimal> avgReducedWeightsSequential = new TreeMap<>();
     Map<Integer, BigDecimal> avgReducedWeightsLocal = new TreeMap<>();
-
     Random rand = new Random(42);
+
     for (int size : vertexSizes) {
       BigDecimal totalReducedWeightSequential = BigDecimal.ZERO;
       BigDecimal totalReducedWeightLocal = BigDecimal.ZERO;
-      for (int i = 0; i < numExecutions; i++) {
+
+      for (int i = 0; i < NUM_EXECUTIONS; i++) {
         HyperGraph hyperGraph = HyperGraphGenerator.generateRandomHyperGraph(size, rand);
         totalReducedWeightSequential =
             totalReducedWeightSequential.add(
-                getReducedWeightWithStrategy(hyperGraph, new SequentialSearchStrategy()));
+                calculateReducedWeight(hyperGraph, new SequentialSearchStrategy()));
         totalReducedWeightLocal =
             totalReducedWeightLocal.add(
-                getReducedWeightWithStrategy(hyperGraph, new LocalSearchStrategy()));
+                calculateReducedWeight(hyperGraph, new LocalSearchStrategy()));
       }
+
       avgReducedWeightsSequential.put(
           size,
           totalReducedWeightSequential.divide(
-              BigDecimal.valueOf(numExecutions), RoundingMode.HALF_UP));
+              BigDecimal.valueOf(NUM_EXECUTIONS), RoundingMode.HALF_UP));
       avgReducedWeightsLocal.put(
           size,
-          totalReducedWeightLocal.divide(BigDecimal.valueOf(numExecutions), RoundingMode.HALF_UP));
+          totalReducedWeightLocal.divide(BigDecimal.valueOf(NUM_EXECUTIONS), RoundingMode.HALF_UP));
     }
 
     plotResults(avgReducedWeightsSequential, avgReducedWeightsLocal);
   }
 
-  private BigDecimal getReducedWeightWithStrategy(
-      HyperGraph hyperGraph, AllocationStrategy strategy) {
-    Set<Vertex> initialIndependentSet = strategy.allocate(hyperGraph);
+  private int[] generateVertexSizes(int maxSize) {
+    int[] vertexSizes = new int[maxSize];
+    for (int i = 0; i < maxSize; i++) {
+      vertexSizes[i] = i + 1;
+    }
+    return vertexSizes;
+  }
 
+  private BigDecimal calculateReducedWeight(HyperGraph hyperGraph, AllocationStrategy strategy) {
+    Set<Vertex> initialIndependentSet = strategy.allocate(hyperGraph);
     BigDecimal initialWeight =
         initialIndependentSet.stream()
             .map(Vertex::getNegativeWeight)
             .reduce(BigDecimal.ZERO, BigDecimal::add)
             .negate();
-
     return initialWeight;
   }
 
-  public abstract void plotResults(
+  protected abstract void plotResults(
       Map<Integer, BigDecimal> avgReducedWeightsSequential,
       Map<Integer, BigDecimal> avgReducedWeightsLocal);
 }

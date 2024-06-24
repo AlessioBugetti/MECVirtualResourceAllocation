@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.Map;
 import org.unifi.mecvirtualresourceallocation.evaluation.util.ChartUtils;
 
-public class EnergyConsumptionReductionEvaluation extends EnergyConsumptionEvaluation {
+public class EnergyConsumptionReductionEvaluator extends EnergyConsumptionEvaluator {
 
   @Override
-  public void plotResults(
+  protected void plotResults(
       Map<Integer, BigDecimal> avgReducedWeightsSequential,
       Map<Integer, BigDecimal> avgReducedWeightsLocal) {
     Map<Integer, BigDecimal> avgReducedWeights = new HashMap<>();

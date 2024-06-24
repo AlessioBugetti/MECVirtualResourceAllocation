@@ -4,10 +4,10 @@ import java.math.BigDecimal;
 import java.util.Map;
 import org.unifi.mecvirtualresourceallocation.evaluation.util.ChartUtils;
 
-public class EnergyConsumptionAlgorithmEvaluation extends EnergyConsumptionEvaluation {
+public class EnergyConsumptionComparisonEvaluator extends EnergyConsumptionEvaluator {
 
   @Override
-  public void plotResults(
+  protected void plotResults(
       Map<Integer, BigDecimal> avgReducedWeightsSequential,
       Map<Integer, BigDecimal> avgReducedWeightsLocal) {
     avgReducedWeightsSequential.put(0, BigDecimal.ZERO);

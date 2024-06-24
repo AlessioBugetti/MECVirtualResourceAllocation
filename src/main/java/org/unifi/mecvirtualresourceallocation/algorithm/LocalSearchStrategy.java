@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.unifi.mecvirtualresourceallocation.evaluation.util.HyperGraphGenerator;
 import org.unifi.mecvirtualresourceallocation.graph.ConflictGraph;
 import org.unifi.mecvirtualresourceallocation.graph.HyperGraph;
 import org.unifi.mecvirtualresourceallocation.graph.Vertex;
@@ -45,7 +46,7 @@ public class LocalSearchStrategy extends AllocationStrategy {
           getAdjacentVertices(currentVertex, conflictGraph, adjacencyCache);
       List<Vertex> sortedAdjacentVertices = sortVerticesByWeightDescending(adjacentVertices);
 
-      for (int phi = 2; phi <= 4; phi++) {
+      for (int phi = 2; phi <= HyperGraphGenerator.DELTA; phi++) {
         Set<Vertex> claw =
             findClaw(independentSet, sortedAdjacentVertices, adjacencyCache, conflictGraph, phi);
         if (!claw.isEmpty()) {
