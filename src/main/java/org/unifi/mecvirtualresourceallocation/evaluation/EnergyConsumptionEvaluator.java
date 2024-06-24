@@ -13,9 +13,7 @@ import org.unifi.mecvirtualresourceallocation.evaluation.util.HyperGraphGenerato
 import org.unifi.mecvirtualresourceallocation.graph.HyperGraph;
 import org.unifi.mecvirtualresourceallocation.graph.Vertex;
 
-public abstract class EnergyConsumptionEvaluator implements Evaluation {
-  private static final int NUM_EXECUTIONS = 100;
-  private static final int MAX_VERTEX_SIZE = 50;
+public abstract class EnergyConsumptionEvaluator extends AbstractEvaluator {
 
   @Override
   public void execute() {
@@ -23,10 +21,10 @@ public abstract class EnergyConsumptionEvaluator implements Evaluation {
   }
 
   private void evaluateEnergyConsumption() {
-    int[] vertexSizes = generateVertexSizes(MAX_VERTEX_SIZE);
+    int[] vertexSizes = generateVertexSizes();
     Map<Integer, BigDecimal> avgReducedWeightsSequential = new TreeMap<>();
     Map<Integer, BigDecimal> avgReducedWeightsLocal = new TreeMap<>();
-    Random rand = new Random(42);
+    Random rand = new Random(SEED);
 
     for (int size : vertexSizes) {
       BigDecimal totalReducedWeightSequential = BigDecimal.ZERO;
@@ -52,14 +50,6 @@ public abstract class EnergyConsumptionEvaluator implements Evaluation {
     }
 
     plotResults(avgReducedWeightsSequential, avgReducedWeightsLocal);
-  }
-
-  private int[] generateVertexSizes(int maxSize) {
-    int[] vertexSizes = new int[maxSize];
-    for (int i = 0; i < maxSize; i++) {
-      vertexSizes[i] = i + 1;
-    }
-    return vertexSizes;
   }
 
   private BigDecimal calculateReducedWeight(HyperGraph hyperGraph, AllocationStrategy strategy) {

@@ -10,9 +10,7 @@ import org.unifi.mecvirtualresourceallocation.evaluation.util.ChartUtils;
 import org.unifi.mecvirtualresourceallocation.evaluation.util.HyperGraphGenerator;
 import org.unifi.mecvirtualresourceallocation.graph.HyperGraph;
 
-public class ExecutionTimeEvaluator implements Evaluation {
-  private static final int NUM_EXECUTIONS = 100;
-  private static final int MAX_VERTEX_SIZE = 50;
+public class ExecutionTimeEvaluator extends AbstractEvaluator {
 
   @Override
   public void execute() {
@@ -20,10 +18,10 @@ public class ExecutionTimeEvaluator implements Evaluation {
   }
 
   private void evaluateExecutionTime() {
-    int[] vertexSizes = generateVertexSizes(MAX_VERTEX_SIZE);
+    int[] vertexSizes = generateVertexSizes();
     Map<Integer, Long> avgExecutionTimeSequential = new TreeMap<>();
     Map<Integer, Long> avgExecutionTimeLocal = new TreeMap<>();
-    Random rand = new Random(42);
+    Random rand = new Random(SEED);
 
     for (int size : vertexSizes) {
       long totalExecutionTimeSequential = 0;
@@ -42,14 +40,6 @@ public class ExecutionTimeEvaluator implements Evaluation {
     }
 
     plotResults(avgExecutionTimeSequential, avgExecutionTimeLocal);
-  }
-
-  private int[] generateVertexSizes(int maxSize) {
-    int[] vertexSizes = new int[maxSize];
-    for (int i = 0; i < maxSize; i++) {
-      vertexSizes[i] = i + 1;
-    }
-    return vertexSizes;
   }
 
   private long measureExecutionTime(HyperGraph hyperGraph, AllocationStrategy strategy) {
