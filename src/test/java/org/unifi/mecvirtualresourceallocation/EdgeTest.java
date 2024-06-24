@@ -36,7 +36,7 @@ public class EdgeTest {
   @Test
   public void testToString() {
     // Test the toString method
-    String expected = "Edge{vertices=Vertex{id=1}, Vertex{id=2}}";
+    String expected = "Edge{vertices=Vertex{id=1, weight=1.0}, Vertex{id=2, weight=2.0}}";
     assertEquals(
         expected,
         edge.toString(),
