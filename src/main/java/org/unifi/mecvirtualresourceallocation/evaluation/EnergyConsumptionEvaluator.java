@@ -34,10 +34,9 @@ public abstract class EnergyConsumptionEvaluator implements Evaluation {
         HyperGraph hyperGraph = HyperGraphGenerator.generateRandomHyperGraph(size, rand);
         totalReducedWeightSequential =
             totalReducedWeightSequential.add(
-                calculateReducedWeight(hyperGraph, new SequentialSearchStrategy()));
+                calculateWeight(hyperGraph, new SequentialSearchStrategy()));
         totalReducedWeightLocal =
-            totalReducedWeightLocal.add(
-                calculateReducedWeight(hyperGraph, new LocalSearchStrategy()));
+            totalReducedWeightLocal.add(calculateWeight(hyperGraph, new LocalSearchStrategy()));
       }
 
       avgReducedWeightsSequential.put(
@@ -52,14 +51,12 @@ public abstract class EnergyConsumptionEvaluator implements Evaluation {
     plotResults(avgReducedWeightsSequential, avgReducedWeightsLocal);
   }
 
-  private BigDecimal calculateReducedWeight(HyperGraph hyperGraph, AllocationStrategy strategy) {
+  private BigDecimal calculateWeight(HyperGraph hyperGraph, AllocationStrategy strategy) {
     Set<Vertex> initialIndependentSet = strategy.allocate(hyperGraph);
-    BigDecimal initialWeight =
-        initialIndependentSet.stream()
-            .map(Vertex::getNegativeWeight)
-            .reduce(BigDecimal.ZERO, BigDecimal::add)
-            .negate();
-    return initialWeight;
+    return initialIndependentSet.stream()
+        .map(Vertex::getNegativeWeight)
+        .reduce(BigDecimal.ZERO, BigDecimal::add)
+        .negate();
   }
 
   protected abstract void plotResults(
