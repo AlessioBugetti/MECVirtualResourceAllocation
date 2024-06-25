@@ -32,7 +32,6 @@ public class ExecutionTimeEvaluator extends AbstractEvaluator {
         totalExecutionTimeSequential +=
             measureExecutionTime(hyperGraph, new SequentialSearchStrategy());
         totalExecutionTimeLocal += measureExecutionTime(hyperGraph, new LocalSearchStrategy());
-        System.out.println(size + " " + i);
       }
 
       avgExecutionTimeSequential.put(size, totalExecutionTimeSequential / NUM_EXECUTIONS);

@@ -108,7 +108,7 @@ public class ChartUtils {
     renderer.setSeriesOutlinePaint(0, Color.RED);
     renderer.setSeriesOutlineStroke(0, new BasicStroke(2.0f));
 
-    if (plot.getDataset().getSeriesCount() > 1) {
+    if (plot.getDataset().getSeriesCount() == 2) {
       renderer.setSeriesShapesVisible(1, true);
       renderer.setSeriesLinesVisible(1, true);
       renderer.setSeriesShape(1, new Rectangle2D.Double(-3, -3, 6, 6));

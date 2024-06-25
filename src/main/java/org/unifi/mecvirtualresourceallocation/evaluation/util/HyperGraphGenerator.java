@@ -20,7 +20,7 @@ public class HyperGraphGenerator {
   public static HyperGraph generateRandomHyperGraph(int numVertices, Random rand) {
     List<Vertex> vertices = generateVertices(numVertices, rand);
     List<HyperEdge> edges = generateEdges(numVertices, rand, vertices);
-    ensureAllVerticesConnected(vertices, edges, rand);
+    ensureAllVerticesConnected(vertices, edges);
     return new HyperGraph(vertices, edges);
   }
 
@@ -40,7 +40,7 @@ public class HyperGraphGenerator {
 
     for (int i = 1; i <= rand.nextInt(maxEdges) + 1; i++) {
       Set<Vertex> edgeVertices = new HashSet<>();
-      int edgeSize = numVertices < 4 ? rand.nextInt(numVertices) + 1 : rand.nextInt(4) + 1;
+      int edgeSize = numVertices < DELTA ? rand.nextInt(numVertices) + 1 : rand.nextInt(DELTA) + 1;
       while (edgeVertices.size() < edgeSize) {
         edgeVertices.add(vertices.get(rand.nextInt(numVertices)));
       }
@@ -57,12 +57,13 @@ public class HyperGraphGenerator {
     return edges;
   }
 
-  private static void ensureAllVerticesConnected(
-      List<Vertex> vertices, List<HyperEdge> edges, Random rand) {
+  private static void ensureAllVerticesConnected(List<Vertex> vertices, List<HyperEdge> edges) {
     for (Vertex vertex : vertices) {
       boolean found = edges.stream().anyMatch(edge -> edge.getVertices().contains(vertex));
       if (!found) {
-        edges.get(rand.nextInt(edges.size())).getVertices().add(vertex);
+        Set<Vertex> newHyperEdge = new HashSet<>();
+        newHyperEdge.add(vertex);
+        edges.add(new HyperEdge(String.valueOf(edges.size() + 1), new ArrayList<>(newHyperEdge)));
       }
     }
   }
