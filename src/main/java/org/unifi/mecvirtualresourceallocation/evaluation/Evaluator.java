@@ -1,6 +1,6 @@
 package org.unifi.mecvirtualresourceallocation.evaluation;
 
-public interface Evaluation {
+public interface Evaluator {
   int MAX_VERTEX_SIZE = 15;
   int NUM_EXECUTIONS = 30;
   long SEED = 42;
