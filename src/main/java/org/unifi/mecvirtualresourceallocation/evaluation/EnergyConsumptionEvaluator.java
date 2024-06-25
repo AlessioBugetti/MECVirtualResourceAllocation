@@ -13,7 +13,7 @@ import org.unifi.mecvirtualresourceallocation.evaluation.util.HyperGraphGenerato
 import org.unifi.mecvirtualresourceallocation.graph.HyperGraph;
 import org.unifi.mecvirtualresourceallocation.graph.Vertex;
 
-public abstract class EnergyConsumptionEvaluator extends AbstractEvaluator {
+public abstract class EnergyConsumptionEvaluator implements Evaluation {
 
   @Override
   public void execute() {

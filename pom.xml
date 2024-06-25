@@ -8,11 +8,13 @@
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>MECVirtualResourceAllocation</name>
-  <url>http://maven.apache.org</url>
+  <url>https://maven.apache.org</url>
 
   <properties>
     <google-java-format.version>1.22.0</google-java-format.version>
     <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
+    <jcommon.version>1.0.24</jcommon.version>
+    <jfreechart.version>1.5.4</jfreechart.version>
     <junit-jupiter-api.version>5.11.0-M2</junit-jupiter-api.version>
     <maven-checkstyle-plugin.version>3.4.0</maven-checkstyle-plugin.version>
     <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
@@ -26,25 +28,15 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.apache.maven.plugins</groupId>
-      <artifactId>maven-surefire-plugin</artifactId>
-      <version>${maven-surefire-plugin.version}</version>
+      <groupId>org.jfree</groupId>
+      <artifactId>jfreechart</artifactId>
+      <version>${jfreechart.version}</version>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
       <version>${junit-jupiter-api.version}</version>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jfree</groupId>
-      <artifactId>jfreechart</artifactId>
-      <version>1.5.4</version>
-    </dependency>
-    <dependency>
-      <groupId>org.jfree</groupId>
-      <artifactId>jcommon</artifactId>
-      <version>1.0.24</version>
     </dependency>
   </dependencies>
 
@@ -101,6 +93,11 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${maven-surefire-plugin.version}</version>
       </plugin>
       <plugin>
         <groupId>org.jacoco</groupId>

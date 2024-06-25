@@ -20,7 +20,7 @@ import org.unifi.mecvirtualresourceallocation.graph.Vertex;
  * Matching algorithm described in the paper "Virtual Resource Allocation for Mobile Edge Computing:
  * A Hypergraph Matching Approach".
  */
-public class LocalSearchStrategy extends AllocationStrategy {
+public class LocalSearchStrategy implements AllocationStrategy {
 
   public Set<Vertex> allocate(HyperGraph hyperGraph) {
     ConflictGraph conflictGraph = hyperGraph.getConflictGraph();

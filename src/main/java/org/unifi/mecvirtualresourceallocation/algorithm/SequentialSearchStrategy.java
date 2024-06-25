@@ -6,7 +6,7 @@ import org.unifi.mecvirtualresourceallocation.graph.ConflictGraph;
 import org.unifi.mecvirtualresourceallocation.graph.HyperGraph;
 import org.unifi.mecvirtualresourceallocation.graph.Vertex;
 
-public class SequentialSearchStrategy extends AllocationStrategy {
+public class SequentialSearchStrategy implements AllocationStrategy {
 
   @Override
   public Set<Vertex> allocate(HyperGraph hyperGraph) {

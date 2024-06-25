@@ -9,11 +9,11 @@ import org.unifi.mecvirtualresourceallocation.graph.HyperEdge;
 import org.unifi.mecvirtualresourceallocation.graph.HyperGraph;
 import org.unifi.mecvirtualresourceallocation.graph.Vertex;
 
-public abstract class AllocationStrategy {
+public interface AllocationStrategy {
 
-  public abstract Set<Vertex> allocate(HyperGraph hyperGraph);
+  Set<Vertex> allocate(HyperGraph hyperGraph);
 
-  public Set<HyperEdge> getHyperEdges(HyperGraph hyperGraph, Set<Vertex> vertices) {
+  default Set<HyperEdge> getHyperEdges(HyperGraph hyperGraph, Set<Vertex> vertices) {
     Set<HyperEdge> resultingHyperEdges = new HashSet<>();
     List<HyperEdge> hyperEdges = hyperGraph.getHyperEdges();
 
@@ -27,7 +27,7 @@ public abstract class AllocationStrategy {
     return resultingHyperEdges;
   }
 
-  protected Set<Vertex> calculateAdjacentVertices(Vertex vertex, ConflictGraph conflictGraph) {
+  default Set<Vertex> calculateAdjacentVertices(Vertex vertex, ConflictGraph conflictGraph) {
     Set<Vertex> adjacentVertices = new HashSet<>();
     for (Edge edge : conflictGraph.getEdges()) {
       if (edge.getVertex1().equals(vertex)) {

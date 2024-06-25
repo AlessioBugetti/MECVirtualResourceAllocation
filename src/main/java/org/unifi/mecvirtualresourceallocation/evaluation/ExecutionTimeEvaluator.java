@@ -10,7 +10,7 @@ import org.unifi.mecvirtualresourceallocation.evaluation.util.ChartUtils;
 import org.unifi.mecvirtualresourceallocation.evaluation.util.HyperGraphGenerator;
 import org.unifi.mecvirtualresourceallocation.graph.HyperGraph;
 
-public class ExecutionTimeEvaluator extends AbstractEvaluator {
+public class ExecutionTimeEvaluator implements Evaluation {
 
   @Override
   public void execute() {
