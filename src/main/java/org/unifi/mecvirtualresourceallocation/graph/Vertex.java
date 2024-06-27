@@ -4,9 +4,9 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
- * This class represents a vertex in a hypergraph or in a conflict graph. Each vertex
- * is characterized by a unique identifier and a weight. The identifier is used to distinguish
- * between different vertices, while the weight represent the energy consumption.
+ * This class represents a vertex in a hypergraph or in a conflict graph. Each vertex is
+ * characterized by a unique identifier and a weight. The identifier is used to distinguish between
+ * different vertices, while the weight represent the energy consumption.
  */
 public class Vertex {
 

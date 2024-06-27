@@ -111,7 +111,7 @@ public class HyperGraphTest {
   }
 
   @Test
-  void testAddEdge() {
+  void testAddHyperEdge() {
     Vertex v3 = new Vertex("3", 3);
     HyperEdge e2 = new HyperEdge("2", Collections.singletonList(v3));
     hyperGraph.addHyperEdge(e2);
@@ -120,7 +120,7 @@ public class HyperGraphTest {
   }
 
   @Test
-  void testAddEdgeWithExistingVertex() {
+  void testAddHyperEdgeWithExistingVertex() {
     HyperEdge e2 = new HyperEdge("2", Collections.singletonList(vertices.get(0)));
     hyperGraph.addHyperEdge(e2);
     assertEquals(2, hyperGraph.getHyperEdges().size());
@@ -162,6 +162,17 @@ public class HyperGraphTest {
   }
 
   @Test
+  void testValidateHyperEdgesWithSameVertices() {
+    Vertex v3 = new Vertex("3", 3);
+    Vertex v4 = new Vertex("4", 4);
+    HyperEdge e2 = new HyperEdge("2", Arrays.asList(v3, v4));
+    HyperEdge e3 = new HyperEdge("3", Arrays.asList(v3, v4));
+    List<HyperEdge> testEdges = Arrays.asList(e2, e3);
+    List<Vertex> vertices = Arrays.asList(v3, v4);
+    assertThrows(IllegalArgumentException.class, () -> new HyperGraph(vertices, testEdges));
+  }
+
+  @Test
   void testValidatePlacementMatrix() {
     int[][] invalidMatrix = {
       {1, 0, 0},
@@ -187,9 +198,19 @@ public class HyperGraphTest {
   }
 
   @Test
-  void testAddEdgeWithEmptyVertexList() {
+  void testAddHyperEdgeWithEmptyVertexList() {
     HyperEdge e2 = new HyperEdge("2", new ArrayList<>());
     assertThrows(IllegalArgumentException.class, () -> hyperGraph.addHyperEdge(e2));
+  }
+
+  @Test
+  void testAddHyperEdgeWithSameVertices() {
+    Vertex v3 = new Vertex("3", 3);
+    Vertex v4 = new Vertex("4", 4);
+    HyperEdge e2 = new HyperEdge("2", Arrays.asList(v3, v4));
+    HyperEdge e3 = new HyperEdge("3", Arrays.asList(v3, v4));
+    hyperGraph.addHyperEdge(e2);
+    assertThrows(IllegalArgumentException.class, () -> hyperGraph.addHyperEdge(e3));
   }
 
   @Test

@@ -60,7 +60,7 @@ public class HyperGraphGenerator {
       int numVertices, Random rand, List<Vertex> vertices) {
     List<HyperEdge> edges = new ArrayList<>();
     Set<Set<Vertex>> uniqueEdgeSets = new HashSet<>();
-    int maxEdges = MathUtils.sumOfBinomials(numVertices, DELTA);
+    int maxEdges = MathUtils.sumOfBinomials(numVertices, DELTA) - 1;
 
     for (int i = 1; i <= rand.nextInt(maxEdges) + 1; i++) {
       Set<Vertex> edgeVertices = new HashSet<>();

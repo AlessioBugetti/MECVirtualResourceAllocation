@@ -20,6 +20,13 @@ public class VertexTest {
   }
 
   @Test
+  void testSetUpNegativeWeight() {
+    double weight = -1.0;
+    Vertex vertex2 = new Vertex(id, weight);
+    assertEquals(BigDecimal.valueOf(weight), vertex2.getNegativeWeight());
+  }
+
+  @Test
   public void testGetId() {
     assertEquals(id, vertex.getId());
   }
@@ -55,14 +62,6 @@ public class VertexTest {
   }
 
   @Test
-  public void testEquals() {
-    Vertex sameVertex = new Vertex(id, weight);
-    Vertex differentVertex = new Vertex("2", 2.0);
-    assertEquals(vertex, sameVertex);
-    assertNotEquals(vertex, differentVertex);
-  }
-
-  @Test
   public void testEqualsWithNull() {
     assertNotEquals(null, vertex);
   }
@@ -70,6 +69,18 @@ public class VertexTest {
   @Test
   public void testEqualsWithDifferentClass() {
     assertNotEquals("not a vertex", vertex);
+  }
+
+  @Test
+  public void testEqualsWithDifferentId() {
+    Vertex differentVertex = new Vertex("2", 2.0);
+    assertNotEquals(vertex, differentVertex);
+  }
+
+  @Test
+  public void testEqualsWithSameId() {
+    Vertex sameVertex = new Vertex(id, weight);
+    assertEquals(vertex, sameVertex);
   }
 
   @Test

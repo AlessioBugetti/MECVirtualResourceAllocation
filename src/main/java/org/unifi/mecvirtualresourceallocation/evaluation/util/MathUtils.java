@@ -17,7 +17,7 @@ public class MathUtils {
    */
   public static int sumOfBinomials(int n, int k) {
     int sum = 0;
-    for (int i = 1; i <= k; i++) {
+    for (int i = 0; i <= k; i++) {
       sum += binomialCoefficient(n, i);
     }
     return sum;
