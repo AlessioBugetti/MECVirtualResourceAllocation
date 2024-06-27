@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
- * The {@code Vertex} class represents a vertex in a hypergraph or in a conflict graph. Each vertex
+ * The Vertex class represents a vertex in a hypergraph or in a conflict graph. Each vertex
  * is characterized by a unique identifier and a weight. The identifier is used to distinguish
  * between different vertices, while the weight represent the energy consumption.
  */
