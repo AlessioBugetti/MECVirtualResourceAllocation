@@ -4,6 +4,7 @@ on:
   push:
     branches: [ master ]
     paths: [ '**.java' ]
+  workflow_dispatch:
 
 jobs:
   api-website:
@@ -58,6 +59,6 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3.8.2
         with:
-          token: ${{ secrets.GH_PAT }}
+          token: ${{ secrets.GITHUB_TOKEN}}
           title: "Automated API website updates."
           commit-message: "Automated API documentation website updates."
