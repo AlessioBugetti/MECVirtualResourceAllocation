@@ -1,7 +1,9 @@
 # MEC Virtual Resource Allocation
 
+[![maven](https://img.shields.io/badge/Maven-v3.9.8-cyan?logo=apachemaven)](https://maven.apache.org/docs/3.9.8/release-notes.html)
+[![style](https://img.shields.io/badge/style-Google%20Java%20Style-informational)](https://google.github.io/styleguide/javaguide.html)
 [![Javadoc](https://img.shields.io/badge/JavaDoc-Online-green)](https://alessiobugetti.github.io/MECVirtualResourceAllocation-Javadoc)
-[![License](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](https://opensource.org/licenses/GPL-3.0)
+[![License](https://img.shields.io/github/license/AlessioBugetti/MECVirtualResourceAllocation)](https://opensource.org/licenses/GPL-3.0)
 
 Welcome to the MEC Virtual Resource Allocation repository. This project implements a hypergraph matching approach for efficient virtual machine (VM) placement and resource allocation in Mobile Edge Computing (MEC) environments. The solution aims to minimize energy consumption through an optimized VM placement matrix using both sequential and local search algorithms.
 
