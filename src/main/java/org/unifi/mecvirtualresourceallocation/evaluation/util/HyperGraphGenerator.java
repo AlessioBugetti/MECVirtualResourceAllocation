@@ -9,14 +9,23 @@ import org.unifi.mecvirtualresourceallocation.graph.HyperEdge;
 import org.unifi.mecvirtualresourceallocation.graph.HyperGraph;
 import org.unifi.mecvirtualresourceallocation.graph.Vertex;
 
+/** Utility class for generating random hypergraphs. */
 public class HyperGraphGenerator {
 
   public static final int DELTA = 3;
 
+  /** Private constructor to prevent instantiation of this utility class. */
   private HyperGraphGenerator() {
     throw new UnsupportedOperationException("This is a utility class and cannot be instantiated.");
   }
 
+  /**
+   * Generates a random hypergraph with the specified number of vertices.
+   *
+   * @param numVertices the number of vertices in the hypergraph.
+   * @param rand the Random instance used for generating random numbers.
+   * @return a randomly generated HyperGraph.
+   */
   public static HyperGraph generateRandomHyperGraph(int numVertices, Random rand) {
     List<Vertex> vertices = generateVertices(numVertices, rand);
     List<HyperEdge> edges = generateEdges(numVertices, rand, vertices);
@@ -24,6 +33,13 @@ public class HyperGraphGenerator {
     return new HyperGraph(vertices, edges);
   }
 
+  /**
+   * Generates a list of vertices with random weights.
+   *
+   * @param numVertices the number of vertices to generate.
+   * @param rand the Random instance used for generating random numbers.
+   * @return a list of generated vertices.
+   */
   private static List<Vertex> generateVertices(int numVertices, Random rand) {
     List<Vertex> vertices = new ArrayList<>();
     for (int i = 1; i <= numVertices; i++) {
@@ -32,6 +48,14 @@ public class HyperGraphGenerator {
     return vertices;
   }
 
+  /**
+   * Generates a list of hyperedges connecting the vertices.
+   *
+   * @param numVertices the number of vertices in the hypergraph.
+   * @param rand the Random instance used for generating random numbers.
+   * @param vertices the list of vertices to be connected by hyperedges.
+   * @return a list of generated hyperedges.
+   */
   private static List<HyperEdge> generateEdges(
       int numVertices, Random rand, List<Vertex> vertices) {
     List<HyperEdge> edges = new ArrayList<>();
@@ -57,6 +81,12 @@ public class HyperGraphGenerator {
     return edges;
   }
 
+  /**
+   * Ensures that all vertices are connected by at least one hyperedge.
+   *
+   * @param vertices the list of vertices in the hypergraph.
+   * @param edges the list of hyperedges in the hypergraph.
+   */
   private static void ensureAllVerticesConnected(List<Vertex> vertices, List<HyperEdge> edges) {
     for (Vertex vertex : vertices) {
       boolean found = edges.stream().anyMatch(edge -> edge.getVertices().contains(vertex));

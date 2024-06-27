@@ -6,8 +6,19 @@ import org.unifi.mecvirtualresourceallocation.graph.ConflictGraph;
 import org.unifi.mecvirtualresourceallocation.graph.HyperGraph;
 import org.unifi.mecvirtualresourceallocation.graph.Vertex;
 
+/**
+ * The SequentialSearchStrategy class implements an allocation strategy based on the sequential
+ * algorithm described in the paper "Virtual Resource Allocation for Mobile Edge Computing: A
+ * Hypergraph Matching Approach".
+ */
 public class SequentialSearchStrategy implements AllocationStrategy {
 
+  /**
+   * Allocates resources based on the sequential search strategy.
+   *
+   * @param hyperGraph the hypergraph used to allocate resources.
+   * @return a set of vertices.
+   */
   @Override
   public Set<Vertex> allocate(HyperGraph hyperGraph) {
     ConflictGraph conflictGraph = hyperGraph.getConflictGraph();
@@ -23,6 +34,12 @@ public class SequentialSearchStrategy implements AllocationStrategy {
     return selectedVertices;
   }
 
+  /**
+   * Finds the vertex with the maximum weight in the given set of vertices.
+   *
+   * @param vertices the set of vertices.
+   * @return the vertex with the maximum weight.
+   */
   private Vertex findMaxWeightVertex(Set<Vertex> vertices) {
     if (vertices == null || vertices.isEmpty()) {
       throw new IllegalArgumentException("The set of vertices cannot be null or empty.");

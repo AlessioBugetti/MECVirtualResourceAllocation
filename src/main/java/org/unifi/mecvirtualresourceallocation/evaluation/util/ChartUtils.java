@@ -19,12 +19,24 @@ import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
+/** Utility class for creating and displaying charts using the JFreeChart library. */
 public class ChartUtils {
 
+  /** Private constructor to prevent instantiation of this utility class. */
   private ChartUtils() {
     throw new UnsupportedOperationException("This is a utility class and cannot be instantiated.");
   }
 
+  /**
+   * Creates and displays a chart with a single series of data.
+   *
+   * @param title the title of the chart.
+   * @param xAxisLabel the label for the X-axis.
+   * @param yAxisLabel the label for the Y-axis.
+   * @param data the data to be displayed in the chart, where the key is the X value and the value
+   *     is the Y value.
+   * @param label the label for the data series.
+   */
   public static void createAndShowChart(
       String title,
       String xAxisLabel,
@@ -43,6 +55,17 @@ public class ChartUtils {
     showChartFrame(title, chart);
   }
 
+  /**
+   * Creates and displays a chart with two series of data.
+   *
+   * @param title the title of the chart.
+   * @param xAxisLabel the label for the X-axis.
+   * @param yAxisLabel the label for the Y-axis.
+   * @param data1 the first data series to be displayed in the chart.
+   * @param label1 the label for the first data series.
+   * @param data2 the second data series to be displayed in the chart.
+   * @param label2 the label for the second data series.
+   */
   public static void createAndShowChart(
       String title,
       String xAxisLabel,
@@ -69,6 +92,17 @@ public class ChartUtils {
     showChartFrame(title, chart);
   }
 
+  /**
+   * Creates and displays a chart with two series of execution time data.
+   *
+   * @param title the title of the chart.
+   * @param xAxisLabel the label for the X-axis.
+   * @param yAxisLabel the label for the Y-axis.
+   * @param data1 the first data series of execution times to be displayed in the chart.
+   * @param label1 the label for the first data series.
+   * @param data2 the second data series of execution times to be displayed in the chart.
+   * @param label2 the label for the second data series.
+   */
   public static void createAndShowExecutionTimeChart(
       String title,
       String xAxisLabel,
@@ -96,6 +130,11 @@ public class ChartUtils {
     showChartFrame(title, chart);
   }
 
+  /**
+   * Customizes the appearance of the chart.
+   *
+   * @param chart the chart to be customized.
+   */
   private static void customizeChart(JFreeChart chart) {
     XYPlot plot = chart.getXYPlot();
     plot.setBackgroundPaint(Color.WHITE);
@@ -122,6 +161,11 @@ public class ChartUtils {
     plot.setRenderer(renderer);
   }
 
+  /**
+   * Customizes the Y-axis of the chart to use scientific notation.
+   *
+   * @param chart the chart to be customized.
+   */
   private static void customizeYAxis(JFreeChart chart) {
     XYPlot plot = chart.getXYPlot();
     NumberAxis yAxis = (NumberAxis) plot.getRangeAxis();
@@ -129,6 +173,12 @@ public class ChartUtils {
     yAxis.setNumberFormatOverride(formatter);
   }
 
+  /**
+   * Displays the chart in a JFrame.
+   *
+   * @param title the title of the JFrame.
+   * @param chart the chart to be displayed.
+   */
   private static void showChartFrame(String title, JFreeChart chart) {
     JFrame frame = new JFrame(title);
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

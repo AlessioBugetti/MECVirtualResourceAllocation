@@ -22,6 +22,12 @@ import org.unifi.mecvirtualresourceallocation.graph.Vertex;
  */
 public class LocalSearchStrategy implements AllocationStrategy {
 
+  /**
+   * Allocates resources based on the local search strategy.
+   *
+   * @param hyperGraph the hypergraph used to allocate resources.
+   * @return a set of vertices.
+   */
   public Set<Vertex> allocate(HyperGraph hyperGraph) {
     ConflictGraph conflictGraph = hyperGraph.getConflictGraph();
     Set<Vertex> independentSet = new SequentialSearchStrategy().allocate(hyperGraph);

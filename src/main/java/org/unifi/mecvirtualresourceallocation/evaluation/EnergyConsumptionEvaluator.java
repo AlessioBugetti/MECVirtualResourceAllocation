@@ -13,13 +13,16 @@ import org.unifi.mecvirtualresourceallocation.evaluation.util.HyperGraphGenerato
 import org.unifi.mecvirtualresourceallocation.graph.HyperGraph;
 import org.unifi.mecvirtualresourceallocation.graph.Vertex;
 
+/** Abstract evaluator for measuring energy consumption in resource allocation. */
 public abstract class EnergyConsumptionEvaluator implements Evaluator {
 
+  /** Executes the evaluation of energy consumption. */
   @Override
   public void execute() {
     evaluateEnergyConsumption();
   }
 
+  /** Evaluates the energy consumption of the allocation strategies. */
   private void evaluateEnergyConsumption() {
     int[] vertexSizes = generateVertexSizes();
     Map<Integer, BigDecimal> avgReducedWeightsSequential = new TreeMap<>();
@@ -51,6 +54,13 @@ public abstract class EnergyConsumptionEvaluator implements Evaluator {
     plotResults(avgReducedWeightsSequential, avgReducedWeightsLocal);
   }
 
+  /**
+   * Calculates the total weight reduction for the given allocation strategy.
+   *
+   * @param hyperGraph the hypergraph to allocate resources for.
+   * @param strategy the allocation strategy to be measured.
+   * @return the total weight reduction.
+   */
   private BigDecimal calculateWeight(HyperGraph hyperGraph, AllocationStrategy strategy) {
     Set<Vertex> initialIndependentSet = strategy.allocate(hyperGraph);
     return initialIndependentSet.stream()
@@ -59,7 +69,12 @@ public abstract class EnergyConsumptionEvaluator implements Evaluator {
         .negate();
   }
 
+  /**
+   * Plots the results of the energy consumption evaluation.
+   *
+   * @param avgWeightsSequential the average reduced weights for the SequentialSearchStrategy.
+   * @param avgWeightsLocal the average reduced weights for the LocalSearchStrategy.
+   */
   protected abstract void plotResults(
-      Map<Integer, BigDecimal> avgReducedWeightsSequential,
-      Map<Integer, BigDecimal> avgReducedWeightsLocal);
+      Map<Integer, BigDecimal> avgWeightsSequential, Map<Integer, BigDecimal> avgWeightsLocal);
 }
