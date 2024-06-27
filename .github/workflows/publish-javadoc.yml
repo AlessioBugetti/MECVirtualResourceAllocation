@@ -1,26 +1,58 @@
-name: Deploy Javadoc
+name: Generate and Deploy Javadoc
 
 on:
   push:
-    branches:
-      - master
-      - main
-concurrency:
-  group: pages
-  cancel-in-progress: false
+    paths:
+      - '**/*.java'
+
 jobs:
-  publish:
+  build:
     runs-on: ubuntu-latest
-    permissions:
-      permissions:
-        contents: read
-        pages: write
-        id-token: write
+
     steps:
-      - name: Deploy JavaDoc 🚀
-        uses: MathieuSoysal/Javadoc-publisher.yml@v2.5.0
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          deploy-mode: artifact
-          java-version: 17
-          project: maven
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Maven
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
+
+      - name: Build with Maven
+        run: mvn clean install
+
+      - name: Generate Javadoc
+        run: mvn javadoc:javadoc
+
+      - name: Checkout Javadoc repository
+        uses: actions/checkout@v2
+        with:
+          repository: AlessioBugetti/MECVirtualResourceAllocation-Javadoc
+          token: ${{ secrets.PAT_TOKEN }}
+          path: javadoc-repo
+
+      - name: Deploy Javadoc to separate repository
+        if: success()
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          cd javadoc-repo
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git checkout master
+          mkdir -p docs
+          rm -rf docs/*
+          cp -r ../target/site/apidocs/* docs/
+          git add docs
+          SHORT_SHA=$(echo "${GITHUB_SHA}" | cut -c1-7)
+          COMMIT_MESSAGE="Update Javadoc from commit MECVirtualResourceAllocation@${SHORT_SHA}"
+          git commit -m "${COMMIT_MESSAGE}"
+          git push origin master
