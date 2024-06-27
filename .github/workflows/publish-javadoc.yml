@@ -58,5 +58,6 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3.8.2
         with:
+          token: ${{ secrets.GH_PAT }}
           title: "Automated API website updates."
           commit-message: "Automated API documentation website updates."
