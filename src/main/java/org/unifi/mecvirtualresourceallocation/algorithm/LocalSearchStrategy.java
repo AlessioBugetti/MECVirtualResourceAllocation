@@ -94,20 +94,6 @@ public class LocalSearchStrategy implements AllocationStrategy {
   }
 
   /**
-   * Retrieves the adjacent vertices for a given vertex. If not present in the cache, calculates and
-   * stores it.
-   *
-   * @param vertex the vertex for which to find adjacent vertices
-   * @param conflictGraph the conflict graph
-   * @param adjacencyCache the cache to store and retrieve adjacent vertices
-   * @return a set of adjacent vertices
-   */
-  private Set<Vertex> getAdjacentVertices(
-      Vertex vertex, ConflictGraph conflictGraph, Map<Vertex, Set<Vertex>> adjacencyCache) {
-    return adjacencyCache.computeIfAbsent(vertex, v -> calculateAdjacentVertices(v, conflictGraph));
-  }
-
-  /**
    * Finds a phi-claw from the sorted adjacent vertices.
    *
    * @param independentSet the current independent set
@@ -209,6 +195,31 @@ public class LocalSearchStrategy implements AllocationStrategy {
   }
 
   /**
+   * Determines if the new set of vertices has a better weight than the old set.
+   *
+   * @param newSet the new set of vertices
+   * @param oldSet the old set of vertices
+   * @return true if the new set has a better weight, false otherwise
+   */
+  private boolean isWeightImproved(Set<Vertex> newSet, Set<Vertex> oldSet) {
+    BigDecimal oldWeightSquared = calculateWeight(oldSet).pow(2);
+    BigDecimal newWeightSquared = calculateWeight(newSet).pow(2);
+    return newWeightSquared.compareTo(oldWeightSquared) < 0;
+  }
+
+  /**
+   * Calculates the total weight of a set of vertices.
+   *
+   * @param vertices the set of vertices
+   * @return the total weight of the vertices
+   */
+  private BigDecimal calculateWeight(Set<Vertex> vertices) {
+    return vertices.stream()
+        .map(Vertex::getNegativeWeight)
+        .reduce(BigDecimal.ZERO, BigDecimal::add);
+  }
+
+  /**
    * Checks if it is valid to add a vertex to the current group.
    *
    * @param currentGroup the current group of vertices
@@ -273,27 +284,16 @@ public class LocalSearchStrategy implements AllocationStrategy {
   }
 
   /**
-   * Determines if the new set of vertices has a better weight than the old set.
+   * Retrieves the adjacent vertices for a given vertex. If not present in the cache, calculates and
+   * stores it.
    *
-   * @param newSet the new set of vertices
-   * @param oldSet the old set of vertices
-   * @return true if the new set has a better weight, false otherwise
+   * @param vertex the vertex for which to find adjacent vertices
+   * @param conflictGraph the conflict graph
+   * @param adjacencyCache the cache to store and retrieve adjacent vertices
+   * @return a set of adjacent vertices
    */
-  private boolean isWeightImproved(Set<Vertex> newSet, Set<Vertex> oldSet) {
-    BigDecimal oldWeightSquared = calculateWeight(oldSet).pow(2);
-    BigDecimal newWeightSquared = calculateWeight(newSet).pow(2);
-    return newWeightSquared.compareTo(oldWeightSquared) < 0;
-  }
-
-  /**
-   * Calculates the total weight of a set of vertices.
-   *
-   * @param vertices the set of vertices
-   * @return the total weight of the vertices
-   */
-  private BigDecimal calculateWeight(Set<Vertex> vertices) {
-    return vertices.stream()
-        .map(Vertex::getNegativeWeight)
-        .reduce(BigDecimal.ZERO, BigDecimal::add);
+  private Set<Vertex> getAdjacentVertices(
+      Vertex vertex, ConflictGraph conflictGraph, Map<Vertex, Set<Vertex>> adjacencyCache) {
+    return adjacencyCache.computeIfAbsent(vertex, v -> calculateAdjacentVertices(v, conflictGraph));
   }
 }

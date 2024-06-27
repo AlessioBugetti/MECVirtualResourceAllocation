@@ -65,6 +65,15 @@ public class HyperEdge {
   }
 
   /**
+   * Gets the unique identifier of the hyperedge.
+   *
+   * @return the unique identifier of the hyperedge.
+   */
+  public String getId() {
+    return id;
+  }
+
+  /**
    * Gets the list of vertices that this hyperedge connects.
    *
    * @return the list of vertices.
@@ -87,15 +96,6 @@ public class HyperEdge {
     }
     this.vertices.add(vertex);
     this.weight = this.weight.add(vertex.getNegativeWeight());
-  }
-
-  /**
-   * Gets the unique identifier of the hyperedge.
-   *
-   * @return the unique identifier of the hyperedge.
-   */
-  public String getId() {
-    return id;
   }
 
   /**

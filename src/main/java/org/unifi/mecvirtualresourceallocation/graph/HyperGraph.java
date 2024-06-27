@@ -72,6 +72,22 @@ public class HyperGraph {
   }
 
   /**
+   * Validates the placement matrix to ensure it contains only 0s and 1s.
+   *
+   * @param placementMatrix the placement matrix to validate.
+   * @throws IllegalArgumentException if any element in the matrix is not 0 or 1.
+   */
+  private void validatePlacementMatrix(int[][] placementMatrix) {
+    for (int[] matrix : placementMatrix) {
+      for (int i : matrix) {
+        if (i != 0 && i != 1) {
+          throw new IllegalArgumentException("Placement matrix must contain only 0 or 1 values");
+        }
+      }
+    }
+  }
+
+  /**
    * Validates that the union of all hyperedges exactly match the set of vertices.
    *
    * @throws IllegalArgumentException if the union of all hyperedges do not exactly match the set of
@@ -106,22 +122,6 @@ public class HyperGraph {
     if (!allUniqueVertices.equals(vertexSet)) {
       throw new IllegalArgumentException(
           "The union of all hyperedges do not exactly match the set of vertices.");
-    }
-  }
-
-  /**
-   * Validates the placement matrix to ensure it contains only 0s and 1s.
-   *
-   * @param placementMatrix the placement matrix to validate.
-   * @throws IllegalArgumentException if any element in the matrix is not 0 or 1.
-   */
-  private void validatePlacementMatrix(int[][] placementMatrix) {
-    for (int[] matrix : placementMatrix) {
-      for (int i : matrix) {
-        if (i != 0 && i != 1) {
-          throw new IllegalArgumentException("Placement matrix must contain only 0 or 1 values");
-        }
-      }
     }
   }
 
@@ -222,6 +222,21 @@ public class HyperGraph {
     return false;
   }
 
+  /** Prints the placement matrix to the console. */
+  public void printPlacementMatrix() {
+    int[][] placementMatrix = getPlacementMatrix();
+
+    for (int[] vector : placementMatrix) {
+      for (int i = 0; i < vector.length; i++) {
+        System.out.print(vector[i]);
+        if (vector.length > 1 && i < vector.length - 1) {
+          System.out.print(" ");
+        }
+      }
+      System.out.println();
+    }
+  }
+
   /**
    * Generates and returns a placement matrix based on the current hypergraph.
    *
@@ -250,21 +265,6 @@ public class HyperGraph {
     }
 
     return placementMatrix;
-  }
-
-  /** Prints the placement matrix to the console. */
-  public void printPlacementMatrix() {
-    int[][] placementMatrix = getPlacementMatrix();
-
-    for (int[] vector : placementMatrix) {
-      for (int i = 0; i < vector.length; i++) {
-        System.out.print(vector[i]);
-        if (vector.length > 1 && i < vector.length - 1) {
-          System.out.print(" ");
-        }
-      }
-      System.out.println();
-    }
   }
 
   /**
