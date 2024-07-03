@@ -48,15 +48,15 @@ The project is structured into several packages, each responsible for different 
 To build and run the project, ensure you have Maven and Java installed. Follow these steps:
 
 1. **Clone the repository:**
-   ```sh
-   git clone https://github.com/alessiobugetti/MECVirtualResourceAllocation.git
-   cd MECVirtualResourceAllocation
-    ```
+```sh
+git clone https://github.com/alessiobugetti/MECVirtualResourceAllocation.git
+cd MECVirtualResourceAllocation
+```
 
 2. **Build the project:**
-   ```sh
-   mvn clean install
-   ```
+```sh
+mvn clean install
+```
 
 ## Usage
 
@@ -64,7 +64,7 @@ To build and run the project, ensure you have Maven and Java installed. Follow t
 
 To run an evaluator, you need to define a `main` method, create an instance of the evaluator, and execute the `execute()` method. Here is an example of how to run the `ExecutionTimeEvaluator`:
 
-   ```java
+```java
 public class Main {
 
   public static void main(String[] args) {
@@ -72,13 +72,13 @@ public class Main {
     SwingUtilities.invokeLater(evaluator::execute);
   }
 }
-   ```
+```
 
 Similarly, you can run other evaluators by creating instances of their respective classes:
 
-**○ Energy Consumption Reduction Evaluator:**
+**Energy Consumption Reduction Evaluator:**
 
-   ```java
+```java
 public class Main {
 
    public static void main(String[] args) {
@@ -86,11 +86,11 @@ public class Main {
       SwingUtilities.invokeLater(evaluator::execute);
    }
 }
-   ```
+```
 
 **Energy Consumption Comparison Evaluator:**
 
-   ```java
+```java
 public class Main {
 
    public static void main(String[] args) {
@@ -98,21 +98,21 @@ public class Main {
       SwingUtilities.invokeLater(evaluator::execute);
    }
 }
-   ```
+```
 
 After defining the main method, you can run the application using:
 
-   ```sh
+```sh
 mvn exec:java -Dexec.mainClass="org.unifi.mecvirtualresourceallocation.Main"
-   ```
+```
 
 ### Running Tests
 
 To run the tests, use:
 
-   ```sh
+```sh
 mvn test
-   ```
+```
 
 ## Code Structure
 
@@ -153,31 +153,31 @@ Alternatively, the Javadoc documentation can be accessed at: [alessiobugetti.git
 
 `google-java-format` is used for consistent code formatting. The formatting is enforced using the Spotless plugin. Run the following command to format the code:
 
-   ```sh
+```sh
 mvn spotless:apply
-   ```
+```
 
 ### Static Analysis
 
 Static code analysis is performed using SpotBugs and Checkstyle. To run the static analysis tools, use:
 
-   ```sh
+```sh
 mvn spotbugs:check
-   ```
+```
 
 or
 
-   ```sh
+```sh
 mvn checkstyle:check
-   ```
+```
 
 ### Code Coverage
 
 Code coverage is measured using JaCoCo. To generate the coverage report, run:
 
-   ```sh
+```sh
 mvn test jacoco:report
-   ```
+```
 
 ## Dependencies and Plugins
 
