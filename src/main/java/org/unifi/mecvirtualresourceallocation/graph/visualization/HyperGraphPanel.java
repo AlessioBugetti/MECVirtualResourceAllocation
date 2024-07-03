@@ -102,8 +102,6 @@ public class HyperGraphPanel extends GraphPanel {
    */
   @Override
   protected void drawVertices(Graphics2D g2d) {
-    g2d.setColor(Color.decode("#b093b9"));
-    g2d.setStroke(new BasicStroke(1));
     FontMetrics fm = g2d.getFontMetrics();
     int vertexSize = 30;
 
@@ -111,7 +109,11 @@ public class HyperGraphPanel extends GraphPanel {
       Point point = entry.getValue();
       int x = point.x - vertexSize / 2;
       int y = point.y - vertexSize / 2;
+
+      g2d.setColor(Color.decode("#b093b9"));
+      g2d.setStroke(new BasicStroke(1));
       g2d.fillOval(x, y, vertexSize, vertexSize);
+
       g2d.setColor(Color.BLACK);
       g2d.drawOval(x, y, vertexSize, vertexSize);
 
@@ -119,8 +121,6 @@ public class HyperGraphPanel extends GraphPanel {
       int textWidth = fm.stringWidth(vertexLabel);
       int textHeight = fm.getAscent();
       g2d.drawString(vertexLabel, point.x - textWidth / 2, point.y + textHeight / 2);
-
-      g2d.setColor(Color.decode("#71c5ce"));
     }
   }
 }

@@ -13,7 +13,7 @@ import org.unifi.mecvirtualresourceallocation.graph.visualization.HyperGraphPane
  * between virtual machine (VM) instances and physical machines (PMs). Each hyperedge connects
  * multiple vertices (VMs).
  */
-public class HyperGraph {
+public final class HyperGraph {
   private List<Vertex> vertices;
   private List<HyperEdge> hyperEdges;
 

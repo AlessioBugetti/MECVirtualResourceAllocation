@@ -1,7 +1,7 @@
 package org.unifi.mecvirtualresourceallocation.evaluation.util;
 
 /** Utility class for mathematical operations. */
-public class MathUtils {
+public final class MathUtils {
 
   /** Private constructor to prevent instantiation of this utility class. */
   private MathUtils() {

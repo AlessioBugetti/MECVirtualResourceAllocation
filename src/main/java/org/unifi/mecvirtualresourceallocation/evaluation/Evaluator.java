@@ -2,8 +2,8 @@ package org.unifi.mecvirtualresourceallocation.evaluation;
 
 /** Interface for evaluating performance metrics. */
 public interface Evaluator {
-  int MAX_VERTEX_SIZE = 100;
-  int NUM_EXECUTIONS = 250;
+  int MAX_VERTEX_SIZE = 75;
+  int NUM_EXECUTIONS = 30;
   long SEED = 42;
 
   /** Executes the evaluation. */

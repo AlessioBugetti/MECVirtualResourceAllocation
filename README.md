@@ -18,7 +18,6 @@ Welcome to the MEC Virtual Resource Allocation repository. This project implemen
 - [Documentation](#documentation)
 - [Development Process](#development-process)
 - [Dependencies and Plugins](#dependencies-and-plugins)
-- [Contributing](#contributing)
 - [License](#license)
 
 ## Introduction
@@ -152,7 +151,7 @@ Alternatively, the Javadoc documentation can be accessed at: [alessiobugetti.git
 
 ### Code Formatting
 
-We use `google-java-format` for consistent code formatting. The formatting is enforced using the Spotless plugin. Run the following command to format the code:
+`google-java-format` is used for consistent code formatting. The formatting is enforced using the Spotless plugin. Run the following command to format the code:
 
    ```sh
 mvn spotless:apply
@@ -191,14 +190,6 @@ The project leverages several Maven plugins and dependencies to streamline devel
 - **JaCoCo**: For code coverage reports.
 - **JFreeChart**: For generating evaluation charts.
 
-## Contributing
-
-To contribute, please fork the repository and submit a pull request. Ensure your code adheres to the coding standards and includes appropriate tests.
-
 ## License
 
 This project is licensed under the GPL-3.0 License. See the LICENSE file for more details.
-
-------------------------------------------------------------
-
-Thank you for using the MEC Virtual Resource Allocation project. We hope it serves as a valuable resource for your research and development efforts in MEC and resource optimization. If you have any questions or feedback, please open an issue on GitHub.

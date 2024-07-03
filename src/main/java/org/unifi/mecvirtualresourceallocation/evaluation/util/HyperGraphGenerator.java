@@ -10,7 +10,7 @@ import org.unifi.mecvirtualresourceallocation.graph.HyperGraph;
 import org.unifi.mecvirtualresourceallocation.graph.Vertex;
 
 /** Utility class for generating random hypergraphs. */
-public class HyperGraphGenerator {
+public final class HyperGraphGenerator {
 
   public static final int DELTA = 3;
 

@@ -2,8 +2,6 @@ package org.unifi.mecvirtualresourceallocation.evaluation.util;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Rectangle2D;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -20,7 +18,7 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 /** Utility class for creating and displaying charts using the JFreeChart library. */
-public class ChartUtils {
+public final class ChartUtils {
 
   /** Private constructor to prevent instantiation of this utility class. */
   private ChartUtils() {
@@ -140,24 +138,14 @@ public class ChartUtils {
     plot.setBackgroundPaint(Color.WHITE);
 
     XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
-    renderer.setSeriesShapesVisible(0, true);
-    renderer.setSeriesLinesVisible(0, true);
-    renderer.setSeriesShape(0, new Ellipse2D.Double(-3, -3, 6, 6));
     renderer.setSeriesStroke(0, new BasicStroke(2.0f));
-    renderer.setSeriesOutlinePaint(0, Color.RED);
-    renderer.setSeriesOutlineStroke(0, new BasicStroke(2.0f));
+    renderer.setSeriesShapesVisible(0, false);
 
     if (plot.getDataset().getSeriesCount() == 2) {
-      renderer.setSeriesShapesVisible(1, true);
-      renderer.setSeriesLinesVisible(1, true);
-      renderer.setSeriesShape(1, new Rectangle2D.Double(-3, -3, 6, 6));
       renderer.setSeriesStroke(1, new BasicStroke(2.0f));
-      renderer.setSeriesOutlinePaint(1, Color.BLUE);
-      renderer.setSeriesOutlineStroke(1, new BasicStroke(2.0f));
+      renderer.setSeriesShapesVisible(1, false);
     }
 
-    renderer.setDefaultShapesFilled(false);
-    renderer.setUseOutlinePaint(true);
     plot.setRenderer(renderer);
   }
 

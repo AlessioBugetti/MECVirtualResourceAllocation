@@ -16,13 +16,13 @@
     <jcommon.version>1.0.24</jcommon.version>
     <jfreechart.version>1.5.4</jfreechart.version>
     <junit-jupiter-api.version>5.11.0-M2</junit-jupiter-api.version>
-    <maven-checkstyle-plugin.version>3.4.0</maven-checkstyle-plugin.version>
     <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
     <maven-javadoc-plugin.version>3.7.0</maven-javadoc-plugin.version>
     <maven-surefire-plugin.version>3.3.0</maven-surefire-plugin.version>
     <maven.compiler.release>17</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <spotbugs-maven-plugin.version>4.8.5.0</spotbugs-maven-plugin.version>
+    <spotbugs-maven-plugin.version>4.8.6.1</spotbugs-maven-plugin.version>
+    <spotbugs.version>4.8.6</spotbugs.version>
     <spotless-maven-plugin.version>2.43.0</spotless-maven-plugin.version>
   </properties>
 
@@ -63,17 +63,16 @@
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
         <version>${spotbugs-maven-plugin.version}</version>
+        <dependencies>
+          <dependency>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs</artifactId>
+            <version>${spotbugs.version}</version>
+          </dependency>
+        </dependencies>
         <configuration>
           <xmlOutput>true</xmlOutput>
           <xmlOutputDirectory>target/site</xmlOutputDirectory>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>${maven-checkstyle-plugin.version}</version>
-        <configuration>
-          <configLocation>google_checks.xml</configLocation>
         </configuration>
       </plugin>
       <plugin>
