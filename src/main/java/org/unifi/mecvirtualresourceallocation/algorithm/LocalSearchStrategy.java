@@ -252,13 +252,9 @@ public class LocalSearchStrategy implements AllocationStrategy {
       Vertex vertex2,
       ConflictGraph conflictGraph,
       Map<Vertex, Set<Vertex>> adjacencyCache) {
-    if (adjacencyCache.containsKey(vertex1)) {
-      return adjacencyCache.get(vertex1).contains(vertex2);
-    } else if (adjacencyCache.containsKey(vertex2)) {
-      return adjacencyCache.get(vertex2).contains(vertex1);
-    } else {
-      return getAdjacentVertices(vertex1, conflictGraph, adjacencyCache).contains(vertex2);
-    }
+    return adjacencyCache
+        .computeIfAbsent(vertex1, v -> calculateAdjacentVertices(v, conflictGraph))
+        .contains(vertex2);
   }
 
   /**

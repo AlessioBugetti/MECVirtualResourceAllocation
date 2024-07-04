@@ -1,5 +1,6 @@
 package org.unifi.mecvirtualresourceallocation.algorithm;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 import org.unifi.mecvirtualresourceallocation.graph.ConflictGraph;
@@ -41,18 +42,9 @@ public class SequentialSearchStrategy implements AllocationStrategy {
    * @return the vertex with the maximum weight.
    */
   private Vertex findMaxWeightVertex(Set<Vertex> vertices) {
-    if (vertices == null || vertices.isEmpty()) {
-      throw new IllegalArgumentException("The set of vertices cannot be null or empty.");
-    }
-
-    Vertex maxVertex = null;
-    for (Vertex vertex : vertices) {
-      if (maxVertex == null
-          || vertex.getNegativeWeight().compareTo(maxVertex.getNegativeWeight()) > 0) {
-        maxVertex = vertex;
-      }
-    }
-
-    return maxVertex;
+    return vertices.stream()
+        .max(Comparator.comparing(Vertex::getNegativeWeight))
+        .orElseThrow(
+            () -> new IllegalArgumentException("The set of vertices cannot be null or empty."));
   }
 }

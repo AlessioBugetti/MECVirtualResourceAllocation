@@ -1,6 +1,8 @@
 package org.unifi.mecvirtualresourceallocation.graph;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import javax.swing.JFrame;
 import org.unifi.mecvirtualresourceallocation.graph.visualization.ConflictGraphPanel;
@@ -12,12 +14,12 @@ import org.unifi.mecvirtualresourceallocation.graph.visualization.ConflictGraphP
  */
 public class ConflictGraph {
 
-  private Set<Vertex> vertices;
+  private Map<String, Vertex> vertices;
   private Set<Edge> edges;
 
   /** Constructs an empty conflict graph. */
   public ConflictGraph() {
-    this.vertices = new HashSet<>();
+    this.vertices = new HashMap<>();
     this.edges = new HashSet<>();
   }
 
@@ -27,7 +29,7 @@ public class ConflictGraph {
    * @return the vertices.
    */
   public Set<Vertex> getVertices() {
-    return vertices;
+    return new HashSet<>(vertices.values());
   }
 
   /**
@@ -37,12 +39,7 @@ public class ConflictGraph {
    * @return the vertex with the specified ID, or null if not found.
    */
   public Vertex getVertexFromId(String id) {
-    for (Vertex vertex : vertices) {
-      if (vertex.getId().equals(id)) {
-        return vertex;
-      }
-    }
-    return null;
+    return vertices.get(id);
   }
 
   /**
@@ -51,7 +48,10 @@ public class ConflictGraph {
    * @param vertex the vertex to be added.
    */
   public void addVertex(Vertex vertex) {
-    vertices.add(vertex);
+    if (vertices.containsKey(vertex.getId())) {
+      throw new IllegalArgumentException("Vertex with ID " + vertex.getId() + " already exists.");
+    }
+    vertices.put(vertex.getId(), vertex);
   }
 
   /**
@@ -61,6 +61,9 @@ public class ConflictGraph {
    * @param vertex2 the second vertex.
    */
   public void addEdge(Vertex vertex1, Vertex vertex2) {
+    if (vertex1 == null || vertex2 == null) {
+      throw new IllegalArgumentException("Vertices cannot be null.");
+    }
     edges.add(new Edge(vertex1, vertex2));
   }
 
@@ -84,7 +87,7 @@ public class ConflictGraph {
     sb.append("ConflictGraph {\n");
 
     sb.append("Vertices:\n");
-    for (Vertex vertex : vertices) {
+    for (Vertex vertex : vertices.values()) {
       sb.append(vertex).append("\n");
     }
 
