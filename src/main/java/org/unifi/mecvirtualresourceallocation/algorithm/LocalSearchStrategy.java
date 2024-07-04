@@ -4,10 +4,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.unifi.mecvirtualresourceallocation.evaluation.util.HyperGraphGenerator;
@@ -43,21 +41,18 @@ public class LocalSearchStrategy implements AllocationStrategy {
    */
   private void optimizeIndependentSet(Set<Vertex> independentSet, ConflictGraph conflictGraph) {
     List<Vertex> sortedIndependentSet = sortVerticesByWeightAscending(independentSet);
-    Map<Vertex, Set<Vertex>> adjacencyCache = new HashMap<>();
     int index = 0;
 
     while (index < sortedIndependentSet.size()) {
       Vertex currentVertex = sortedIndependentSet.get(index);
-      Set<Vertex> adjacentVertices =
-          getAdjacentVertices(currentVertex, conflictGraph, adjacencyCache);
+      Set<Vertex> adjacentVertices = conflictGraph.getAdjacentVertices(currentVertex);
       List<Vertex> sortedAdjacentVertices = sortVerticesByWeightDescending(adjacentVertices);
 
       for (int phi = 2; phi <= HyperGraphGenerator.DELTA; phi++) {
-        Set<Vertex> claw =
-            findClaw(independentSet, sortedAdjacentVertices, adjacencyCache, conflictGraph, phi);
+        Set<Vertex> claw = findClaw(independentSet, sortedAdjacentVertices, conflictGraph, phi);
         if (!claw.isEmpty()) {
           Set<Vertex> adjacentVertexIndependentSet =
-              findAdjacentVertexIndependentSet(claw, independentSet, conflictGraph, adjacencyCache);
+              findAdjacentVertexIndependentSet(claw, independentSet, conflictGraph);
           independentSet.removeAll(adjacentVertexIndependentSet);
           independentSet.addAll(claw);
           sortedIndependentSet = sortVerticesByWeightAscending(independentSet);
@@ -98,7 +93,6 @@ public class LocalSearchStrategy implements AllocationStrategy {
    *
    * @param independentSet the current independent set
    * @param sortedAdjacentVertices the list of adjacent vertices sorted by weight
-   * @param adjacencyCache the adjacency cache
    * @param conflictGraph the conflict graph
    * @param phi the size of the claw
    * @return a set of vertices representing the claw
@@ -106,18 +100,11 @@ public class LocalSearchStrategy implements AllocationStrategy {
   private Set<Vertex> findClaw(
       Set<Vertex> independentSet,
       List<Vertex> sortedAdjacentVertices,
-      Map<Vertex, Set<Vertex>> adjacencyCache,
       ConflictGraph conflictGraph,
       int phi) {
     Set<Vertex> result = new HashSet<>();
     generateClaw(
-        independentSet,
-        result,
-        sortedAdjacentVertices,
-        conflictGraph,
-        adjacencyCache,
-        new HashSet<>(),
-        phi);
+        independentSet, result, sortedAdjacentVertices, conflictGraph, new HashSet<>(), phi);
     return result;
   }
 
@@ -128,7 +115,6 @@ public class LocalSearchStrategy implements AllocationStrategy {
    * @param result the set to store the valid claw
    * @param remaining the list of vertices that can still be added to the claw
    * @param conflictGraph the conflict graph
-   * @param adjacencyCache the adjacency cache
    * @param currentGroup the current group being formed
    * @param phi the size of the claw
    */
@@ -137,24 +123,22 @@ public class LocalSearchStrategy implements AllocationStrategy {
       Set<Vertex> result,
       List<Vertex> remaining,
       ConflictGraph conflictGraph,
-      Map<Vertex, Set<Vertex>> adjacencyCache,
       Set<Vertex> currentGroup,
       int phi) {
     if (currentGroup.size() == phi) {
-      if (isValidClaw(currentGroup, independentSet, conflictGraph, adjacencyCache, result)) {
+      if (isValidClaw(currentGroup, independentSet, conflictGraph, result)) {
         return;
       }
     }
 
     for (Vertex vertex : new ArrayList<>(remaining)) {
-      if (isValidToAdd(currentGroup, vertex, conflictGraph, adjacencyCache)) {
+      if (isValidToAdd(currentGroup, vertex, conflictGraph)) {
         currentGroup.add(vertex);
         remaining.remove(vertex);
-        generateClaw(
-            independentSet, result, remaining, conflictGraph, adjacencyCache, currentGroup, phi);
+        generateClaw(independentSet, result, remaining, conflictGraph, currentGroup, phi);
 
         if (currentGroup.size() == phi) {
-          if (isValidClaw(currentGroup, independentSet, conflictGraph, adjacencyCache, result)) {
+          if (isValidClaw(currentGroup, independentSet, conflictGraph, result)) {
             return;
           }
         }
@@ -171,7 +155,6 @@ public class LocalSearchStrategy implements AllocationStrategy {
    * @param currentGroup the current group of vertices forming the claw
    * @param independentSet the current independent set
    * @param conflictGraph the conflict graph
-   * @param adjacencyCache the adjacency cache
    * @param result the set to store the valid claw
    * @return true if the claw improves the weight, false otherwise
    */
@@ -179,11 +162,9 @@ public class LocalSearchStrategy implements AllocationStrategy {
       Set<Vertex> currentGroup,
       Set<Vertex> independentSet,
       ConflictGraph conflictGraph,
-      Map<Vertex, Set<Vertex>> adjacencyCache,
       Set<Vertex> result) {
     Set<Vertex> adjacentVertexIndependentSet =
-        findAdjacentVertexIndependentSet(
-            currentGroup, independentSet, conflictGraph, adjacencyCache);
+        findAdjacentVertexIndependentSet(currentGroup, independentSet, conflictGraph);
     Set<Vertex> resultingVertices = new HashSet<>(independentSet);
     resultingVertices.removeAll(adjacentVertexIndependentSet);
     resultingVertices.addAll(currentGroup);
@@ -224,37 +205,12 @@ public class LocalSearchStrategy implements AllocationStrategy {
    *
    * @param currentGroup the current group of vertices
    * @param vertex the vertex to be added
-   * @param adjacencyCache the adjacency cache
    * @return true if the vertex can be added, false otherwise
    */
   private boolean isValidToAdd(
-      Set<Vertex> currentGroup,
-      Vertex vertex,
-      ConflictGraph conflictGraph,
-      Map<Vertex, Set<Vertex>> adjacencyCache) {
+      Set<Vertex> currentGroup, Vertex vertex, ConflictGraph conflictGraph) {
     return currentGroup.stream()
-        .noneMatch(
-            groupVertex ->
-                areVerticesConnected(vertex, groupVertex, conflictGraph, adjacencyCache));
-  }
-
-  /**
-   * Checks if two vertices are connected in the conflict graph using the adjacency cache.
-   *
-   * @param vertex1 the first vertex
-   * @param vertex2 the second vertex
-   * @param conflictGraph the conflict graph
-   * @param adjacencyCache the adjacency cache
-   * @return true if the vertices are connected, false otherwise
-   */
-  private boolean areVerticesConnected(
-      Vertex vertex1,
-      Vertex vertex2,
-      ConflictGraph conflictGraph,
-      Map<Vertex, Set<Vertex>> adjacencyCache) {
-    return adjacencyCache
-        .computeIfAbsent(vertex1, v -> calculateAdjacentVertices(v, conflictGraph))
-        .contains(vertex2);
+        .noneMatch(groupVertex -> conflictGraph.areVerticesConnected(vertex, groupVertex));
   }
 
   /**
@@ -264,32 +220,14 @@ public class LocalSearchStrategy implements AllocationStrategy {
    * @param currentGroup the current group of vertices
    * @param independentSet the current independent set
    * @param conflictGraph the conflict graph
-   * @param adjacencyCache the adjacency cache
    * @return a set of vertices from the initial independent set that are adjacent to the given set
    *     of vertices
    */
   private Set<Vertex> findAdjacentVertexIndependentSet(
-      Set<Vertex> currentGroup,
-      Set<Vertex> independentSet,
-      ConflictGraph conflictGraph,
-      Map<Vertex, Set<Vertex>> adjacencyCache) {
+      Set<Vertex> currentGroup, Set<Vertex> independentSet, ConflictGraph conflictGraph) {
     return currentGroup.stream()
-        .flatMap(vertex -> getAdjacentVertices(vertex, conflictGraph, adjacencyCache).stream())
+        .flatMap(vertex -> conflictGraph.getAdjacentVertices(vertex).stream())
         .filter(independentSet::contains)
         .collect(Collectors.toSet());
-  }
-
-  /**
-   * Retrieves the adjacent vertices for a given vertex. If not present in the cache, calculates and
-   * stores it.
-   *
-   * @param vertex the vertex for which to find adjacent vertices
-   * @param conflictGraph the conflict graph
-   * @param adjacencyCache the cache to store and retrieve adjacent vertices
-   * @return a set of adjacent vertices
-   */
-  private Set<Vertex> getAdjacentVertices(
-      Vertex vertex, ConflictGraph conflictGraph, Map<Vertex, Set<Vertex>> adjacencyCache) {
-    return adjacencyCache.computeIfAbsent(vertex, v -> calculateAdjacentVertices(v, conflictGraph));
   }
 }

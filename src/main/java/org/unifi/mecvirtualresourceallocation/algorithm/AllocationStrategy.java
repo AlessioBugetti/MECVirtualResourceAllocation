@@ -3,8 +3,6 @@ package org.unifi.mecvirtualresourceallocation.algorithm;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.unifi.mecvirtualresourceallocation.graph.ConflictGraph;
-import org.unifi.mecvirtualresourceallocation.graph.Edge;
 import org.unifi.mecvirtualresourceallocation.graph.HyperEdge;
 import org.unifi.mecvirtualresourceallocation.graph.HyperGraph;
 import org.unifi.mecvirtualresourceallocation.graph.Vertex;
@@ -33,24 +31,5 @@ public interface AllocationStrategy {
       }
     }
     return resultingHyperEdges;
-  }
-
-  /**
-   * Calculates the vertices adjacent to the given vertex in the conflict graph.
-   *
-   * @param vertex the vertex.
-   * @param conflictGraph the conflict graph.
-   * @return a set of adjacent vertices.
-   */
-  default Set<Vertex> calculateAdjacentVertices(Vertex vertex, ConflictGraph conflictGraph) {
-    Set<Vertex> adjacentVertices = new HashSet<>();
-    for (Edge edge : conflictGraph.getEdges()) {
-      if (edge.getVertex1().equals(vertex)) {
-        adjacentVertices.add(edge.getVertex2());
-      } else if (edge.getVertex2().equals(vertex)) {
-        adjacentVertices.add(edge.getVertex1());
-      }
-    }
-    return adjacentVertices;
   }
 }

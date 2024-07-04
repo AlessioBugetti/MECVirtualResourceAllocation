@@ -27,7 +27,7 @@ public class SequentialSearchStrategy implements AllocationStrategy {
     Set<Vertex> vertices = new HashSet<>(conflictGraph.getVertices());
     while (!vertices.isEmpty()) {
       Vertex maxWeightVertex = findMaxWeightVertex(vertices);
-      Set<Vertex> adjacentVertices = calculateAdjacentVertices(maxWeightVertex, conflictGraph);
+      Set<Vertex> adjacentVertices = conflictGraph.getAdjacentVertices(maxWeightVertex);
       selectedVertices.add(maxWeightVertex);
       vertices.remove(maxWeightVertex);
       vertices.removeAll(adjacentVertices);

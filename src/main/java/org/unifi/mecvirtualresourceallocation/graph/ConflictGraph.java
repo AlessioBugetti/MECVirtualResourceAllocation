@@ -1,5 +1,6 @@
 package org.unifi.mecvirtualresourceallocation.graph;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -15,11 +16,13 @@ import org.unifi.mecvirtualresourceallocation.graph.visualization.ConflictGraphP
 public class ConflictGraph {
 
   private Map<String, Vertex> vertices;
+  private Map<Vertex, Set<Vertex>> adjacencyList;
   private Set<Edge> edges;
 
   /** Constructs an empty conflict graph. */
   public ConflictGraph() {
     this.vertices = new HashMap<>();
+    this.adjacencyList = new HashMap<>();
     this.edges = new HashSet<>();
   }
 
@@ -52,6 +55,7 @@ public class ConflictGraph {
       throw new IllegalArgumentException("Vertex with ID " + vertex.getId() + " already exists.");
     }
     vertices.put(vertex.getId(), vertex);
+    adjacencyList.putIfAbsent(vertex, new HashSet<>());
   }
 
   /**
@@ -64,6 +68,8 @@ public class ConflictGraph {
     if (vertex1 == null || vertex2 == null) {
       throw new IllegalArgumentException("Vertices cannot be null.");
     }
+    adjacencyList.get(vertex1).add(vertex2);
+    adjacencyList.get(vertex2).add(vertex1);
     edges.add(new Edge(vertex1, vertex2));
   }
 
@@ -74,6 +80,27 @@ public class ConflictGraph {
    */
   public Set<Edge> getEdges() {
     return edges;
+  }
+
+  /**
+   * Checks if two vertices are connected.
+   *
+   * @param vertex1 the first vertex.
+   * @param vertex2 the second vertex.
+   * @return true if the vertices are connected, false otherwise.
+   */
+  public boolean areVerticesConnected(Vertex vertex1, Vertex vertex2) {
+    return adjacencyList.getOrDefault(vertex1, Collections.emptySet()).contains(vertex2);
+  }
+
+  /**
+   * Retrieves the adjacent vertices for a given vertex.
+   *
+   * @param vertex the vertex for which to find adjacent vertices.
+   * @return a set of adjacent vertices.
+   */
+  public Set<Vertex> getAdjacentVertices(Vertex vertex) {
+    return adjacencyList.getOrDefault(vertex, Collections.emptySet());
   }
 
   /**
