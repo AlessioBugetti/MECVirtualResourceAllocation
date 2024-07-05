@@ -126,7 +126,7 @@ public final class HyperGraph {
   /**
    * Gets the vertices of the hypergraph.
    *
-   * @return the vertices.
+   * @return the vertices
    */
   public Set<Vertex> getVertices() {
     return vertices;
@@ -135,7 +135,7 @@ public final class HyperGraph {
   /**
    * Gets the hyperedges of the hypergraph.
    *
-   * @return the hyperedges.
+   * @return the hyperedges
    */
   public Set<HyperEdge> getHyperEdges() {
     return hyperEdges;
@@ -145,9 +145,9 @@ public final class HyperGraph {
    * Adds a hyperedge to the hypergraph, ensuring no duplicate hyperedge IDs exist. The vertices of
    * the hyperedge are also added to the hypergraph if not already present.
    *
-   * @param hyperEdge the hyperedge to be added.
+   * @param hyperEdge the hyperedge to be added
    * @throws IllegalArgumentException if the hyperedge has no vertices or if there are duplicate
-   *     IDs.
+   *     IDs
    */
   public void addHyperEdge(HyperEdge hyperEdge) {
     if (hyperEdge.getVertices().isEmpty()) {
@@ -177,7 +177,7 @@ public final class HyperGraph {
    * Generates a conflict graph based on the hypergraph. The conflict graph represents conflicts
    * between hyperedges where conflicts are defined by the presence of common vertices.
    *
-   * @return the generated conflict graph.
+   * @return the generated conflict graph
    */
   public ConflictGraph getConflictGraph() {
     ConflictGraph conflictGraph = new ConflictGraph();
@@ -204,9 +204,9 @@ public final class HyperGraph {
   /**
    * Checks if two hyperedges have at least one vertex in common.
    *
-   * @param hyperEdge1 the first hyperedge.
-   * @param hyperEdge2 the second hyperedge.
-   * @return true if there is an intersection; false otherwise.
+   * @param hyperEdge1 the first hyperedge
+   * @param hyperEdge2 the second hyperedge
+   * @return true if there is an intersection; false otherwise
    */
   private boolean hasIntersection(HyperEdge hyperEdge1, HyperEdge hyperEdge2) {
     for (Vertex v : hyperEdge1.getVertices()) {
@@ -235,8 +235,8 @@ public final class HyperGraph {
   /**
    * Generates and returns a placement matrix based on the current hypergraph.
    *
-   * @return the placement matrix where rows represent vertices and columns represent hyperedges.
-   *     Each element is 1 if the corresponding vertex is part of the hyperedge, otherwise 0.
+   * @return the placement matrix where rows represent vertices and columns represent hyperedges
+   *     Each element is 1 if the corresponding vertex is part of the hyperedge, otherwise 0
    */
   public int[][] getPlacementMatrix() {
     int numVertices = vertices.size();
@@ -266,7 +266,7 @@ public final class HyperGraph {
   /**
    * Returns a string representation of the hypergraph, including its vertices and hyperedges.
    *
-   * @return a string representation of the hypergraph.
+   * @return a string representation of the hypergraph
    */
   @Override
   public String toString() {
