@@ -146,8 +146,7 @@ public final class HyperGraph {
    * the hyperedge are also added to the hypergraph if not already present.
    *
    * @param hyperEdge the hyperedge to be added
-   * @throws IllegalArgumentException if the hyperedge has no vertices or if there are duplicate
-   *     IDs
+   * @throws IllegalArgumentException if the hyperedge has no vertices or if there are duplicate IDs
    */
   public void addHyperEdge(HyperEdge hyperEdge) {
     if (hyperEdge.getVertices().isEmpty()) {
