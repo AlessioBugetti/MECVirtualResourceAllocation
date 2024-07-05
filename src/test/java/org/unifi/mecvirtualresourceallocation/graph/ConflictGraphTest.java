@@ -1,4 +1,4 @@
-package org.unifi.mecvirtualresourceallocation;
+package org.unifi.mecvirtualresourceallocation.graph;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -12,11 +12,6 @@ import javax.swing.SwingUtilities;
 import org.fest.swing.fixture.FrameFixture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.unifi.mecvirtualresourceallocation.graph.ConflictGraph;
-import org.unifi.mecvirtualresourceallocation.graph.Edge;
-import org.unifi.mecvirtualresourceallocation.graph.HyperEdge;
-import org.unifi.mecvirtualresourceallocation.graph.HyperGraph;
-import org.unifi.mecvirtualresourceallocation.graph.Vertex;
 
 public class ConflictGraphTest {
 

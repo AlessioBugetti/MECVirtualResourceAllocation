@@ -1,4 +1,4 @@
-package org.unifi.mecvirtualresourceallocation;
+package org.unifi.mecvirtualresourceallocation.evaluation.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
@@ -19,7 +19,6 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.junit.jupiter.api.Test;
-import org.unifi.mecvirtualresourceallocation.evaluation.util.ChartUtils;
 
 public class ChartUtilsTest {
 

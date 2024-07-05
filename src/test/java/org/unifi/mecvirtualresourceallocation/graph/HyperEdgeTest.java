@@ -1,4 +1,4 @@
-package org.unifi.mecvirtualresourceallocation;
+package org.unifi.mecvirtualresourceallocation.graph;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -10,8 +10,6 @@ import java.util.HashSet;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.unifi.mecvirtualresourceallocation.graph.HyperEdge;
-import org.unifi.mecvirtualresourceallocation.graph.Vertex;
 
 public class HyperEdgeTest {
 

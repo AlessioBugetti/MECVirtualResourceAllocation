@@ -1,11 +1,9 @@
-package org.unifi.mecvirtualresourceallocation;
+package org.unifi.mecvirtualresourceallocation.graph;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.unifi.mecvirtualresourceallocation.graph.Edge;
-import org.unifi.mecvirtualresourceallocation.graph.Vertex;
 
 public class EdgeTest {
 

@@ -1,4 +1,4 @@
-package org.unifi.mecvirtualresourceallocation;
+package org.unifi.mecvirtualresourceallocation.evaluation.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -11,8 +11,6 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.unifi.mecvirtualresourceallocation.evaluation.Evaluator;
-import org.unifi.mecvirtualresourceallocation.evaluation.util.HyperGraphGenerator;
-import org.unifi.mecvirtualresourceallocation.evaluation.util.MathUtils;
 import org.unifi.mecvirtualresourceallocation.graph.HyperEdge;
 import org.unifi.mecvirtualresourceallocation.graph.HyperGraph;
 import org.unifi.mecvirtualresourceallocation.graph.Vertex;

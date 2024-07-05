@@ -1,9 +1,8 @@
-package org.unifi.mecvirtualresourceallocation;
+package org.unifi.mecvirtualresourceallocation.evaluation.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
-import org.unifi.mecvirtualresourceallocation.evaluation.util.MathUtils;
 
 public class MathUtilsTest {
 
