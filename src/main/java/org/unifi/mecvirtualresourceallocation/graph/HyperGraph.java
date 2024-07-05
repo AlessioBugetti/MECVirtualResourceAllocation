@@ -1,6 +1,7 @@
 package org.unifi.mecvirtualresourceallocation.graph;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -14,16 +15,16 @@ import org.unifi.mecvirtualresourceallocation.graph.visualization.HyperGraphPane
  * multiple vertices (VMs).
  */
 public final class HyperGraph {
-  private List<Vertex> vertices;
-  private List<HyperEdge> hyperEdges;
+  private Set<Vertex> vertices;
+  private Set<HyperEdge> hyperEdges;
 
   /**
    * Constructs a hypergraph with the specified vertices and hyperedges.
    *
-   * @param vertices the vertices of the hypergraph.
-   * @param hyperEdges the hyperedges of the hypergraph.
+   * @param vertices the vertices of the hypergraph
+   * @param hyperEdges the hyperedges of the hypergraph
    */
-  public HyperGraph(List<Vertex> vertices, List<HyperEdge> hyperEdges) {
+  public HyperGraph(Set<Vertex> vertices, Set<HyperEdge> hyperEdges) {
     validate(vertices, hyperEdges);
     this.vertices = vertices;
     this.hyperEdges = hyperEdges;
@@ -36,36 +37,38 @@ public final class HyperGraph {
    *
    * @param placementMatrix the placement matrix where rows represent vertices and columns represent
    *     hyperedges. Each element should be 1 if the corresponding vertex is part of the hyperedge,
-   *     otherwise 0.
+   *     otherwise 0
    * @param weights the array of weights for the vertices. The order of weights must match the order
-   *     of rows in the placement matrix.
+   *     of rows in the placement matrix
    * @throws IllegalArgumentException if the number of weights does not match the number of rows in
-   *     the placement matrix.
+   *     the placement matrix
    */
   public HyperGraph(int[][] placementMatrix, double[] weights) {
-
     validatePlacementMatrix(placementMatrix);
-    List<HyperEdge> tmpHyperEdges = new ArrayList<>();
-    List<Vertex> tmpVertices = new ArrayList<>();
-    for (int i = 0; i < weights.length; i++) {
-      tmpVertices.add(new Vertex(Integer.toString(i + 1), weights[i]));
-    }
 
-    if (placementMatrix.length != tmpVertices.size()) {
+    if (placementMatrix.length != weights.length) {
       throw new IllegalArgumentException(
-          "Mismatch between number of vertices and placement matrix rows");
+          "Mismatch between number of weights and placement matrix rows");
     }
 
+    List<Vertex> vertexList = new ArrayList<>();
+    for (int i = 0; i < weights.length; i++) {
+      vertexList.add(new Vertex(Integer.toString(i + 1), weights[i]));
+    }
+
+    Set<Vertex> tmpVertices = new HashSet<>(vertexList);
+
+    Set<HyperEdge> tmpHyperEdges = new HashSet<>();
     for (int j = 0; j < placementMatrix[0].length; j++) {
-      List<Vertex> verticesInHyperEdge = new ArrayList<>();
+      Set<Vertex> verticesInHyperEdge = new HashSet<>();
       for (int i = 0; i < placementMatrix.length; i++) {
         if (placementMatrix[i][j] == 1) {
-          verticesInHyperEdge.add(tmpVertices.get(i));
+          verticesInHyperEdge.add(vertexList.get(i));
         }
       }
-      HyperEdge hyperEdge = new HyperEdge(Integer.toString(j + 1), verticesInHyperEdge);
-      tmpHyperEdges.add(hyperEdge);
+      tmpHyperEdges.add(new HyperEdge(Integer.toString(j + 1), verticesInHyperEdge));
     }
+
     validate(tmpVertices, tmpHyperEdges);
     this.vertices = tmpVertices;
     this.hyperEdges = tmpHyperEdges;
@@ -74,8 +77,8 @@ public final class HyperGraph {
   /**
    * Validates the placement matrix to ensure it contains only 0s and 1s.
    *
-   * @param placementMatrix the placement matrix to validate.
-   * @throws IllegalArgumentException if any element in the matrix is not 0 or 1.
+   * @param placementMatrix the placement matrix to validate
+   * @throws IllegalArgumentException if any element in the matrix is not 0 or 1
    */
   private void validatePlacementMatrix(int[][] placementMatrix) {
     for (int[] matrix : placementMatrix) {
@@ -88,38 +91,33 @@ public final class HyperGraph {
   }
 
   /**
-   * Validates that the union of all hyperedges exactly match the set of vertices.
+   * Validates that the union of all hyperedges exactly matches the set of vertices.
    *
-   * @throws IllegalArgumentException if the union of all hyperedges do not exactly match the set of
-   *     vertices.
+   * @param vertices the set of vertices
+   * @param hyperEdges the set of hyperedges
+   * @throws IllegalArgumentException if the union of all hyperedges does not exactly match the set
+   *     of vertices
    */
-  private void validate(List<Vertex> vertices, List<HyperEdge> hyperEdges) {
+  private void validate(Set<Vertex> vertices, Set<HyperEdge> hyperEdges) {
 
     Set<Vertex> allUniqueVertices = new HashSet<>();
-    Set<String> hyperEdgeIds = new HashSet<>();
     Set<Set<Vertex>> uniqueVertexSets = new HashSet<>();
 
     for (HyperEdge hyperEdge : hyperEdges) {
-      List<Vertex> verticesInEdge = hyperEdge.getVertices();
+      Set<Vertex> verticesInEdge = hyperEdge.getVertices();
       if (verticesInEdge.isEmpty()) {
         throw new IllegalArgumentException("Cannot add a HyperEdge with no vertices.");
       }
 
-      if (!hyperEdgeIds.add(hyperEdge.getId())) {
-        throw new IllegalArgumentException("Duplicate HyperEdge ID found: " + hyperEdge.getId());
-      }
-
       allUniqueVertices.addAll(verticesInEdge);
 
-      Set<Vertex> vertexSetInEdge = new HashSet<>(verticesInEdge);
-      if (!uniqueVertexSets.add(vertexSetInEdge)) {
+      if (!uniqueVertexSets.add(verticesInEdge)) {
         throw new IllegalArgumentException(
-            "Different HyperEdges with the same set of vertices found: " + vertexSetInEdge);
+            "Different HyperEdges with the same set of vertices found: " + verticesInEdge);
       }
     }
 
-    Set<Vertex> vertexSet = new HashSet<>(vertices);
-    if (!allUniqueVertices.equals(vertexSet)) {
+    if (!allUniqueVertices.equals(vertices)) {
       throw new IllegalArgumentException(
           "The union of all hyperedges do not exactly match the set of vertices.");
     }
@@ -130,7 +128,7 @@ public final class HyperGraph {
    *
    * @return the vertices.
    */
-  public List<Vertex> getVertices() {
+  public Set<Vertex> getVertices() {
     return vertices;
   }
 
@@ -139,7 +137,7 @@ public final class HyperGraph {
    *
    * @return the hyperedges.
    */
-  public List<HyperEdge> getHyperEdges() {
+  public Set<HyperEdge> getHyperEdges() {
     return hyperEdges;
   }
 
@@ -170,11 +168,7 @@ public final class HyperGraph {
       }
     }
 
-    for (Vertex vertex : hyperEdge.getVertices()) {
-      if (!vertices.contains(vertex)) {
-        vertices.add(vertex);
-      }
-    }
+    vertices.addAll(hyperEdge.getVertices());
 
     hyperEdges.add(hyperEdge);
   }
@@ -192,10 +186,11 @@ public final class HyperGraph {
       conflictGraph.addVertex(new Vertex(hyperEdge.getId(), hyperEdge.getNegativeWeight()));
     }
 
-    for (int i = 0; i < hyperEdges.size(); i++) {
-      for (int j = i + 1; j < hyperEdges.size(); j++) {
-        HyperEdge hyperEdge1 = hyperEdges.get(i);
-        HyperEdge hyperEdge2 = hyperEdges.get(j);
+    List<HyperEdge> hyperEdgeList = new ArrayList<>(hyperEdges);
+    for (int i = 0; i < hyperEdgeList.size(); i++) {
+      for (int j = i + 1; j < hyperEdgeList.size(); j++) {
+        HyperEdge hyperEdge1 = hyperEdgeList.get(i);
+        HyperEdge hyperEdge2 = hyperEdgeList.get(j);
         if (hasIntersection(hyperEdge1, hyperEdge2)) {
           Vertex v1 = conflictGraph.getVertexFromId(hyperEdge1.getId());
           Vertex v2 = conflictGraph.getVertexFromId(hyperEdge2.getId());
@@ -249,17 +244,18 @@ public final class HyperGraph {
 
     int[][] placementMatrix = new int[numVertices][numHyperEdges];
 
-    for (int edgeIndex = 0; edgeIndex < numHyperEdges; edgeIndex++) {
-      HyperEdge hyperEdge = hyperEdges.get(edgeIndex);
-      List<Vertex> verticesInHyperEdge = hyperEdge.getVertices();
+    List<Vertex> sortedVertices = new ArrayList<>(vertices);
+    sortedVertices.sort(Comparator.comparing(Vertex::getId));
 
-      for (int vertexIndex = 0; vertexIndex < numVertices; vertexIndex++) {
-        Vertex vertex = vertices.get(vertexIndex);
+    List<HyperEdge> sortedHyperEdges = new ArrayList<>(hyperEdges);
+    sortedHyperEdges.sort(Comparator.comparing(HyperEdge::getId));
 
-        if (verticesInHyperEdge.contains(vertex)) {
-          placementMatrix[vertexIndex][edgeIndex] = 1;
+    for (int j = 0; j < placementMatrix[0].length; j++) {
+      for (int i = 0; i < placementMatrix.length; i++) {
+        if (sortedHyperEdges.get(j).getVertices().contains(sortedVertices.get(i))) {
+          placementMatrix[i][j] = 1;
         } else {
-          placementMatrix[vertexIndex][edgeIndex] = 0;
+          placementMatrix[i][j] = 0;
         }
       }
     }

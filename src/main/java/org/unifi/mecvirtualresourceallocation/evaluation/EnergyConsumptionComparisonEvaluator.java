@@ -10,8 +10,8 @@ public class EnergyConsumptionComparisonEvaluator extends EnergyConsumptionEvalu
   /**
    * Plots the results of the energy consumption comparison.
    *
-   * @param avgWeightsSequential the average weights for the SequentialSearchStrategy.
-   * @param avgWeightsLocal the average weights for the LocalSearchStrategy.
+   * @param avgWeightsSequential the average weights for the SequentialSearchStrategy
+   * @param avgWeightsLocal the average weights for the LocalSearchStrategy
    */
   @Override
   protected void plotResults(

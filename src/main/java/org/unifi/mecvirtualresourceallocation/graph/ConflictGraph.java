@@ -29,7 +29,7 @@ public class ConflictGraph {
   /**
    * Gets the vertices of the conflict graph.
    *
-   * @return the vertices.
+   * @return the vertices
    */
   public Set<Vertex> getVertices() {
     return new HashSet<>(vertices.values());
@@ -38,8 +38,8 @@ public class ConflictGraph {
   /**
    * Retrieves a vertex from the conflict graph by its ID.
    *
-   * @param id the ID of the vertex to retrieve.
-   * @return the vertex with the specified ID, or null if not found.
+   * @param id the ID of the vertex to retrieve
+   * @return the vertex with the specified ID, or null if not found
    */
   public Vertex getVertexFromId(String id) {
     return vertices.get(id);
@@ -48,7 +48,7 @@ public class ConflictGraph {
   /**
    * Adds a vertex to the conflict graph.
    *
-   * @param vertex the vertex to be added.
+   * @param vertex the vertex to be added
    */
   public void addVertex(Vertex vertex) {
     if (vertices.containsKey(vertex.getId())) {
@@ -61,13 +61,20 @@ public class ConflictGraph {
   /**
    * Adds an edge between two vertices in the conflict graph.
    *
-   * @param vertex1 the first vertex.
-   * @param vertex2 the second vertex.
+   * @param vertex1 the first vertex
+   * @param vertex2 the second vertex
    */
   public void addEdge(Vertex vertex1, Vertex vertex2) {
     if (vertex1 == null || vertex2 == null) {
       throw new IllegalArgumentException("Vertices cannot be null.");
     }
+
+    Edge edge = new Edge(vertex1, vertex2);
+    if (edges.contains(edge)) {
+      throw new IllegalArgumentException(
+          "Edge between " + vertex1.getId() + " and " + vertex2.getId() + " already exists.");
+    }
+
     adjacencyList.get(vertex1).add(vertex2);
     adjacencyList.get(vertex2).add(vertex1);
     edges.add(new Edge(vertex1, vertex2));
@@ -76,7 +83,7 @@ public class ConflictGraph {
   /**
    * Gets the edges of the conflict graph.
    *
-   * @return the edges.
+   * @return the edges
    */
   public Set<Edge> getEdges() {
     return edges;
@@ -85,9 +92,9 @@ public class ConflictGraph {
   /**
    * Checks if two vertices are connected.
    *
-   * @param vertex1 the first vertex.
-   * @param vertex2 the second vertex.
-   * @return true if the vertices are connected, false otherwise.
+   * @param vertex1 the first vertex
+   * @param vertex2 the second vertex
+   * @return true if the vertices are connected, false otherwise
    */
   public boolean areVerticesConnected(Vertex vertex1, Vertex vertex2) {
     return adjacencyList.getOrDefault(vertex1, Collections.emptySet()).contains(vertex2);
@@ -96,8 +103,8 @@ public class ConflictGraph {
   /**
    * Retrieves the adjacent vertices for a given vertex.
    *
-   * @param vertex the vertex for which to find adjacent vertices.
-   * @return a set of adjacent vertices.
+   * @param vertex the vertex for which to find adjacent vertices
+   * @return a set of adjacent vertices
    */
   public Set<Vertex> getAdjacentVertices(Vertex vertex) {
     return adjacencyList.getOrDefault(vertex, Collections.emptySet());
@@ -106,7 +113,7 @@ public class ConflictGraph {
   /**
    * Returns a string representation of the conflict graph, including its vertices and edges.
    *
-   * @return a string representation of the conflict graph.
+   * @return a string representation of the conflict graph
    */
   @Override
   public String toString() {
@@ -130,7 +137,7 @@ public class ConflictGraph {
 
   /** Displays the conflict graph using a graphical user interface. */
   public void showGraph() {
-    JFrame frame = new JFrame("Conflict Graph");
+    JFrame frame = new JFrame("ConflictGraph");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setSize(800, 600);
     frame.add(new ConflictGraphPanel(this));

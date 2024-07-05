@@ -11,16 +11,19 @@ public class EnergyConsumptionReductionEvaluator extends EnergyConsumptionEvalua
   /**
    * Plots the results of the energy consumption reduction evaluation.
    *
-   * @param avgWeightsSequential the average reduced weights for the SequentialSearchStrategy.
-   * @param avgWeightsLocal the average reduced weights for the LocalSearchStrategy.
+   * @param avgWeightsSequential the average reduced weights for the SequentialSearchStrategy
+   * @param avgWeightsLocal the average reduced weights for the LocalSearchStrategy
    */
   @Override
   protected void plotResults(
       Map<Integer, BigDecimal> avgWeightsSequential, Map<Integer, BigDecimal> avgWeightsLocal) {
     Map<Integer, BigDecimal> avgReducedWeights = new HashMap<>();
-    for (Integer key : avgWeightsLocal.keySet()) {
+    for (Map.Entry<Integer, BigDecimal> entry : avgWeightsLocal.entrySet()) {
+      Integer key = entry.getKey();
+      BigDecimal localValue = entry.getValue();
       if (avgWeightsSequential.containsKey(key)) {
-        BigDecimal difference = avgWeightsSequential.get(key).subtract(avgWeightsLocal.get(key));
+        BigDecimal sequentialValue = avgWeightsSequential.get(key);
+        BigDecimal difference = sequentialValue.subtract(localValue);
         avgReducedWeights.put(key, difference);
       }
     }

@@ -5,9 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.unifi.mecvirtualresourceallocation.graph.HyperEdge;
@@ -16,15 +16,14 @@ import org.unifi.mecvirtualresourceallocation.graph.Vertex;
 public class HyperEdgeTest {
 
   private HyperEdge hyperEdge;
-  private List<Vertex> vertices;
-  private Vertex v1;
+  private Set<Vertex> vertices;
   private Vertex v2;
 
   @BeforeEach
   public void setUp() {
-    v1 = new Vertex("1", 1.0);
+    Vertex v1 = new Vertex("1", 1.0);
     v2 = new Vertex("2", 2.0);
-    vertices = new ArrayList<>(Arrays.asList(v1, v2));
+    vertices = new HashSet<>(Arrays.asList(v1, v2));
 
     hyperEdge = new HyperEdge("1", vertices);
   }
@@ -39,7 +38,7 @@ public class HyperEdgeTest {
     Vertex v3 = new Vertex("3", 3.0);
     hyperEdge.addVertex(v3);
 
-    List<Vertex> updatedVertices = hyperEdge.getVertices();
+    Set<Vertex> updatedVertices = hyperEdge.getVertices();
     assertEquals(3, updatedVertices.size());
     assertTrue(updatedVertices.contains(v3));
     assertEquals(BigDecimal.valueOf(6.0), hyperEdge.getWeight());
@@ -47,6 +46,11 @@ public class HyperEdgeTest {
 
   @Test
   public void testUninitializedVertex() {
+    assertThrows(IllegalArgumentException.class, () -> new HyperEdge("1", null));
+  }
+
+  @Test
+  public void testAddUninitializedVertex() {
     assertThrows(IllegalArgumentException.class, () -> hyperEdge.addVertex(null));
   }
 
@@ -63,13 +67,6 @@ public class HyperEdgeTest {
   @Test
   public void testGetNegativeWeight() {
     assertEquals(BigDecimal.valueOf(-3.0), hyperEdge.getNegativeWeight());
-  }
-
-  @Test
-  public void testConstructorWithDuplicateVertices() {
-    Vertex v3 = new Vertex("3", 3.0);
-    List<Vertex> verticesWithDuplicates = new ArrayList<>(Arrays.asList(v1, v2, v3, v3));
-    assertThrows(IllegalArgumentException.class, () -> new HyperEdge("2", verticesWithDuplicates));
   }
 
   @Test

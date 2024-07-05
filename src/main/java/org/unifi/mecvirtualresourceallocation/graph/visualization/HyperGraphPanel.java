@@ -6,8 +6,9 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import org.unifi.mecvirtualresourceallocation.graph.HyperEdge;
 import org.unifi.mecvirtualresourceallocation.graph.HyperGraph;
 import org.unifi.mecvirtualresourceallocation.graph.Vertex;
@@ -24,7 +25,7 @@ public class HyperGraphPanel extends GraphPanel {
   /**
    * Constructs a HyperGraphPanel with the specified HyperGraph.
    *
-   * @param hyperGraph The HyperGraph object representing the hypergraph to visualize.
+   * @param hyperGraph The HyperGraph object representing the hypergraph to visualize
    */
   public HyperGraphPanel(HyperGraph hyperGraph) {
     this.hyperGraph = hyperGraph;
@@ -34,11 +35,11 @@ public class HyperGraphPanel extends GraphPanel {
   /**
    * Assigns colors to each hyperedge based on its position in the hypergraph.
    *
-   * @return A map associating each HyperEdge with a Color.
+   * @return A map associating each HyperEdge with a Color
    */
   private Map<HyperEdge, Color> assignEdgeColors() {
     Map<HyperEdge, Color> colors = new HashMap<>();
-    List<HyperEdge> edges = hyperGraph.getHyperEdges();
+    Set<HyperEdge> edges = hyperGraph.getHyperEdges();
     float hueIncrement = 1.0f / edges.size();
     float hue = 0.0f;
 
@@ -72,25 +73,31 @@ public class HyperGraphPanel extends GraphPanel {
   /**
    * Draws hyperedges between vertices of the HyperGraph.
    *
-   * @param g2d The Graphics2D context used for drawing.
+   * @param g2d The Graphics2D context used for drawing
    */
   @Override
   protected void drawEdges(Graphics2D g2d) {
-    List<HyperEdge> edges = hyperGraph.getHyperEdges();
+    Set<HyperEdge> edges = hyperGraph.getHyperEdges();
     g2d.setStroke(new BasicStroke(2f));
 
     for (HyperEdge edge : edges) {
       Color color = edgeColors.get(edge);
       g2d.setColor(color);
-      List<Vertex> vertices = edge.getVertices();
-      for (int i = 0; i < vertices.size() - 1; i++) {
-        Vertex vertex1 = vertices.get(i);
-        Vertex vertex2 = vertices.get(i + 1);
+      Set<Vertex> vertices = edge.getVertices();
+      Iterator<Vertex> iterator = vertices.iterator();
 
-        Point point1 = vertexPositions.get(vertex1);
-        Point point2 = vertexPositions.get(vertex2);
+      if (iterator.hasNext()) {
+        Vertex vertex1 = iterator.next();
+        while (iterator.hasNext()) {
+          Vertex vertex2 = iterator.next();
 
-        g2d.drawLine(point1.x, point1.y, point2.x, point2.y);
+          Point point1 = vertexPositions.get(vertex1);
+          Point point2 = vertexPositions.get(vertex2);
+
+          g2d.drawLine(point1.x, point1.y, point2.x, point2.y);
+
+          vertex1 = vertex2;
+        }
       }
     }
   }
@@ -98,7 +105,7 @@ public class HyperGraphPanel extends GraphPanel {
   /**
    * Draws vertices of the HyperGraph with labels.
    *
-   * @param g2d The Graphics2D context used for drawing.
+   * @param g2d The Graphics2D context used for drawing
    */
   @Override
   protected void drawVertices(Graphics2D g2d) {

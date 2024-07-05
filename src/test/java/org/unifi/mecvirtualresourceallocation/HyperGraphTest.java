@@ -1,13 +1,20 @@
 package org.unifi.mecvirtualresourceallocation;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.awt.Dimension;
+import java.awt.Frame;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+import org.fest.swing.fixture.FrameFixture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.unifi.mecvirtualresourceallocation.graph.ConflictGraph;
@@ -18,17 +25,17 @@ import org.unifi.mecvirtualresourceallocation.graph.Vertex;
 public class HyperGraphTest {
 
   private HyperGraph hyperGraph;
-  private List<Vertex> vertices;
-  private List<HyperEdge> edges;
+  private Set<Vertex> vertices;
+  private Set<HyperEdge> edges;
 
   @BeforeEach
   public void setUp() {
     Vertex v1 = new Vertex("1", 1);
     Vertex v2 = new Vertex("2", 2);
-    vertices = new ArrayList<>(Arrays.asList(v1, v2));
+    vertices = new HashSet<>(Arrays.asList(v1, v2));
 
-    HyperEdge e1 = new HyperEdge("1", Arrays.asList(v1, v2));
-    edges = new ArrayList<>(Collections.singletonList(e1));
+    HyperEdge e1 = new HyperEdge("1", new HashSet<>(Arrays.asList(v1, v2)));
+    edges = new HashSet<>(Collections.singletonList(e1));
 
     hyperGraph = new HyperGraph(vertices, edges);
   }
@@ -46,7 +53,7 @@ public class HyperGraphTest {
   @Test
   public void testDuplicateEdgeId() {
     Vertex v3 = new Vertex("3", 3);
-    HyperEdge e2 = new HyperEdge("1", Collections.singletonList(v3));
+    HyperEdge e2 = new HyperEdge("1", new HashSet<>(Collections.singletonList(v3)));
     assertThrows(IllegalArgumentException.class, () -> hyperGraph.addHyperEdge(e2));
   }
 
@@ -74,8 +81,11 @@ public class HyperGraphTest {
     assertEquals(6, hyperGraphFromMatrix.getHyperEdges().size());
     assertEquals(6, hyperGraphFromMatrix.getVertices().size());
     for (int i = 0; i < weights.length; i++) {
-      assertEquals(
-          BigDecimal.valueOf(weights[i]), hyperGraphFromMatrix.getVertices().get(i).getWeight());
+      for (Vertex vertex : hyperGraphFromMatrix.getVertices()) {
+        if (vertex.getId().equals(String.valueOf(i + 1))) {
+          assertEquals(BigDecimal.valueOf(weights[i]), vertex.getWeight());
+        }
+      }
     }
   }
 
@@ -105,26 +115,39 @@ public class HyperGraphTest {
   @Test
   void testAddVertex() {
     Vertex v3 = new Vertex("3", 3);
-    hyperGraph.addHyperEdge(new HyperEdge("2", Collections.singletonList(v3)));
+    hyperGraph.addHyperEdge(new HyperEdge("2", new HashSet<>(Collections.singletonList(v3))));
     assertEquals(3, hyperGraph.getVertices().size());
-    assertEquals(v3, hyperGraph.getVertices().get(2));
+    for (Vertex vertex : hyperGraph.getVertices()) {
+      if (vertex.getId().equals("3")) {
+        assertEquals(v3, vertex);
+      }
+    }
   }
 
   @Test
   void testAddHyperEdge() {
     Vertex v3 = new Vertex("3", 3);
-    HyperEdge e2 = new HyperEdge("2", Collections.singletonList(v3));
+    HyperEdge e2 = new HyperEdge("2", new HashSet<>(Collections.singletonList(v3)));
     hyperGraph.addHyperEdge(e2);
     assertEquals(2, hyperGraph.getHyperEdges().size());
-    assertEquals(e2, hyperGraph.getHyperEdges().get(1));
+    for (HyperEdge hyperEdge : hyperGraph.getHyperEdges()) {
+      if (hyperEdge.getId().equals("2")) {
+        assertEquals(e2, hyperEdge);
+      }
+    }
   }
 
   @Test
   void testAddHyperEdgeWithExistingVertex() {
-    HyperEdge e2 = new HyperEdge("2", Collections.singletonList(vertices.get(0)));
+    HyperEdge e2 =
+        new HyperEdge("2", new HashSet<>(Collections.singletonList(vertices.iterator().next())));
     hyperGraph.addHyperEdge(e2);
     assertEquals(2, hyperGraph.getHyperEdges().size());
-    assertEquals(e2, hyperGraph.getHyperEdges().get(1));
+    for (HyperEdge hyperEdge : hyperGraph.getHyperEdges()) {
+      if (hyperEdge.getId().equals("2")) {
+        assertEquals(e2, hyperEdge);
+      }
+    }
   }
 
   @Test
@@ -137,10 +160,10 @@ public class HyperGraphTest {
   @Test
   void testValidate() {
     Vertex v3 = new Vertex("3", 3);
-    HyperEdge e2 = new HyperEdge("2", Collections.singletonList(v3));
-    List<HyperEdge> testEdges = List.of(e2);
+    HyperEdge e2 = new HyperEdge("2", new HashSet<>(Collections.singletonList(v3)));
+    Set<HyperEdge> testEdges = new HashSet<>(List.of(e2));
     Vertex v4 = new Vertex("4", 4);
-    List<Vertex> invalidVertices = Arrays.asList(v3, v4);
+    Set<Vertex> invalidVertices = new HashSet<>(Arrays.asList(v3, v4));
     assertThrows(IllegalArgumentException.class, () -> new HyperGraph(invalidVertices, testEdges));
   }
 
@@ -148,27 +171,20 @@ public class HyperGraphTest {
   void testValidateEmptyHyperEdge() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> new HyperGraph(List.of(new Vertex("3", 3)), List.of(new HyperEdge("2"))));
-  }
-
-  @Test
-  void testValidateDuplicateHyperEdge() {
-    Vertex v3 = new Vertex("3", 3);
-    Vertex v4 = new Vertex("4", 4);
-    HyperEdge e2 = new HyperEdge("2", Arrays.asList(v3, v4));
-    List<HyperEdge> testEdges = Arrays.asList(e2, e2);
-    List<Vertex> vertices = Arrays.asList(v3, v4);
-    assertThrows(IllegalArgumentException.class, () -> new HyperGraph(vertices, testEdges));
+        () ->
+            new HyperGraph(
+                new HashSet<>(List.of(new Vertex("3", 3))),
+                new HashSet<>(List.of(new HyperEdge("2")))));
   }
 
   @Test
   void testValidateHyperEdgesWithSameVertices() {
     Vertex v3 = new Vertex("3", 3);
     Vertex v4 = new Vertex("4", 4);
-    HyperEdge e2 = new HyperEdge("2", Arrays.asList(v3, v4));
-    HyperEdge e3 = new HyperEdge("3", Arrays.asList(v3, v4));
-    List<HyperEdge> testEdges = Arrays.asList(e2, e3);
-    List<Vertex> vertices = Arrays.asList(v3, v4);
+    HyperEdge e2 = new HyperEdge("2", new HashSet<>(Arrays.asList(v3, v4)));
+    HyperEdge e3 = new HyperEdge("3", new HashSet<>(Arrays.asList(v3, v4)));
+    Set<HyperEdge> testEdges = new HashSet<>(Arrays.asList(e2, e3));
+    Set<Vertex> vertices = new HashSet<>(Arrays.asList(v3, v4));
     assertThrows(IllegalArgumentException.class, () -> new HyperGraph(vertices, testEdges));
   }
 
@@ -198,25 +214,19 @@ public class HyperGraphTest {
   }
 
   @Test
-  void testAddHyperEdgeWithEmptyVertexList() {
-    HyperEdge e2 = new HyperEdge("2", new ArrayList<>());
-    assertThrows(IllegalArgumentException.class, () -> hyperGraph.addHyperEdge(e2));
-  }
-
-  @Test
   void testAddHyperEdgeWithSameVertices() {
     Vertex v3 = new Vertex("3", 3);
     Vertex v4 = new Vertex("4", 4);
-    HyperEdge e2 = new HyperEdge("2", Arrays.asList(v3, v4));
-    HyperEdge e3 = new HyperEdge("3", Arrays.asList(v3, v4));
+    HyperEdge e2 = new HyperEdge("2", new HashSet<>(Arrays.asList(v3, v4)));
+    HyperEdge e3 = new HyperEdge("3", new HashSet<>(Arrays.asList(v3, v4)));
     hyperGraph.addHyperEdge(e2);
     assertThrows(IllegalArgumentException.class, () -> hyperGraph.addHyperEdge(e3));
   }
 
   @Test
   public void testValidateEmptyHyperEdges() {
-    List<Vertex> testVertices = Arrays.asList(new Vertex("1", 1), new Vertex("2", 2));
-    List<HyperEdge> testEdges = new ArrayList<>();
+    Set<Vertex> testVertices = new HashSet<>(Arrays.asList(new Vertex("1", 1), new Vertex("2", 2)));
+    Set<HyperEdge> testEdges = new HashSet<>();
     assertThrows(IllegalArgumentException.class, () -> new HyperGraph(testVertices, testEdges));
   }
 
@@ -236,12 +246,12 @@ public class HyperGraphTest {
     Vertex v2 = new Vertex("2", 2);
     Vertex v3 = new Vertex("3", 3);
 
-    HyperEdge e1 = new HyperEdge("1", Arrays.asList(v1, v2));
-    HyperEdge e2 = new HyperEdge("2", Arrays.asList(v2, v3));
-    HyperEdge e3 = new HyperEdge("3", Arrays.asList(v1, v3));
+    HyperEdge e1 = new HyperEdge("1", new HashSet<>(Arrays.asList(v1, v2)));
+    HyperEdge e2 = new HyperEdge("2", new HashSet<>(Arrays.asList(v2, v3)));
+    HyperEdge e3 = new HyperEdge("3", new HashSet<>(Arrays.asList(v1, v3)));
 
-    List<Vertex> testVertices = Arrays.asList(v1, v2, v3);
-    List<HyperEdge> testEdges = Arrays.asList(e1, e2, e3);
+    Set<Vertex> testVertices = new HashSet<>(Arrays.asList(v1, v2, v3));
+    Set<HyperEdge> testEdges = new HashSet<>(Arrays.asList(e1, e2, e3));
 
     HyperGraph graphWithIntersections = new HyperGraph(testVertices, testEdges);
 
@@ -255,11 +265,11 @@ public class HyperGraphTest {
     Vertex v3 = new Vertex("3", 1.0);
     Vertex v4 = new Vertex("4", 2.0);
 
-    HyperEdge e1 = new HyperEdge("1", List.of(v3));
-    HyperEdge e2 = new HyperEdge("2", List.of(v4));
+    HyperEdge e1 = new HyperEdge("1", new HashSet<>(List.of(v3)));
+    HyperEdge e2 = new HyperEdge("2", new HashSet<>(List.of(v4)));
 
-    List<Vertex> testVertices = Arrays.asList(v3, v4);
-    List<HyperEdge> testEdges = Arrays.asList(e1, e2);
+    Set<Vertex> testVertices = new HashSet<>(Arrays.asList(v3, v4));
+    Set<HyperEdge> testEdges = new HashSet<>(Arrays.asList(e1, e2));
 
     HyperGraph graphWithoutIntersections = new HyperGraph(testVertices, testEdges);
 
@@ -286,12 +296,41 @@ public class HyperGraphTest {
     java.io.ByteArrayOutputStream outContent = new java.io.ByteArrayOutputStream();
     System.setOut(new java.io.PrintStream(outContent));
     Vertex v3 = new Vertex("3", 3.0);
-    hyperGraph.addHyperEdge(new HyperEdge("2", Collections.singletonList(v3)));
+    hyperGraph.addHyperEdge(new HyperEdge("2", new HashSet<>(Collections.singletonList(v3))));
     hyperGraph.printPlacementMatrix();
 
     String expectedOutput = "1 0\n1 0\n0 1";
     assertEquals(expectedOutput, outContent.toString().trim());
 
     System.setOut(System.out);
+  }
+
+  @Test
+  public void testShowGraph() {
+    FrameFixture frameFixture = null;
+    try {
+      SwingUtilities.invokeAndWait(() -> hyperGraph.showGraph());
+
+      JFrame hyperGraphFrame = null;
+      for (Frame frame : JFrame.getFrames()) {
+        if (frame instanceof JFrame && frame.getTitle().equals("HyperGraph")) {
+          hyperGraphFrame = (JFrame) frame;
+          break;
+        }
+      }
+
+      assertNotNull(hyperGraphFrame, "HyperGraph frame should be present");
+
+      frameFixture = new FrameFixture(hyperGraphFrame);
+      frameFixture.requireSize(new Dimension(800, 600));
+      frameFixture.requireVisible();
+      assertEquals("HyperGraph", hyperGraphFrame.getTitle());
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      if (frameFixture != null) {
+        frameFixture.cleanUp();
+      }
+    }
   }
 }

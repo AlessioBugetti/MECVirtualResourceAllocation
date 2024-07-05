@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -32,8 +31,8 @@ public class HyperGraphGeneratorTest {
   public void testGenerateRandomHyperGraph() {
     hyperGraph = HyperGraphGenerator.generateRandomHyperGraph(5, rand);
 
-    List<Vertex> vertices = hyperGraph.getVertices();
-    List<HyperEdge> edges = hyperGraph.getHyperEdges();
+    Set<Vertex> vertices = hyperGraph.getVertices();
+    Set<HyperEdge> edges = hyperGraph.getHyperEdges();
 
     assertEquals(5, vertices.size());
 
@@ -63,8 +62,8 @@ public class HyperGraphGeneratorTest {
   public void testGenerateRandomHyperGraphWithMinimalVertices() {
     hyperGraph = HyperGraphGenerator.generateRandomHyperGraph(1, rand);
 
-    List<Vertex> vertices = hyperGraph.getVertices();
-    List<HyperEdge> edges = hyperGraph.getHyperEdges();
+    Set<Vertex> vertices = hyperGraph.getVertices();
+    Set<HyperEdge> edges = hyperGraph.getHyperEdges();
 
     assertEquals(1, vertices.size());
 
@@ -79,7 +78,7 @@ public class HyperGraphGeneratorTest {
     }
 
     assertTrue(
-        edges.size() <= MathUtils.sumOfBinomials(5, HyperGraphGenerator.DELTA) - 1
+        edges.size() <= MathUtils.sumOfBinomials(1, HyperGraphGenerator.DELTA) - 1
             && !edges.isEmpty());
   }
 
@@ -87,8 +86,8 @@ public class HyperGraphGeneratorTest {
   public void testGenerateRandomHyperGraphWithMediumVertices() {
     hyperGraph = HyperGraphGenerator.generateRandomHyperGraph(50, rand);
 
-    List<Vertex> vertices = hyperGraph.getVertices();
-    List<HyperEdge> edges = hyperGraph.getHyperEdges();
+    Set<Vertex> vertices = hyperGraph.getVertices();
+    Set<HyperEdge> edges = hyperGraph.getHyperEdges();
 
     assertEquals(50, vertices.size());
 
@@ -111,8 +110,8 @@ public class HyperGraphGeneratorTest {
   public void testGenerateRandomHyperGraphWithMaxVertices() {
     hyperGraph = HyperGraphGenerator.generateRandomHyperGraph(150, rand);
 
-    List<Vertex> vertices = hyperGraph.getVertices();
-    List<HyperEdge> edges = hyperGraph.getHyperEdges();
+    Set<Vertex> vertices = hyperGraph.getVertices();
+    Set<HyperEdge> edges = hyperGraph.getHyperEdges();
 
     assertEquals(150, vertices.size());
 

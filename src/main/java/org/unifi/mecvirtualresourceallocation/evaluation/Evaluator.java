@@ -12,7 +12,7 @@ public interface Evaluator {
   /**
    * Generates an array from 1 to MAX_VERTEX_SIZE.
    *
-   * @return an array from 1 to MAX_VERTEX_SIZE.
+   * @return an array from 1 to MAX_VERTEX_SIZE
    */
   default int[] generateVertexSizes() {
     int[] vertexSizes = new int[MAX_VERTEX_SIZE];

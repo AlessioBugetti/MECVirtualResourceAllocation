@@ -17,8 +17,8 @@ public class SequentialSearchStrategy implements AllocationStrategy {
   /**
    * Allocates resources based on the sequential search strategy.
    *
-   * @param hyperGraph the hypergraph used to allocate resources.
-   * @return a set of vertices.
+   * @param hyperGraph the hypergraph used to allocate resources
+   * @return a set of vertices
    */
   @Override
   public Set<Vertex> allocate(HyperGraph hyperGraph) {
@@ -38,8 +38,8 @@ public class SequentialSearchStrategy implements AllocationStrategy {
   /**
    * Finds the vertex with the maximum weight in the given set of vertices.
    *
-   * @param vertices the set of vertices.
-   * @return the vertex with the maximum weight.
+   * @param vertices the set of vertices
+   * @return the vertex with the maximum weight
    */
   private Vertex findMaxWeightVertex(Set<Vertex> vertices) {
     return vertices.stream()

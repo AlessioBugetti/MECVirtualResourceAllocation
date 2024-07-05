@@ -29,21 +29,21 @@ public abstract class GraphPanel extends JPanel {
   /**
    * Abstract method to be implemented by subclasses for drawing edges between vertices.
    *
-   * @param g2d The Graphics2D context used for drawing.
+   * @param g2d The Graphics2D context used for drawing
    */
   protected abstract void drawEdges(Graphics2D g2d);
 
   /**
    * Abstract method to be implemented by subclasses for drawing vertices with labels.
    *
-   * @param g2d The Graphics2D context used for drawing.
+   * @param g2d The Graphics2D context used for drawing
    */
   protected abstract void drawVertices(Graphics2D g2d);
 
   /**
    * Overrides JPanel's paintComponent method to draw the graph.
    *
-   * @param graphics The Graphics context used for painting.
+   * @param graphics The Graphics context used for painting
    */
   @Override
   protected void paintComponent(Graphics graphics) {

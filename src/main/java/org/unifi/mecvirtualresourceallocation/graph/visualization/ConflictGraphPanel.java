@@ -21,7 +21,7 @@ public class ConflictGraphPanel extends GraphPanel {
   /**
    * Constructs a ConflictGraphPanel with the specified ConflictGraph.
    *
-   * @param conflictGraph The ConflictGraph object representing the graph to visualize.
+   * @param conflictGraph The ConflictGraph object representing the graph to visualize
    */
   public ConflictGraphPanel(ConflictGraph conflictGraph) {
     this.conflictGraph = conflictGraph;
@@ -49,7 +49,7 @@ public class ConflictGraphPanel extends GraphPanel {
   /**
    * Draws edges between vertices of the ConflictGraph.
    *
-   * @param g2d The Graphics2D context used for drawing.
+   * @param g2d The Graphics2D context used for drawing
    */
   @Override
   protected void drawEdges(Graphics2D g2d) {
@@ -65,7 +65,7 @@ public class ConflictGraphPanel extends GraphPanel {
   /**
    * Draws vertices of the ConflictGraph with labels.
    *
-   * @param g2d The Graphics2D context used for drawing.
+   * @param g2d The Graphics2D context used for drawing
    */
   @Override
   protected void drawVertices(Graphics2D g2d) {

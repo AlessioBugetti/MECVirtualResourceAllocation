@@ -22,26 +22,26 @@ public final class HyperGraphGenerator {
   /**
    * Generates a random hypergraph with the specified number of vertices.
    *
-   * @param numVertices the number of vertices in the hypergraph.
-   * @param rand the Random instance used for generating random numbers.
-   * @return a randomly generated HyperGraph.
+   * @param numVertices the number of vertices in the hypergraph
+   * @param rand the Random instance used for generating random numbers
+   * @return a randomly generated HyperGraph
    */
   public static HyperGraph generateRandomHyperGraph(int numVertices, Random rand) {
-    List<Vertex> vertices = generateVertices(numVertices, rand);
-    List<HyperEdge> edges = generateEdges(numVertices, rand, vertices);
+    Set<Vertex> vertices = generateVertices(numVertices, rand);
+    Set<HyperEdge> edges = generateEdges(numVertices, rand, vertices);
     ensureAllVerticesConnected(vertices, edges);
     return new HyperGraph(vertices, edges);
   }
 
   /**
-   * Generates a list of vertices with random weights.
+   * Generates a set of vertices with random weights.
    *
-   * @param numVertices the number of vertices to generate.
-   * @param rand the Random instance used for generating random numbers.
-   * @return a list of generated vertices.
+   * @param numVertices the number of vertices to generate
+   * @param rand the Random instance used for generating random numbers
+   * @return a set of generated vertices
    */
-  private static List<Vertex> generateVertices(int numVertices, Random rand) {
-    List<Vertex> vertices = new ArrayList<>();
+  private static Set<Vertex> generateVertices(int numVertices, Random rand) {
+    Set<Vertex> vertices = new HashSet<>();
     for (int i = 1; i <= numVertices; i++) {
       vertices.add(new Vertex(String.valueOf(i), rand.nextDouble() * 10));
     }
@@ -49,33 +49,33 @@ public final class HyperGraphGenerator {
   }
 
   /**
-   * Generates a list of hyperedges connecting the vertices.
+   * Generates a set of hyperedges connecting the vertices.
    *
-   * @param numVertices the number of vertices in the hypergraph.
-   * @param rand the Random instance used for generating random numbers.
-   * @param vertices the list of vertices to be connected by hyperedges.
-   * @return a list of generated hyperedges.
+   * @param numVertices the number of vertices in the hypergraph
+   * @param rand the Random instance used for generating random numbers
+   * @param vertices the set of vertices to be connected by hyperedges
+   * @return a set of generated hyperedges
    */
-  private static List<HyperEdge> generateEdges(
-      int numVertices, Random rand, List<Vertex> vertices) {
-    List<HyperEdge> edges = new ArrayList<>();
+  private static Set<HyperEdge> generateEdges(int numVertices, Random rand, Set<Vertex> vertices) {
+    Set<HyperEdge> edges = new HashSet<>();
     Set<Set<Vertex>> uniqueEdgeSets = new HashSet<>();
     int maxEdges = MathUtils.sumOfBinomials(numVertices, DELTA) - 1;
+    List<Vertex> vertexList = new ArrayList<>(vertices);
 
     for (int i = 1; i <= rand.nextInt(maxEdges) + 1; i++) {
       Set<Vertex> edgeVertices = new HashSet<>();
       int edgeSize = numVertices < DELTA ? rand.nextInt(numVertices) + 1 : rand.nextInt(DELTA) + 1;
       while (edgeVertices.size() < edgeSize) {
-        edgeVertices.add(vertices.get(rand.nextInt(numVertices)));
+        edgeVertices.add(vertexList.get(rand.nextInt(numVertices)));
       }
       if (i == 1) {
         uniqueEdgeSets.add(edgeVertices);
-        edges.add(new HyperEdge(String.valueOf(i), new ArrayList<>(edgeVertices)));
+        edges.add(new HyperEdge(String.valueOf(i), edgeVertices));
       } else if (uniqueEdgeSets.contains(edgeVertices)) {
         i--;
       } else {
         uniqueEdgeSets.add(edgeVertices);
-        edges.add(new HyperEdge(String.valueOf(i), new ArrayList<>(edgeVertices)));
+        edges.add(new HyperEdge(String.valueOf(i), edgeVertices));
       }
     }
     return edges;
@@ -84,16 +84,16 @@ public final class HyperGraphGenerator {
   /**
    * Ensures that all vertices are connected by at least one hyperedge.
    *
-   * @param vertices the list of vertices in the hypergraph.
-   * @param edges the list of hyperedges in the hypergraph.
+   * @param vertices the set of vertices in the hypergraph
+   * @param edges the set of hyperedges in the hypergraph
    */
-  private static void ensureAllVerticesConnected(List<Vertex> vertices, List<HyperEdge> edges) {
+  private static void ensureAllVerticesConnected(Set<Vertex> vertices, Set<HyperEdge> edges) {
     for (Vertex vertex : vertices) {
       boolean found = edges.stream().anyMatch(edge -> edge.getVertices().contains(vertex));
       if (!found) {
         Set<Vertex> newHyperEdge = new HashSet<>();
         newHyperEdge.add(vertex);
-        edges.add(new HyperEdge(String.valueOf(edges.size() + 1), new ArrayList<>(newHyperEdge)));
+        edges.add(new HyperEdge(String.valueOf(edges.size() + 1), newHyperEdge));
       }
     }
   }

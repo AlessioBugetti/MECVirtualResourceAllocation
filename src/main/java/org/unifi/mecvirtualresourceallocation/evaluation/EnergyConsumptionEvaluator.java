@@ -57,9 +57,9 @@ public abstract class EnergyConsumptionEvaluator implements Evaluator {
   /**
    * Calculates the total weight reduction for the given allocation strategy.
    *
-   * @param hyperGraph the hypergraph to allocate resources for.
-   * @param strategy the allocation strategy to be measured.
-   * @return the total weight reduction.
+   * @param hyperGraph the hypergraph to allocate resources for
+   * @param strategy the allocation strategy to be measured
+   * @return the total weight reduction
    */
   private BigDecimal calculateWeight(HyperGraph hyperGraph, AllocationStrategy strategy) {
     Set<Vertex> initialIndependentSet = strategy.allocate(hyperGraph);
@@ -72,8 +72,8 @@ public abstract class EnergyConsumptionEvaluator implements Evaluator {
   /**
    * Plots the results of the energy consumption evaluation.
    *
-   * @param avgWeightsSequential the average reduced weights for the SequentialSearchStrategy.
-   * @param avgWeightsLocal the average reduced weights for the LocalSearchStrategy.
+   * @param avgWeightsSequential the average reduced weights for the SequentialSearchStrategy
+   * @param avgWeightsLocal the average reduced weights for the LocalSearchStrategy
    */
   protected abstract void plotResults(
       Map<Integer, BigDecimal> avgWeightsSequential, Map<Integer, BigDecimal> avgWeightsLocal);

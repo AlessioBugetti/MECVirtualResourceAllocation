@@ -2,11 +2,20 @@ package org.unifi.mecvirtualresourceallocation;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+import org.fest.swing.fixture.FrameFixture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.unifi.mecvirtualresourceallocation.graph.ConflictGraph;
 import org.unifi.mecvirtualresourceallocation.graph.Edge;
+import org.unifi.mecvirtualresourceallocation.graph.HyperEdge;
+import org.unifi.mecvirtualresourceallocation.graph.HyperGraph;
 import org.unifi.mecvirtualresourceallocation.graph.Vertex;
 
 public class ConflictGraphTest {
@@ -35,6 +44,12 @@ public class ConflictGraphTest {
   }
 
   @Test
+  public void testAddDuplicateVertex() {
+    conflictGraph.addVertex(vertex1);
+    assertThrows(IllegalArgumentException.class, () -> conflictGraph.addVertex(vertex1));
+  }
+
+  @Test
   public void testAddEdge() {
     conflictGraph.addVertex(vertex1);
     conflictGraph.addVertex(vertex2);
@@ -49,6 +64,25 @@ public class ConflictGraphTest {
   }
 
   @Test
+  public void testAddEdgeNullVertex1() {
+    assertThrows(IllegalArgumentException.class, () -> conflictGraph.addEdge(null, vertex2));
+  }
+
+  @Test
+  public void testAddEdgeNullVertex2() {
+    assertThrows(IllegalArgumentException.class, () -> conflictGraph.addEdge(vertex1, null));
+  }
+
+  @Test
+  public void testAddDuplicateEdge() {
+    conflictGraph.addVertex(vertex1);
+    conflictGraph.addVertex(vertex2);
+    conflictGraph.addEdge(vertex1, vertex2);
+
+    assertThrows(IllegalArgumentException.class, () -> conflictGraph.addEdge(vertex1, vertex2));
+  }
+
+  @Test
   public void testGetVertexFromId() {
     conflictGraph.addVertex(vertex1);
     conflictGraph.addVertex(vertex2);
@@ -59,23 +93,106 @@ public class ConflictGraphTest {
   }
 
   @Test
+  public void testAreVerticesConnected() {
+    conflictGraph.addVertex(vertex1);
+    conflictGraph.addVertex(vertex2);
+    conflictGraph.addEdge(vertex1, vertex2);
+
+    assertTrue(
+        conflictGraph.areVerticesConnected(vertex1, vertex2), "Vertices should be connected");
+  }
+
+  @Test
+  public void testAreVerticesConnectedEmpty() {
+    assertFalse(
+        conflictGraph.areVerticesConnected(vertex1, vertex2), "Vertices should not be connected");
+  }
+
+  @Test
+  public void testGetAdjacentVertices() {
+    conflictGraph.addVertex(vertex1);
+    conflictGraph.addVertex(vertex2);
+    conflictGraph.addEdge(vertex1, vertex2);
+
+    Set<Vertex> adjacentVertices = conflictGraph.getAdjacentVertices(vertex1);
+
+    for (Vertex vertex : adjacentVertices) {
+      assertEquals(vertex, vertex2, "Vertex2 should be adjacent to Vertex1");
+    }
+  }
+
+  @Test
+  public void testGetAdjacentVerticesEmpty() {
+    Set<Vertex> adjacentVertices = conflictGraph.getAdjacentVertices(vertex1);
+    assertTrue(adjacentVertices.isEmpty(), "There should be no adjacent vertices");
+  }
+
+  @Test
   public void testToString() {
     conflictGraph.addVertex(vertex1);
     conflictGraph.addVertex(vertex2);
     conflictGraph.addEdge(vertex1, vertex2);
 
     String expected =
-        "ConflictGraph {\n"
-            + "Vertices:\n"
-            + "Vertex{id=1, weight=1.0}\n"
-            + "Vertex{id=2, weight=2.0}\n"
-            + "Edges:\n"
-            + "Edge{vertices=Vertex{id=1, weight=1.0}, Vertex{id=2, weight=2.0}}\n"
-            + "}";
+        """
+            ConflictGraph {
+            Vertices:
+            Vertex{id=1, weight=1.0}
+            Vertex{id=2, weight=2.0}
+            Edges:
+            Edge{vertices=Vertex{id=1, weight=1.0}, Vertex{id=2, weight=2.0}}
+            }""";
 
     assertEquals(
         expected,
         conflictGraph.toString(),
         "The toString method should return the correct string representation of the graph");
+  }
+
+  @Test
+  public void testShowGraph() {
+    Vertex v1 = new Vertex("1", 1.0);
+    Vertex v2 = new Vertex("2", 2.0);
+    Vertex v3 = new Vertex("3", 3.0);
+    Vertex v4 = new Vertex("4", 4.0);
+    Vertex v5 = new Vertex("5", 5.0);
+    Vertex v6 = new Vertex("6", 6.0);
+    Set<Vertex> vertices = new HashSet<>(Arrays.asList(v1, v2, v3, v4, v5, v6));
+
+    HyperEdge p1 = new HyperEdge("1", new HashSet<>(Arrays.asList(v1, v2, v3)));
+    HyperEdge p2 = new HyperEdge("2", new HashSet<>(Arrays.asList(v2, v4)));
+    HyperEdge p3 = new HyperEdge("3", new HashSet<>(Arrays.asList(v3, v6)));
+    HyperEdge p4 = new HyperEdge("4", new HashSet<>(Arrays.asList(v1, v5)));
+    HyperEdge p5 = new HyperEdge("5", new HashSet<>(Arrays.asList(v3, v5, v6)));
+    HyperEdge p6 = new HyperEdge("6", new HashSet<>(Arrays.asList(v1, v4)));
+    Set<HyperEdge> edges = new HashSet<>(Arrays.asList(p1, p2, p3, p4, p5, p6));
+
+    ConflictGraph conflictGraph = new HyperGraph(vertices, edges).getConflictGraph();
+
+    FrameFixture frameFixture = null;
+    try {
+      SwingUtilities.invokeAndWait(conflictGraph::showGraph);
+
+      JFrame conflictGraphFrame = null;
+      for (Frame frame : JFrame.getFrames()) {
+        if (frame instanceof JFrame && frame.getTitle().equals("ConflictGraph")) {
+          conflictGraphFrame = (JFrame) frame;
+          break;
+        }
+      }
+
+      assertNotNull(conflictGraphFrame, "ConflictGraph frame should be present");
+
+      frameFixture = new FrameFixture(conflictGraphFrame);
+      frameFixture.requireSize(new Dimension(800, 600));
+      frameFixture.requireVisible();
+      assertEquals("ConflictGraph", conflictGraphFrame.getTitle());
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      if (frameFixture != null) {
+        frameFixture.cleanUp();
+      }
+    }
   }
 }

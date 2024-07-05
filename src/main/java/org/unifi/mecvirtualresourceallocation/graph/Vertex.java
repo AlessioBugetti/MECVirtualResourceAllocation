@@ -6,26 +6,41 @@ import java.util.Objects;
 /**
  * This class represents a vertex in a hypergraph or in a conflict graph. Each vertex is
  * characterized by a unique identifier and a weight. The identifier is used to distinguish between
- * different vertices, while the weight represent the energy consumption.
+ * different vertices, while the weight represents the energy consumption.
  */
-public class Vertex {
+public final class Vertex {
 
   private String id;
   private BigDecimal weight;
 
   /**
-   * Constructs a new {@code Vertex} with the specified identifier and weight.
+   * Constructs a new vertex with the specified identifier and weight.
    *
-   * @param id the unique identifier of the vertex.
-   * @param weight the weight associated with the vertex.
+   * @param id the unique identifier of the vertex
+   * @param weight the weight associated with the vertex
    */
   public Vertex(String id, double weight) {
+    if (!id.matches("\\d+") || Integer.parseInt(id) <= 0) {
+      throw new IllegalArgumentException("ID must be a positive integer");
+    }
     this.id = id;
-    if (weight > 0) this.weight = BigDecimal.valueOf(-weight);
-    else this.weight = BigDecimal.valueOf(weight);
+    if (weight > 0) {
+      this.weight = BigDecimal.valueOf(-weight);
+    } else {
+      this.weight = BigDecimal.valueOf(weight);
+    }
   }
 
+  /**
+   * Constructs a new vertex with the specified identifier and weight.
+   *
+   * @param id the unique identifier of the vertex
+   * @param weight the weight associated with the vertex
+   */
   public Vertex(String id, BigDecimal weight) {
+    if (!id.matches("\\d+") || Integer.parseInt(id) <= 0) {
+      throw new IllegalArgumentException("ID must be a positive integer");
+    }
     this.id = id;
     this.weight = weight.compareTo(BigDecimal.ZERO) > 0 ? weight.negate() : weight;
   }
@@ -33,7 +48,7 @@ public class Vertex {
   /**
    * Returns the identifier of this vertex.
    *
-   * @return the identifier of the vertex.
+   * @return the identifier of the vertex
    */
   public String getId() {
     return id;
@@ -42,7 +57,7 @@ public class Vertex {
   /**
    * Sets the identifier of this vertex.
    *
-   * @param id the new identifier of the vertex.
+   * @param id the new identifier of the vertex
    */
   public void setId(String id) {
     this.id = id;
@@ -51,7 +66,7 @@ public class Vertex {
   /**
    * Returns the weight of this vertex.
    *
-   * @return the weight of the vertex.
+   * @return the weight of the vertex
    */
   public BigDecimal getWeight() {
     return weight.negate();
@@ -60,7 +75,7 @@ public class Vertex {
   /**
    * Returns the negative weight of this vertex.
    *
-   * @return the negative weight of the vertex.
+   * @return the negative weight of the vertex
    */
   public BigDecimal getNegativeWeight() {
     return weight;
@@ -70,7 +85,7 @@ public class Vertex {
    * Returns a string representation of the vertex. The string representation consists of the
    * vertex's identifier and weight, enclosed in curly braces.
    *
-   * @return a string representation of the vertex.
+   * @return a string representation of the vertex
    */
   @Override
   public String toString() {

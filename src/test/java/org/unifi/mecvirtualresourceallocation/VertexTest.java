@@ -1,7 +1,10 @@
 package org.unifi.mecvirtualresourceallocation;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +27,20 @@ public class VertexTest {
     double weight = -1.0;
     Vertex vertex2 = new Vertex(id, weight);
     assertEquals(BigDecimal.valueOf(weight), vertex2.getNegativeWeight());
+  }
+
+  @Test
+  void testSetNegativeId() {
+    assertThrows(IllegalArgumentException.class, () -> new Vertex("-1", 1.0));
+    assertThrows(IllegalArgumentException.class, () -> new Vertex("0", 1.0));
+    assertThrows(IllegalArgumentException.class, () -> new Vertex("-1", BigDecimal.valueOf(1.0)));
+    assertThrows(IllegalArgumentException.class, () -> new Vertex("0", BigDecimal.valueOf(1.0)));
+  }
+
+  @Test
+  void testSetWrongId() {
+    assertThrows(IllegalArgumentException.class, () -> new Vertex("test", 1.0));
+    assertThrows(IllegalArgumentException.class, () -> new Vertex("test", BigDecimal.valueOf(1.0)));
   }
 
   @Test
@@ -63,24 +80,34 @@ public class VertexTest {
 
   @Test
   public void testEqualsWithNull() {
-    assertNotEquals(null, vertex);
+    Vertex vertex1 = new Vertex("1", 1.0);
+    assertFalse(vertex1.equals(null));
   }
 
   @Test
-  public void testEqualsWithDifferentClass() {
-    assertNotEquals("not a vertex", vertex);
+  public void testEqualsWithString() {
+    Vertex vertex1 = new Vertex("1", 1.0);
+    String differentClassObject = "test";
+    assertFalse(vertex1.equals(differentClassObject));
+  }
+
+  @Test
+  public void testEqualsWithObject() {
+    Vertex vertex1 = new Vertex("1", 1.0);
+    Object differentClassObject = new Object();
+    assertFalse(vertex1.equals(differentClassObject));
   }
 
   @Test
   public void testEqualsWithDifferentId() {
     Vertex differentVertex = new Vertex("2", 2.0);
-    assertNotEquals(vertex, differentVertex);
+    assertFalse(vertex.equals(differentVertex));
   }
 
   @Test
   public void testEqualsWithSameId() {
     Vertex sameVertex = new Vertex(id, weight);
-    assertEquals(vertex, sameVertex);
+    assertTrue(vertex.equals(sameVertex));
   }
 
   @Test

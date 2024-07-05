@@ -47,9 +47,9 @@ public class ExecutionTimeEvaluator implements Evaluator {
   /**
    * Measures the execution time of the given allocation strategy on the given hypergraph.
    *
-   * @param hyperGraph the hypergraph to allocate resources for.
-   * @param strategy the allocation strategy to be measured.
-   * @return the execution time in nanoseconds.
+   * @param hyperGraph the hypergraph to allocate resources for
+   * @param strategy the allocation strategy to be measured
+   * @return the execution time in nanoseconds
    */
   private long measureExecutionTime(HyperGraph hyperGraph, AllocationStrategy strategy) {
     long startTime = System.nanoTime();
@@ -60,8 +60,8 @@ public class ExecutionTimeEvaluator implements Evaluator {
   /**
    * Plots the results of the execution time evaluation.
    *
-   * @param avgExecutionTimeSequential the average execution time for the SequentialSearchStrategy.
-   * @param avgExecutionTimeLocal the average execution time for the LocalSearchStrategy.
+   * @param avgExecutionTimeSequential the average execution time for the SequentialSearchStrategy
+   * @param avgExecutionTimeLocal the average execution time for the LocalSearchStrategy
    */
   private void plotResults(
       Map<Integer, Long> avgExecutionTimeSequential, Map<Integer, Long> avgExecutionTimeLocal) {
