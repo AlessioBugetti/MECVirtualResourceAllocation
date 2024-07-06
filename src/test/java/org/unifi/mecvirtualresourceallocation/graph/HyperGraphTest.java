@@ -3,9 +3,11 @@ package org.unifi.mecvirtualresourceallocation.graph;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
@@ -321,8 +323,8 @@ public class HyperGraphTest {
       frameFixture.requireSize(new Dimension(800, 600));
       frameFixture.requireVisible();
       assertEquals("HyperGraph", hyperGraphFrame.getTitle());
-    } catch (Exception e) {
-      e.printStackTrace();
+    } catch (InvocationTargetException | InterruptedException e) {
+      fail("Test failed due to exception: " + e.getMessage());
     } finally {
       if (frameFixture != null) {
         frameFixture.cleanUp();

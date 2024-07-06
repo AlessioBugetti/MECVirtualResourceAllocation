@@ -1,10 +1,22 @@
 package org.unifi.mecvirtualresourceallocation.evaluation.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import org.junit.jupiter.api.Test;
 
 public class MathUtilsTest {
+
+  @Test
+  public void testPrivateConstructor() throws Exception {
+    Constructor<MathUtils> constructor = MathUtils.class.getDeclaredConstructor();
+    constructor.setAccessible(true);
+    InvocationTargetException thrown =
+        assertThrows(InvocationTargetException.class, constructor::newInstance);
+    assertEquals(UnsupportedOperationException.class, thrown.getCause().getClass());
+  }
 
   @Test
   public void testBinomialCoefficient() {

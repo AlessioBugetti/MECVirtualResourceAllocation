@@ -2,8 +2,11 @@ package org.unifi.mecvirtualresourceallocation.evaluation.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -23,6 +26,16 @@ public class HyperGraphGeneratorTest {
   @BeforeEach
   public void setUp() {
     rand = new Random(Evaluator.SEED);
+  }
+
+  @Test
+  public void testPrivateConstructor() throws Exception {
+    Constructor<HyperGraphGenerator> constructor =
+        HyperGraphGenerator.class.getDeclaredConstructor();
+    constructor.setAccessible(true);
+    InvocationTargetException thrown =
+        assertThrows(InvocationTargetException.class, constructor::newInstance);
+    assertEquals(UnsupportedOperationException.class, thrown.getCause().getClass());
   }
 
   @Test

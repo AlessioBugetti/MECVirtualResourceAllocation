@@ -3,9 +3,13 @@ package org.unifi.mecvirtualresourceallocation.evaluation.util;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.Map;
@@ -21,6 +25,15 @@ import org.jfree.data.xy.XYSeriesCollection;
 import org.junit.jupiter.api.Test;
 
 public class ChartUtilsTest {
+
+  @Test
+  public void testPrivateConstructor() throws Exception {
+    Constructor<ChartUtils> constructor = ChartUtils.class.getDeclaredConstructor();
+    constructor.setAccessible(true);
+    InvocationTargetException thrown =
+        assertThrows(InvocationTargetException.class, constructor::newInstance);
+    assertEquals(UnsupportedOperationException.class, thrown.getCause().getClass());
+  }
 
   @Test
   public void testCreateAndShowChartSingleSeries() {
@@ -64,8 +77,8 @@ public class ChartUtilsTest {
       assertEquals(BigDecimal.valueOf(1.0), series.getY(0));
       assertEquals(2, series.getX(1));
       assertEquals(BigDecimal.valueOf(2.0), series.getY(1));
-    } catch (Exception e) {
-      e.printStackTrace();
+    } catch (InvocationTargetException | InterruptedException e) {
+      fail("Test failed due to exception: " + e.getMessage());
     } finally {
       if (frameFixture != null) {
         frameFixture.cleanUp();
@@ -131,8 +144,8 @@ public class ChartUtilsTest {
       assertEquals(BigDecimal.valueOf(1.5), series2.getY(0));
       assertEquals(2, series2.getX(1));
       assertEquals(BigDecimal.valueOf(2.5), series2.getY(1));
-    } catch (Exception e) {
-      e.printStackTrace();
+    } catch (InvocationTargetException | InterruptedException e) {
+      fail("Test failed due to exception: " + e.getMessage());
     } finally {
       if (frameFixture != null) {
         frameFixture.cleanUp();
@@ -201,8 +214,8 @@ public class ChartUtilsTest {
       assertEquals(1500L, series2.getY(0).longValue());
       assertEquals(2, series2.getX(1).longValue());
       assertEquals(2500L, series2.getY(1).longValue());
-    } catch (Exception e) {
-      e.printStackTrace();
+    } catch (InvocationTargetException | InterruptedException e) {
+      fail("Test failed due to exception: " + e.getMessage());
     } finally {
       if (frameFixture != null) {
         frameFixture.cleanUp();

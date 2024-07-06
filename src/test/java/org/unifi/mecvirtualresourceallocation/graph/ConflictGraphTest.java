@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -182,8 +183,8 @@ public class ConflictGraphTest {
       frameFixture.requireSize(new Dimension(800, 600));
       frameFixture.requireVisible();
       assertEquals("ConflictGraph", conflictGraphFrame.getTitle());
-    } catch (Exception e) {
-      e.printStackTrace();
+    } catch (InvocationTargetException | InterruptedException e) {
+      fail("Test failed due to exception: " + e.getMessage());
     } finally {
       if (frameFixture != null) {
         frameFixture.cleanUp();
