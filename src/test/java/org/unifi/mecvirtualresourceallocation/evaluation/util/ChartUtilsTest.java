@@ -45,6 +45,7 @@ public class ChartUtilsTest {
               ChartUtils.createAndShowChart(
                   "Test Chart Single Series", "X Axis", "Y Axis", data, "Single Series"));
 
+      Thread.sleep(1000);
       JFrame hyperGraphFrame = null;
       for (Frame frame : JFrame.getFrames()) {
         if (frame instanceof JFrame && frame.getTitle().equals("Test Chart Single Series")) {
@@ -104,6 +105,7 @@ public class ChartUtilsTest {
                   data2,
                   "Series 2"));
 
+      Thread.sleep(1000);
       JFrame hyperGraphFrame = null;
       for (Frame frame : JFrame.getFrames()) {
         if (frame instanceof JFrame && frame.getTitle().equals("Test Chart Two Series")) {
@@ -170,6 +172,8 @@ public class ChartUtilsTest {
                   "Execution 1",
                   data2,
                   "Execution 2"));
+
+      Thread.sleep(1000);
 
       JFrame hyperGraphFrame = null;
       for (Frame frame : JFrame.getFrames()) {
