@@ -16,15 +16,25 @@ import org.unifi.mecvirtualresourceallocation.graph.Vertex;
 /** Abstract evaluator for measuring energy consumption in resource allocation. */
 public abstract class EnergyConsumptionEvaluator implements Evaluator {
 
-  /** Executes the evaluation of energy consumption. */
+  /**
+   * Executes the evaluation of energy consumption.
+   *
+   * @param maxVertexSize the maximum size of vertices in the hypergraph
+   * @param numExecutions the number of times the evaluation is executed
+   */
   @Override
-  public void execute() {
-    evaluateEnergyConsumption();
+  public void execute(int maxVertexSize, int numExecutions) {
+    evaluateEnergyConsumption(maxVertexSize, numExecutions);
   }
 
-  /** Evaluates the energy consumption of the allocation strategies. */
-  private void evaluateEnergyConsumption() {
-    int[] vertexSizes = generateVertexSizes();
+  /**
+   * Evaluates the energy consumption of the allocation strategies.
+   *
+   * @param maxVertexSize the maximum size of vertices in the hypergraph
+   * @param numExecutions the number of times the evaluation is executed
+   */
+  private void evaluateEnergyConsumption(int maxVertexSize, int numExecutions) {
+    int[] vertexSizes = generateVertexSizes(maxVertexSize);
     Map<Integer, BigDecimal> avgReducedWeightsSequential = new TreeMap<>();
     Map<Integer, BigDecimal> avgReducedWeightsLocal = new TreeMap<>();
     Random rand = new Random(SEED);
@@ -33,8 +43,9 @@ public abstract class EnergyConsumptionEvaluator implements Evaluator {
       BigDecimal totalReducedWeightSequential = BigDecimal.ZERO;
       BigDecimal totalReducedWeightLocal = BigDecimal.ZERO;
 
-      for (int i = 0; i < NUM_EXECUTIONS; i++) {
+      for (int i = 0; i < numExecutions; i++) {
         HyperGraph hyperGraph = HyperGraphGenerator.generateRandomHyperGraph(size, rand);
+        System.out.println("Num. vertices: " + size + " Execution: " + i);
         totalReducedWeightSequential =
             totalReducedWeightSequential.add(
                 calculateWeight(hyperGraph, new SequentialSearchStrategy()));
@@ -45,10 +56,10 @@ public abstract class EnergyConsumptionEvaluator implements Evaluator {
       avgReducedWeightsSequential.put(
           size,
           totalReducedWeightSequential.divide(
-              BigDecimal.valueOf(NUM_EXECUTIONS), RoundingMode.HALF_UP));
+              BigDecimal.valueOf(numExecutions), RoundingMode.HALF_UP));
       avgReducedWeightsLocal.put(
           size,
-          totalReducedWeightLocal.divide(BigDecimal.valueOf(NUM_EXECUTIONS), RoundingMode.HALF_UP));
+          totalReducedWeightLocal.divide(BigDecimal.valueOf(numExecutions), RoundingMode.HALF_UP));
     }
 
     plotResults(avgReducedWeightsSequential, avgReducedWeightsLocal);

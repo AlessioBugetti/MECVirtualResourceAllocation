@@ -18,7 +18,7 @@ public class SequentialSearchStrategy implements AllocationStrategy {
    * Allocates resources based on the sequential search strategy.
    *
    * @param hyperGraph the hypergraph used to allocate resources
-   * @return a set of vertices
+   * @return a set of vertices in the conflict graph selected by the allocation strategy
    */
   @Override
   public Set<Vertex> allocate(HyperGraph hyperGraph) {

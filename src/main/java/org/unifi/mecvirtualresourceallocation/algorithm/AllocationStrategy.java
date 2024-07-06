@@ -9,6 +9,12 @@ import org.unifi.mecvirtualresourceallocation.graph.Vertex;
 /** This interface defines the strategy for allocating resources in a hypergraph. */
 public interface AllocationStrategy {
 
+  /**
+   * Allocates resources based on a specific strategy.
+   *
+   * @param hyperGraph the hypergraph used to allocate resources
+   * @return a set of vertices in the conflict graph selected by the allocation strategy
+   */
   Set<Vertex> allocate(HyperGraph hyperGraph);
 
   /**

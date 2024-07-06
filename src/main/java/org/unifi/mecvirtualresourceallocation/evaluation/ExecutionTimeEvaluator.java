@@ -13,15 +13,25 @@ import org.unifi.mecvirtualresourceallocation.graph.HyperGraph;
 /** Evaluator for measuring the execution time of different allocation strategies. */
 public class ExecutionTimeEvaluator implements Evaluator {
 
-  /** Executes the evaluation of execution time. */
+  /**
+   * Executes the evaluation of execution time.
+   *
+   * @param maxVertexSize the maximum size of vertices in the hypergraph
+   * @param numExecutions the number of times the evaluation is executed
+   */
   @Override
-  public void execute() {
-    evaluateExecutionTime();
+  public void execute(int maxVertexSize, int numExecutions) {
+    evaluateExecutionTime(maxVertexSize, numExecutions);
   }
 
-  /** Evaluates the execution time of the allocation strategies. */
-  private void evaluateExecutionTime() {
-    int[] vertexSizes = generateVertexSizes();
+  /**
+   * Evaluates the execution time of the allocation strategies.
+   *
+   * @param maxVertexSize the maximum size of vertices in the hypergraph
+   * @param numExecutions the number of times the evaluation is executed
+   */
+  private void evaluateExecutionTime(int maxVertexSize, int numExecutions) {
+    int[] vertexSizes = generateVertexSizes(maxVertexSize);
     Map<Integer, Long> avgExecutionTimeSequential = new TreeMap<>();
     Map<Integer, Long> avgExecutionTimeLocal = new TreeMap<>();
     Random rand = new Random(SEED);
@@ -30,15 +40,15 @@ public class ExecutionTimeEvaluator implements Evaluator {
       long totalExecutionTimeSequential = 0;
       long totalExecutionTimeLocal = 0;
 
-      for (int i = 0; i < NUM_EXECUTIONS; i++) {
+      for (int i = 0; i < numExecutions; i++) {
         HyperGraph hyperGraph = HyperGraphGenerator.generateRandomHyperGraph(size, rand);
         totalExecutionTimeSequential +=
             measureExecutionTime(hyperGraph, new SequentialSearchStrategy());
         totalExecutionTimeLocal += measureExecutionTime(hyperGraph, new LocalSearchStrategy());
       }
 
-      avgExecutionTimeSequential.put(size, totalExecutionTimeSequential / NUM_EXECUTIONS);
-      avgExecutionTimeLocal.put(size, totalExecutionTimeLocal / NUM_EXECUTIONS);
+      avgExecutionTimeSequential.put(size, totalExecutionTimeSequential / numExecutions);
+      avgExecutionTimeLocal.put(size, totalExecutionTimeLocal / numExecutions);
     }
 
     plotResults(avgExecutionTimeSequential, avgExecutionTimeLocal);

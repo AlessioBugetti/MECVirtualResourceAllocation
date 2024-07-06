@@ -2,21 +2,25 @@ package org.unifi.mecvirtualresourceallocation.evaluation;
 
 /** Interface for evaluating performance metrics. */
 public interface Evaluator {
-  int MAX_VERTEX_SIZE = 75;
-  int NUM_EXECUTIONS = 30;
   long SEED = 42;
 
-  /** Executes the evaluation. */
-  void execute();
+  /**
+   * Executes the evaluation.
+   *
+   * @param maxVertexSize the maximum size of vertices in the hypergraph
+   * @param numExecutions the number of times the evaluation is executed
+   */
+  void execute(int maxVertexSize, int numExecutions);
 
   /**
-   * Generates an array from 1 to MAX_VERTEX_SIZE.
+   * Generates an array from 1 to maxVertexSize.
    *
-   * @return an array from 1 to MAX_VERTEX_SIZE
+   * @param maxVertexSize the maximum size of vertices in the hypergraph
+   * @return an array from 1 to maxVertexSize
    */
-  default int[] generateVertexSizes() {
-    int[] vertexSizes = new int[MAX_VERTEX_SIZE];
-    for (int i = 0; i < MAX_VERTEX_SIZE; i++) {
+  default int[] generateVertexSizes(int maxVertexSize) {
+    int[] vertexSizes = new int[maxVertexSize];
+    for (int i = 0; i < maxVertexSize; i++) {
       vertexSizes[i] = i + 1;
     }
     return vertexSizes;

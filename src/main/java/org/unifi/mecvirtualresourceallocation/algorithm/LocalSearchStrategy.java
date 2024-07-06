@@ -24,7 +24,7 @@ public class LocalSearchStrategy implements AllocationStrategy {
    * Allocates resources based on the local search strategy.
    *
    * @param hyperGraph the hypergraph used to allocate resources
-   * @return a set of vertices
+   * @return a set of vertices in the conflict graph selected by the allocation strategy
    */
   public Set<Vertex> allocate(HyperGraph hyperGraph) {
     ConflictGraph conflictGraph = hyperGraph.getConflictGraph();
