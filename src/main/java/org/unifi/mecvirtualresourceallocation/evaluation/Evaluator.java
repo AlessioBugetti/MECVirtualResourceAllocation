@@ -2,6 +2,7 @@ package org.unifi.mecvirtualresourceallocation.evaluation;
 
 /** Interface for evaluating performance metrics. */
 public interface Evaluator {
+  /** The seed value used for random number generation. */
   long SEED = 42;
 
   /**

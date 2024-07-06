@@ -11,7 +11,7 @@ import org.unifi.mecvirtualresourceallocation.graph.Vertex;
 
 /** Utility class for generating random hypergraphs. */
 public final class HyperGraphGenerator {
-
+  /** The δ value used for generating hypergraphs. */
   public static final int DELTA = 3;
 
   /** Private constructor to prevent instantiation of this utility class. */

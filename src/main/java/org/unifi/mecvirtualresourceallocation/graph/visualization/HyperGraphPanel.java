@@ -18,8 +18,10 @@ import org.unifi.mecvirtualresourceallocation.graph.Vertex;
  * implements methods for specific hypergraph visualization.
  */
 public class HyperGraphPanel extends GraphPanel {
-
+  /** The hypergraph to be visualized. */
   private final HyperGraph hyperGraph;
+
+  /** The map of hyperedges to their assigned colors. */
   private final Map<HyperEdge, Color> edgeColors;
 
   /**

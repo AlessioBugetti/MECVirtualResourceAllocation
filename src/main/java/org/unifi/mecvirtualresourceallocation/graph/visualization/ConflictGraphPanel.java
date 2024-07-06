@@ -15,7 +15,7 @@ import org.unifi.mecvirtualresourceallocation.graph.Vertex;
  * methods for specific conflict graph visualization.
  */
 public class ConflictGraphPanel extends GraphPanel {
-
+  /** The conflict graph to be visualized. */
   private final ConflictGraph conflictGraph;
 
   /**
