@@ -3,6 +3,7 @@ package org.unifi.mecvirtualresourceallocation.evaluation;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.TreeMap;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +31,7 @@ public class ExecutionTimeEvaluatorTest {
   @Test
   public void testEvaluateExecutionTime() {
     try {
-      java.lang.reflect.Method method =
+      Method method =
           ExecutionTimeEvaluator.class.getDeclaredMethod(
               "evaluateExecutionTime", int.class, int.class);
       method.setAccessible(true);
@@ -65,7 +66,7 @@ public class ExecutionTimeEvaluatorTest {
     }
 
     try {
-      java.lang.reflect.Method method =
+      Method method =
           ExecutionTimeEvaluator.class.getDeclaredMethod("plotResults", Map.class, Map.class);
       method.setAccessible(true);
       method.invoke(evaluator, avgExecutionTimeSequential, avgExecutionTimeLocal);

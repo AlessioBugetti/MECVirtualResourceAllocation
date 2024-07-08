@@ -87,19 +87,16 @@ public class HyperGraphPanel extends GraphPanel {
       g2d.setColor(color);
       Set<Vertex> vertices = edge.getVertices();
       Iterator<Vertex> iterator = vertices.iterator();
+      Vertex vertex1 = iterator.next();
+      while (iterator.hasNext()) {
+        Vertex vertex2 = iterator.next();
 
-      if (iterator.hasNext()) {
-        Vertex vertex1 = iterator.next();
-        while (iterator.hasNext()) {
-          Vertex vertex2 = iterator.next();
+        Point point1 = vertexPositions.get(vertex1);
+        Point point2 = vertexPositions.get(vertex2);
 
-          Point point1 = vertexPositions.get(vertex1);
-          Point point2 = vertexPositions.get(vertex2);
+        g2d.drawLine(point1.x, point1.y, point2.x, point2.y);
 
-          g2d.drawLine(point1.x, point1.y, point2.x, point2.y);
-
-          vertex1 = vertex2;
-        }
+        vertex1 = vertex2;
       }
     }
   }

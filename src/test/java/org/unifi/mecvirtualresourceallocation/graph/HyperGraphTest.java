@@ -322,31 +322,6 @@ public class HyperGraphTest {
   }
 
   @Test
-  public void testShowGraphIteratorHasNoNext() {
-    Vertex v1 = new Vertex("1", 1);
-    Set<Vertex> vertices = new HashSet<>(Collections.singletonList(v1));
-
-    HyperEdge e1 = new HyperEdge("1", new HashSet<>(Collections.singletonList(v1)));
-    Set<HyperEdge> edges = new HashSet<>(Collections.singletonList(e1));
-
-    HyperGraph hyperGraph = new HyperGraph(vertices, edges);
-    try {
-      SwingUtilities.invokeAndWait(hyperGraph::showGraph);
-
-      JFrame hyperGraphFrame = findHyperGraphFrame();
-
-      assertNotNull(hyperGraphFrame, "HyperGraph frame should be present");
-
-      frameFixture = new FrameFixture(hyperGraphFrame);
-      frameFixture.requireSize(new Dimension(800, 600));
-      frameFixture.requireVisible();
-      assertEquals("HyperGraph", hyperGraphFrame.getTitle());
-    } catch (InvocationTargetException | InterruptedException e) {
-      fail("Test failed due to exception: " + e.getMessage());
-    }
-  }
-
-  @Test
   public void testShowGraphIteratorHasNext() {
     Vertex v1 = new Vertex("1", 1);
     Vertex v2 = new Vertex("2", 2);

@@ -1,8 +1,11 @@
 package org.unifi.mecvirtualresourceallocation.algorithm;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -71,5 +74,16 @@ public class SequentialSearchStrategyTest {
       totalWeight = totalWeight.add(hyperEdge.getWeight());
     }
     assertEquals(0, totalWeight.compareTo(BigDecimal.valueOf(14.0)));
+  }
+
+  @Test
+  void testFindMaxWeightVertex() throws Exception {
+    Method method =
+        SequentialSearchStrategy.class.getDeclaredMethod("findMaxWeightVertex", Set.class);
+    Set<Vertex> vertices = new HashSet<>();
+    method.setAccessible(true);
+    InvocationTargetException thrown =
+        assertThrows(InvocationTargetException.class, () -> method.invoke(strategy, vertices));
+    assertEquals(IllegalArgumentException.class, thrown.getCause().getClass());
   }
 }
