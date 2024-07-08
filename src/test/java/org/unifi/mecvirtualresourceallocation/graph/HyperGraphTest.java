@@ -17,6 +17,7 @@ import java.util.Set;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import org.fest.swing.fixture.FrameFixture;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,6 +26,7 @@ public class HyperGraphTest {
   private HyperGraph hyperGraph;
   private Set<Vertex> vertices;
   private Set<HyperEdge> edges;
+  private FrameFixture frameFixture;
 
   @BeforeEach
   public void setUp() {
@@ -36,6 +38,22 @@ public class HyperGraphTest {
     edges = new HashSet<>(Collections.singletonList(e1));
 
     hyperGraph = new HyperGraph(vertices, edges);
+  }
+
+  @AfterEach
+  public void tearDown() {
+    if (frameFixture != null) {
+      frameFixture.cleanUp();
+    }
+    closeAllFrames();
+  }
+
+  private void closeAllFrames() {
+    for (Frame frame : JFrame.getFrames()) {
+      if (frame.isDisplayable()) {
+        frame.dispose();
+      }
+    }
   }
 
   @Test
@@ -304,18 +322,18 @@ public class HyperGraphTest {
   }
 
   @Test
-  public void testShowGraph() {
-    FrameFixture frameFixture = null;
-    try {
-      SwingUtilities.invokeAndWait(() -> hyperGraph.showGraph());
+  public void testShowGraphIteratorHasNoNext() {
+    Vertex v1 = new Vertex("1", 1);
+    Set<Vertex> vertices = new HashSet<>(Collections.singletonList(v1));
 
-      JFrame hyperGraphFrame = null;
-      for (Frame frame : JFrame.getFrames()) {
-        if (frame instanceof JFrame && frame.getTitle().equals("HyperGraph")) {
-          hyperGraphFrame = (JFrame) frame;
-          break;
-        }
-      }
+    HyperEdge e1 = new HyperEdge("1", new HashSet<>(Collections.singletonList(v1)));
+    Set<HyperEdge> edges = new HashSet<>(Collections.singletonList(e1));
+
+    HyperGraph hyperGraph = new HyperGraph(vertices, edges);
+    try {
+      SwingUtilities.invokeAndWait(hyperGraph::showGraph);
+
+      JFrame hyperGraphFrame = findHyperGraphFrame();
 
       assertNotNull(hyperGraphFrame, "HyperGraph frame should be present");
 
@@ -325,10 +343,45 @@ public class HyperGraphTest {
       assertEquals("HyperGraph", hyperGraphFrame.getTitle());
     } catch (InvocationTargetException | InterruptedException e) {
       fail("Test failed due to exception: " + e.getMessage());
-    } finally {
-      if (frameFixture != null) {
-        frameFixture.cleanUp();
+    }
+  }
+
+  @Test
+  public void testShowGraphIteratorHasNext() {
+    Vertex v1 = new Vertex("1", 1);
+    Vertex v2 = new Vertex("2", 2);
+    Vertex v3 = new Vertex("3", 3);
+    Set<Vertex> vertices = new HashSet<>(Arrays.asList(v1, v2, v3));
+
+    HyperEdge e1 = new HyperEdge("1", new HashSet<>(Arrays.asList(v1, v2)));
+    HyperEdge e2 = new HyperEdge("2", new HashSet<>(Arrays.asList(v2, v3)));
+    Set<HyperEdge> edges = new HashSet<>(Arrays.asList(e1, e2));
+
+    HyperGraph hyperGraph = new HyperGraph(vertices, edges);
+
+    try {
+      SwingUtilities.invokeAndWait(hyperGraph::showGraph);
+
+      JFrame hyperGraphFrame = findHyperGraphFrame();
+
+      assertNotNull(hyperGraphFrame, "HyperGraph frame should be present");
+
+      frameFixture = new FrameFixture(hyperGraphFrame);
+      frameFixture.requireSize(new Dimension(800, 600));
+      frameFixture.requireVisible();
+      assertEquals("HyperGraph", hyperGraphFrame.getTitle());
+    } catch (InvocationTargetException | InterruptedException e) {
+      fail("Test failed due to exception: " + e.getMessage());
+    }
+  }
+
+  private JFrame findHyperGraphFrame() {
+    for (Frame frame : JFrame.getFrames()) {
+      if (frame instanceof JFrame && frame.getTitle().equals("HyperGraph")) {
+        frame.setVisible(true);
+        return (JFrame) frame;
       }
     }
+    return null;
   }
 }

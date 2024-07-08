@@ -45,7 +45,6 @@ public abstract class EnergyConsumptionEvaluator implements Evaluator {
 
       for (int i = 0; i < numExecutions; i++) {
         HyperGraph hyperGraph = HyperGraphGenerator.generateRandomHyperGraph(size, rand);
-        System.out.println("Num. vertices: " + size + " Execution: " + i);
         totalReducedWeightSequential =
             totalReducedWeightSequential.add(
                 calculateWeight(hyperGraph, new SequentialSearchStrategy()));
