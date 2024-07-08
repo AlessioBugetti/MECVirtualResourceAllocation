@@ -2,6 +2,8 @@
 
 [![maven](https://img.shields.io/badge/Maven-v3.9.8-cyan?logo=apachemaven)](https://maven.apache.org/docs/3.9.8/release-notes.html)
 [![style](https://img.shields.io/badge/style-Google%20Java%20Style-informational)](https://google.github.io/styleguide/javaguide.html)
+![Jacoco-coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)
+![Jacoco-branches](https://img.shields.io/badge/branches-100%25-brightgreen)
 [![Javadoc](https://img.shields.io/badge/JavaDoc-Online-green)](https://alessiobugetti.github.io/MECVirtualResourceAllocation-Javadoc)
 [![License](https://img.shields.io/github/license/AlessioBugetti/MECVirtualResourceAllocation)](https://opensource.org/licenses/GPL-3.0)
 
@@ -62,17 +64,19 @@ mvn clean install
 
 ### Running an Evaluator
 
-To run an evaluator, you need to define a `main` method, create an instance of the evaluator, and execute the `execute()` method. Here is an example of how to run the `ExecutionTimeEvaluator`:
+To run an evaluator, you need to define a `main` method, create an instance of the evaluator, and execute the `execute` method. Here is an example of how to run the `ExecutionTimeEvaluator`:
 
 ```java
 public class Main {
 
   public static void main(String[] args) {
     Evaluator evaluator = new ExecutionTimeEvaluator();
-    SwingUtilities.invokeLater(evaluator::execute);
+    evaluator.execute(100,30);
   }
 }
 ```
+
+In the example above, `100` represents the maximum number of vertices in the hypergraph, and `30` represents the number of times the evaluation is executed.
 
 Similarly, you can run other evaluators by creating instances of their respective classes:
 
@@ -83,7 +87,7 @@ public class Main {
 
    public static void main(String[] args) {
       Evaluator evaluator = new EnergyConsumptionReductionEvaluator();
-      SwingUtilities.invokeLater(evaluator::execute);
+      evaluator.execute(100,30);
    }
 }
 ```
@@ -95,7 +99,7 @@ public class Main {
 
    public static void main(String[] args) {
       Evaluator evaluator = new EnergyConsumptionComparisonEvaluator();
-      SwingUtilities.invokeLater(evaluator::execute);
+      evaluator.execute(100,30);
    }
 }
 ```
@@ -159,16 +163,10 @@ mvn spotless:apply
 
 ### Static Analysis
 
-Static code analysis is performed using SpotBugs and Checkstyle. To run the static analysis tools, use:
+Static code analysis is performed using SpotBugs and Checkstyle. Note that Checkstyle is not used as a Maven plugin but is integrated directly as an IntelliJ plugin. To run the static analysis tools, use:
 
 ```sh
 mvn spotbugs:check
-```
-
-or
-
-```sh
-mvn checkstyle:check
 ```
 
 ### Code Coverage

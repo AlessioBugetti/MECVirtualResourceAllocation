@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.unifi.mecvirtualresourceallocation.evaluation.util.HyperGraphGenerator;
 import org.unifi.mecvirtualresourceallocation.graph.ConflictGraph;
 import org.unifi.mecvirtualresourceallocation.graph.HyperGraph;
 import org.unifi.mecvirtualresourceallocation.graph.Vertex;
@@ -24,13 +23,24 @@ public class LocalSearchStrategy implements AllocationStrategy {
    * Allocates resources based on the local search strategy.
    *
    * @param hyperGraph the hypergraph used to allocate resources
+   * @param delta the δ value used
+   * @return a set of vertices in the conflict graph selected by the allocation strategy
+   */
+  public Set<Vertex> allocate(HyperGraph hyperGraph, int delta) {
+    ConflictGraph conflictGraph = hyperGraph.getConflictGraph();
+    Set<Vertex> independentSet = new SequentialSearchStrategy().allocate(hyperGraph);
+    optimizeIndependentSet(independentSet, conflictGraph, delta);
+    return independentSet;
+  }
+
+  /**
+   * Allocates resources based on the local search strategy with a default δ value of 3.
+   *
+   * @param hyperGraph the hypergraph used to allocate resources
    * @return a set of vertices in the conflict graph selected by the allocation strategy
    */
   public Set<Vertex> allocate(HyperGraph hyperGraph) {
-    ConflictGraph conflictGraph = hyperGraph.getConflictGraph();
-    Set<Vertex> independentSet = new SequentialSearchStrategy().allocate(hyperGraph);
-    optimizeIndependentSet(independentSet, conflictGraph);
-    return independentSet;
+    return allocate(hyperGraph, 3);
   }
 
   /**
@@ -38,8 +48,10 @@ public class LocalSearchStrategy implements AllocationStrategy {
    *
    * @param independentSet the initial independent set to be optimized
    * @param conflictGraph the conflict graph derived from the original hypergraph
+   * @param delta the δ value used
    */
-  private void optimizeIndependentSet(Set<Vertex> independentSet, ConflictGraph conflictGraph) {
+  private void optimizeIndependentSet(
+      Set<Vertex> independentSet, ConflictGraph conflictGraph, int delta) {
     List<Vertex> sortedIndependentSet = sortVerticesByWeightAscending(independentSet);
     int index = 0;
 
@@ -48,7 +60,7 @@ public class LocalSearchStrategy implements AllocationStrategy {
       Set<Vertex> adjacentVertices = conflictGraph.getAdjacentVertices(currentVertex);
       List<Vertex> sortedAdjacentVertices = sortVerticesByWeightDescending(adjacentVertices);
 
-      for (int phi = 2; phi <= HyperGraphGenerator.DELTA; phi++) {
+      for (int phi = 2; phi <= delta; phi++) {
         Set<Vertex> claw = findClaw(independentSet, sortedAdjacentVertices, conflictGraph, phi);
         if (!claw.isEmpty()) {
           Set<Vertex> adjacentVertexIndependentSet =

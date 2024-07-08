@@ -23,8 +23,8 @@ public abstract class EnergyConsumptionEvaluator implements Evaluator {
    * @param numExecutions the number of times the evaluation is executed
    */
   @Override
-  public void execute(int maxVertexSize, int numExecutions) {
-    evaluateEnergyConsumption(maxVertexSize, numExecutions);
+  public void execute(int maxVertexSize, int numExecutions, int delta) {
+    evaluateEnergyConsumption(maxVertexSize, numExecutions, delta);
   }
 
   /**
@@ -33,7 +33,7 @@ public abstract class EnergyConsumptionEvaluator implements Evaluator {
    * @param maxVertexSize the maximum size of vertices in the hypergraph
    * @param numExecutions the number of times the evaluation is executed
    */
-  private void evaluateEnergyConsumption(int maxVertexSize, int numExecutions) {
+  private void evaluateEnergyConsumption(int maxVertexSize, int numExecutions, int delta) {
     int[] vertexSizes = generateVertexSizes(maxVertexSize);
     Map<Integer, BigDecimal> avgReducedWeightsSequential = new TreeMap<>();
     Map<Integer, BigDecimal> avgReducedWeightsLocal = new TreeMap<>();
@@ -44,7 +44,7 @@ public abstract class EnergyConsumptionEvaluator implements Evaluator {
       BigDecimal totalReducedWeightLocal = BigDecimal.ZERO;
 
       for (int i = 0; i < numExecutions; i++) {
-        HyperGraph hyperGraph = HyperGraphGenerator.generateRandomHyperGraph(size, rand);
+        HyperGraph hyperGraph = HyperGraphGenerator.generateRandomHyperGraph(size, delta, rand);
         totalReducedWeightSequential =
             totalReducedWeightSequential.add(
                 calculateWeight(hyperGraph, new SequentialSearchStrategy()));

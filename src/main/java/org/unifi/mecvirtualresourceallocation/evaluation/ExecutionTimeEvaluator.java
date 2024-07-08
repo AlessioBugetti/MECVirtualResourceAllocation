@@ -18,10 +18,11 @@ public class ExecutionTimeEvaluator implements Evaluator {
    *
    * @param maxVertexSize the maximum size of vertices in the hypergraph
    * @param numExecutions the number of times the evaluation is executed
+   * @param delta the δ value used for generating hypergraphs
    */
   @Override
-  public void execute(int maxVertexSize, int numExecutions) {
-    evaluateExecutionTime(maxVertexSize, numExecutions);
+  public void execute(int maxVertexSize, int numExecutions, int delta) {
+    evaluateExecutionTime(maxVertexSize, numExecutions, delta);
   }
 
   /**
@@ -29,8 +30,9 @@ public class ExecutionTimeEvaluator implements Evaluator {
    *
    * @param maxVertexSize the maximum size of vertices in the hypergraph
    * @param numExecutions the number of times the evaluation is executed
+   * @param delta the δ value used for generating hypergraphs
    */
-  private void evaluateExecutionTime(int maxVertexSize, int numExecutions) {
+  private void evaluateExecutionTime(int maxVertexSize, int numExecutions, int delta) {
     int[] vertexSizes = generateVertexSizes(maxVertexSize);
     Map<Integer, Long> avgExecutionTimeSequential = new TreeMap<>();
     Map<Integer, Long> avgExecutionTimeLocal = new TreeMap<>();
@@ -41,7 +43,7 @@ public class ExecutionTimeEvaluator implements Evaluator {
       long totalExecutionTimeLocal = 0;
 
       for (int i = 0; i < numExecutions; i++) {
-        HyperGraph hyperGraph = HyperGraphGenerator.generateRandomHyperGraph(size, rand);
+        HyperGraph hyperGraph = HyperGraphGenerator.generateRandomHyperGraph(size, delta, rand);
         totalExecutionTimeSequential +=
             measureExecutionTime(hyperGraph, new SequentialSearchStrategy());
         totalExecutionTimeLocal += measureExecutionTime(hyperGraph, new LocalSearchStrategy());

@@ -20,8 +20,8 @@ public class EnergyConsumptionReductionEvaluator extends EnergyConsumptionEvalua
 
     if (avgWeightsSequential.size() != avgWeightsLocal.size()) {
       throw new IllegalArgumentException(
-          "The output of Sequential Search and that of Local Search have a different number of"
-              + " elements.");
+          "The output of Sequential Search and that of Local Search have a different number of "
+              + "elements.");
     }
 
     if (!avgWeightsSequential.keySet().equals(avgWeightsLocal.keySet())) {

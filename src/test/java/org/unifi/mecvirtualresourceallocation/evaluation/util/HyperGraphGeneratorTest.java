@@ -22,6 +22,7 @@ public class HyperGraphGeneratorTest {
 
   private Random rand;
   private HyperGraph hyperGraph;
+  private final int DELTA = 3;
 
   @BeforeEach
   public void setUp() {
@@ -40,7 +41,7 @@ public class HyperGraphGeneratorTest {
 
   @Test
   public void testGenerateRandomHyperGraph() {
-    hyperGraph = HyperGraphGenerator.generateRandomHyperGraph(5, rand);
+    hyperGraph = HyperGraphGenerator.generateRandomHyperGraph(5, DELTA, rand);
 
     Set<Vertex> vertices = hyperGraph.getVertices();
     Set<HyperEdge> edges = hyperGraph.getHyperEdges();
@@ -61,17 +62,15 @@ public class HyperGraphGeneratorTest {
     assertEquals(uniqueEdgeSets.size(), edges.size());
 
     for (HyperEdge edge : edges) {
-      assertTrue(edge.getVertices().size() <= HyperGraphGenerator.DELTA);
+      assertTrue(edge.getVertices().size() <= DELTA);
     }
 
-    assertTrue(
-        edges.size() <= MathUtils.sumOfBinomials(5, HyperGraphGenerator.DELTA) - 1
-            && !edges.isEmpty());
+    assertTrue(edges.size() <= MathUtils.sumOfBinomials(5, DELTA) - 1 && !edges.isEmpty());
   }
 
   @Test
   public void testGenerateRandomHyperGraphWithMinimalVertices() {
-    hyperGraph = HyperGraphGenerator.generateRandomHyperGraph(1, rand);
+    hyperGraph = HyperGraphGenerator.generateRandomHyperGraph(1, DELTA, rand);
 
     Set<Vertex> vertices = hyperGraph.getVertices();
     Set<HyperEdge> edges = hyperGraph.getHyperEdges();
@@ -85,17 +84,15 @@ public class HyperGraphGeneratorTest {
     assertTrue(vertices.containsAll(connectedVertices));
 
     for (HyperEdge edge : edges) {
-      assertTrue(edge.getVertices().size() <= HyperGraphGenerator.DELTA);
+      assertTrue(edge.getVertices().size() <= DELTA);
     }
 
-    assertTrue(
-        edges.size() <= MathUtils.sumOfBinomials(1, HyperGraphGenerator.DELTA) - 1
-            && !edges.isEmpty());
+    assertTrue(edges.size() <= MathUtils.sumOfBinomials(1, DELTA) - 1 && !edges.isEmpty());
   }
 
   @Test
   public void testGenerateRandomHyperGraphWithMediumVertices() {
-    hyperGraph = HyperGraphGenerator.generateRandomHyperGraph(50, rand);
+    hyperGraph = HyperGraphGenerator.generateRandomHyperGraph(50, DELTA, rand);
 
     Set<Vertex> vertices = hyperGraph.getVertices();
     Set<HyperEdge> edges = hyperGraph.getHyperEdges();
@@ -109,17 +106,15 @@ public class HyperGraphGeneratorTest {
     assertTrue(vertices.containsAll(connectedVertices));
 
     for (HyperEdge edge : edges) {
-      assertTrue(edge.getVertices().size() <= HyperGraphGenerator.DELTA);
+      assertTrue(edge.getVertices().size() <= DELTA);
     }
 
-    assertTrue(
-        edges.size() <= MathUtils.sumOfBinomials(50, HyperGraphGenerator.DELTA) - 1
-            && !edges.isEmpty());
+    assertTrue(edges.size() <= MathUtils.sumOfBinomials(50, DELTA) - 1 && !edges.isEmpty());
   }
 
   @Test
   public void testGenerateRandomHyperGraphWithMaxVertices() {
-    hyperGraph = HyperGraphGenerator.generateRandomHyperGraph(150, rand);
+    hyperGraph = HyperGraphGenerator.generateRandomHyperGraph(150, DELTA, rand);
 
     Set<Vertex> vertices = hyperGraph.getVertices();
     Set<HyperEdge> edges = hyperGraph.getHyperEdges();
@@ -133,11 +128,9 @@ public class HyperGraphGeneratorTest {
     assertTrue(vertices.containsAll(connectedVertices));
 
     for (HyperEdge edge : edges) {
-      assertTrue(edge.getVertices().size() <= HyperGraphGenerator.DELTA);
+      assertTrue(edge.getVertices().size() <= DELTA);
     }
 
-    assertTrue(
-        edges.size() <= MathUtils.sumOfBinomials(150, HyperGraphGenerator.DELTA) - 1
-            && !edges.isEmpty());
+    assertTrue(edges.size() <= MathUtils.sumOfBinomials(150, DELTA) - 1 && !edges.isEmpty());
   }
 }

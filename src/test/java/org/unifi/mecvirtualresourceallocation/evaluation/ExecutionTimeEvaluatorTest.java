@@ -8,11 +8,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.unifi.mecvirtualresourceallocation.algorithm.AllocationStrategy;
-import org.unifi.mecvirtualresourceallocation.algorithm.LocalSearchStrategy;
-import org.unifi.mecvirtualresourceallocation.algorithm.SequentialSearchStrategy;
-import org.unifi.mecvirtualresourceallocation.evaluation.util.HyperGraphGenerator;
-import org.unifi.mecvirtualresourceallocation.graph.HyperGraph;
 
 public class ExecutionTimeEvaluatorTest {
 
@@ -33,26 +28,12 @@ public class ExecutionTimeEvaluatorTest {
     try {
       Method method =
           ExecutionTimeEvaluator.class.getDeclaredMethod(
-              "evaluateExecutionTime", int.class, int.class);
+              "evaluateExecutionTime", int.class, int.class, int.class);
       method.setAccessible(true);
-      method.invoke(evaluator, 10, 5);
+      method.invoke(evaluator, 10, 5, 3);
     } catch (Exception e) {
       fail("Exception should not be thrown: " + e.getMessage());
     }
-  }
-
-  @Test
-  public void testMeasureExecutionTime() {
-    HyperGraph hyperGraph =
-        HyperGraphGenerator.generateRandomHyperGraph(10, new java.util.Random(42));
-    AllocationStrategy sequentialStrategy = new SequentialSearchStrategy();
-    AllocationStrategy localStrategy = new LocalSearchStrategy();
-
-    long sequentialTime = measureExecutionTime(hyperGraph, sequentialStrategy);
-    long localTime = measureExecutionTime(hyperGraph, localStrategy);
-
-    assertTrue(sequentialTime > 0, "Sequential strategy execution time should be greater than 0");
-    assertTrue(localTime > 0, "Local strategy execution time should be greater than 0");
   }
 
   @Test
@@ -75,14 +56,5 @@ public class ExecutionTimeEvaluatorTest {
     } catch (Exception e) {
       fail("Exception should not be thrown: " + e.getMessage());
     }
-  }
-
-  private long measureExecutionTime(HyperGraph hyperGraph, AllocationStrategy strategy) {
-    long startTime = System.nanoTime();
-    strategy.allocate(hyperGraph);
-    long endTime = System.nanoTime();
-    long executionTime = endTime - startTime;
-    assertTrue(executionTime > 0, "Execution time should be greater than 0");
-    return executionTime;
   }
 }

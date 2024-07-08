@@ -136,6 +136,12 @@ public final class ChartUtils {
   private static void customizeChart(JFreeChart chart) {
     XYPlot plot = chart.getXYPlot();
     plot.setBackgroundPaint(Color.WHITE);
+    plot.setDomainGridlinesVisible(true);
+    plot.setRangeGridlinesVisible(true);
+    plot.setDomainGridlinePaint(Color.decode("#e2e2e2"));
+    plot.setRangeGridlinePaint(Color.decode("#e2e2e2"));
+    plot.setDomainGridlineStroke(new BasicStroke(0.5f));
+    plot.setRangeGridlineStroke(new BasicStroke(0.5f));
 
     XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
     renderer.setSeriesStroke(0, new BasicStroke(2.0f));

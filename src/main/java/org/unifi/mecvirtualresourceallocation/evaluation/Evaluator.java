@@ -10,8 +10,19 @@ public interface Evaluator {
    *
    * @param maxVertexSize the maximum size of vertices in the hypergraph
    * @param numExecutions the number of times the evaluation is executed
+   * @param delta the δ value used for generating hypergraphs
    */
-  void execute(int maxVertexSize, int numExecutions);
+  void execute(int maxVertexSize, int numExecutions, int delta);
+
+  /**
+   * Executes the evaluation with a default δ value of 3.
+   *
+   * @param maxVertexSize the maximum size of vertices in the hypergraph
+   * @param numExecutions the number of times the evaluation is executed
+   */
+  default void execute(int maxVertexSize, int numExecutions) {
+    execute(maxVertexSize, numExecutions, 3);
+  }
 
   /**
    * Generates an array from 1 to maxVertexSize.

@@ -11,8 +11,6 @@ import org.unifi.mecvirtualresourceallocation.graph.Vertex;
 
 /** Utility class for generating random hypergraphs. */
 public final class HyperGraphGenerator {
-  /** The δ value used for generating hypergraphs. */
-  public static final int DELTA = 3;
 
   /** Private constructor to prevent instantiation of this utility class. */
   private HyperGraphGenerator() {
@@ -24,11 +22,12 @@ public final class HyperGraphGenerator {
    *
    * @param numVertices the number of vertices in the hypergraph
    * @param rand the Random instance used for generating random numbers
+   * @param delta the δ value used for generating hypergraphs
    * @return a randomly generated HyperGraph
    */
-  public static HyperGraph generateRandomHyperGraph(int numVertices, Random rand) {
+  public static HyperGraph generateRandomHyperGraph(int numVertices, int delta, Random rand) {
     Set<Vertex> vertices = generateVertices(numVertices, rand);
-    Set<HyperEdge> edges = generateEdges(numVertices, rand, vertices);
+    Set<HyperEdge> edges = generateEdges(numVertices, delta, rand, vertices);
     ensureAllVerticesConnected(vertices, edges);
     return new HyperGraph(vertices, edges);
   }
@@ -52,19 +51,21 @@ public final class HyperGraphGenerator {
    * Generates a set of hyperedges connecting the vertices.
    *
    * @param numVertices the number of vertices in the hypergraph
+   * @param delta the δ value used
    * @param rand the Random instance used for generating random numbers
    * @param vertices the set of vertices to be connected by hyperedges
    * @return a set of generated hyperedges
    */
-  private static Set<HyperEdge> generateEdges(int numVertices, Random rand, Set<Vertex> vertices) {
+  private static Set<HyperEdge> generateEdges(
+      int numVertices, int delta, Random rand, Set<Vertex> vertices) {
     Set<HyperEdge> edges = new HashSet<>();
     Set<Set<Vertex>> uniqueEdgeSets = new HashSet<>();
-    int maxEdges = MathUtils.sumOfBinomials(numVertices, DELTA) - 1;
+    int maxEdges = MathUtils.sumOfBinomials(numVertices, delta) - 1;
     List<Vertex> vertexList = new ArrayList<>(vertices);
 
     for (int i = 1; i <= rand.nextInt(maxEdges) + 1; i++) {
       Set<Vertex> edgeVertices = new HashSet<>();
-      int edgeSize = numVertices < DELTA ? rand.nextInt(numVertices) + 1 : rand.nextInt(DELTA) + 1;
+      int edgeSize = numVertices < delta ? rand.nextInt(numVertices) + 1 : rand.nextInt(delta) + 1;
       while (edgeVertices.size() < edgeSize) {
         edgeVertices.add(vertexList.get(rand.nextInt(numVertices)));
       }
