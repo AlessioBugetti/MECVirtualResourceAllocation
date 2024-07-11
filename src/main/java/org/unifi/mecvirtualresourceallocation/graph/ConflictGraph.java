@@ -16,7 +16,7 @@ import org.unifi.mecvirtualresourceallocation.graph.visualization.ConflictGraphP
 public class ConflictGraph {
 
   private Map<String, Vertex> vertices;
-  private Map<Vertex, Set<Vertex>> adjacencyList;
+  private Map<String, Set<Vertex>> adjacencyList;
   private Set<Edge> edges;
 
   /** Constructs an empty conflict graph. */
@@ -55,7 +55,7 @@ public class ConflictGraph {
       throw new IllegalArgumentException("Vertex with ID " + vertex.getId() + " already exists.");
     }
     vertices.put(vertex.getId(), vertex);
-    adjacencyList.putIfAbsent(vertex, new HashSet<>());
+    adjacencyList.putIfAbsent(vertex.getId(), new HashSet<>());
   }
 
   /**
@@ -75,8 +75,8 @@ public class ConflictGraph {
           "Edge between " + vertex1.getId() + " and " + vertex2.getId() + " already exists.");
     }
 
-    adjacencyList.get(vertex1).add(vertex2);
-    adjacencyList.get(vertex2).add(vertex1);
+    adjacencyList.get(vertex1.getId()).add(vertex2);
+    adjacencyList.get(vertex2.getId()).add(vertex1);
     edges.add(new Edge(vertex1, vertex2));
   }
 
@@ -97,7 +97,7 @@ public class ConflictGraph {
    * @return true if the vertices are connected, false otherwise
    */
   public boolean areVerticesConnected(Vertex vertex1, Vertex vertex2) {
-    return adjacencyList.getOrDefault(vertex1, Collections.emptySet()).contains(vertex2);
+    return adjacencyList.getOrDefault(vertex1.getId(), Collections.emptySet()).contains(vertex2);
   }
 
   /**
@@ -107,7 +107,7 @@ public class ConflictGraph {
    * @return a set of adjacent vertices
    */
   public Set<Vertex> getAdjacentVertices(Vertex vertex) {
-    return adjacencyList.getOrDefault(vertex, Collections.emptySet());
+    return adjacencyList.getOrDefault(vertex.getId(), Collections.emptySet());
   }
 
   /**

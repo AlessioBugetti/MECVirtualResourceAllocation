@@ -1,11 +1,9 @@
 package org.unifi.mecvirtualresourceallocation.algorithm;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.unifi.mecvirtualresourceallocation.graph.ConflictGraph;
@@ -18,6 +16,17 @@ import org.unifi.mecvirtualresourceallocation.graph.Vertex;
  * A Hypergraph Matching Approach".
  */
 public class LocalSearchStrategy implements AllocationStrategy {
+
+  /**
+   * Allocates resources based on the local search strategy with a default δ value of 3.
+   *
+   * @param hyperGraph the hypergraph used to allocate resources
+   * @return a set of vertices in the conflict graph selected by the allocation strategy
+   */
+  @Override
+  public Set<Vertex> allocate(HyperGraph hyperGraph) {
+    return allocate(hyperGraph, 3);
+  }
 
   /**
    * Allocates resources based on the local search strategy.
@@ -34,16 +43,6 @@ public class LocalSearchStrategy implements AllocationStrategy {
   }
 
   /**
-   * Allocates resources based on the local search strategy with a default δ value of 3.
-   *
-   * @param hyperGraph the hypergraph used to allocate resources
-   * @return a set of vertices in the conflict graph selected by the allocation strategy
-   */
-  public Set<Vertex> allocate(HyperGraph hyperGraph) {
-    return allocate(hyperGraph, 3);
-  }
-
-  /**
    * Optimizes the given independent set by searching for better sets using local search.
    *
    * @param independentSet the initial independent set to be optimized
@@ -52,69 +51,47 @@ public class LocalSearchStrategy implements AllocationStrategy {
    */
   private void optimizeIndependentSet(
       Set<Vertex> independentSet, ConflictGraph conflictGraph, int delta) {
-    List<Vertex> sortedIndependentSet = sortVerticesByWeightAscending(independentSet);
-    int index = 0;
+    PriorityQueue<Vertex> sortedIndependentSet =
+        new PriorityQueue<>(Comparator.comparing(Vertex::getNegativeWeight));
+    sortedIndependentSet.addAll(independentSet);
 
-    while (index < sortedIndependentSet.size()) {
-      Vertex currentVertex = sortedIndependentSet.get(index);
+    while (!sortedIndependentSet.isEmpty()) {
+      Vertex currentVertex = sortedIndependentSet.poll();
       Set<Vertex> adjacentVertices = conflictGraph.getAdjacentVertices(currentVertex);
-      List<Vertex> sortedAdjacentVertices = sortVerticesByWeightDescending(adjacentVertices);
 
       for (int phi = 2; phi <= delta; phi++) {
-        Set<Vertex> claw = findClaw(independentSet, sortedAdjacentVertices, conflictGraph, phi);
+        Set<Vertex> claw = findClaw(independentSet, adjacentVertices, conflictGraph, phi);
         if (!claw.isEmpty()) {
           Set<Vertex> adjacentVertexIndependentSet =
               findAdjacentVertexIndependentSet(claw, independentSet, conflictGraph);
           independentSet.removeAll(adjacentVertexIndependentSet);
           independentSet.addAll(claw);
-          sortedIndependentSet = sortVerticesByWeightAscending(independentSet);
-          index = -1;
+          sortedIndependentSet.clear();
+          sortedIndependentSet.addAll(independentSet);
           break;
         }
       }
-      index++;
     }
-  }
-
-  /**
-   * Sorts a collection of vertices by their weight in ascending order.
-   *
-   * @param vertices the collection of vertices to be sorted
-   * @return a list of vertices sorted by weight in ascending order
-   */
-  private List<Vertex> sortVerticesByWeightAscending(Collection<Vertex> vertices) {
-    return vertices.stream()
-        .sorted(Comparator.comparing(Vertex::getNegativeWeight))
-        .collect(Collectors.toList());
-  }
-
-  /**
-   * Sorts a collection of vertices by their weight in descending order.
-   *
-   * @param vertices the collection of vertices to be sorted
-   * @return a list of vertices sorted by weight in descending order
-   */
-  private List<Vertex> sortVerticesByWeightDescending(Collection<Vertex> vertices) {
-    return vertices.stream()
-        .sorted(Comparator.comparing(Vertex::getNegativeWeight).reversed())
-        .collect(Collectors.toList());
   }
 
   /**
    * Finds a phi-claw from the sorted adjacent vertices.
    *
    * @param independentSet the current independent set
-   * @param sortedAdjacentVertices the list of adjacent vertices sorted by weight
+   * @param adjacentVertices the set of adjacent vertices
    * @param conflictGraph the conflict graph
    * @param phi the size of the claw
    * @return a set of vertices representing the claw
    */
   private Set<Vertex> findClaw(
       Set<Vertex> independentSet,
-      List<Vertex> sortedAdjacentVertices,
+      Set<Vertex> adjacentVertices,
       ConflictGraph conflictGraph,
       int phi) {
     Set<Vertex> result = new HashSet<>();
+    PriorityQueue<Vertex> sortedAdjacentVertices =
+        new PriorityQueue<>(Comparator.comparing(Vertex::getNegativeWeight).reversed());
+    sortedAdjacentVertices.addAll(adjacentVertices);
     generateClaw(
         independentSet, result, sortedAdjacentVertices, conflictGraph, new HashSet<>(), phi);
     return result;
@@ -125,7 +102,7 @@ public class LocalSearchStrategy implements AllocationStrategy {
    *
    * @param independentSet the current independent set
    * @param result the set to store the valid claw
-   * @param remaining the list of vertices that can still be added to the claw
+   * @param remaining the priority queue of vertices that can still be added to the claw
    * @param conflictGraph the conflict graph
    * @param currentGroup the current group being formed
    * @param phi the size of the claw
@@ -133,7 +110,7 @@ public class LocalSearchStrategy implements AllocationStrategy {
   private void generateClaw(
       Set<Vertex> independentSet,
       Set<Vertex> result,
-      List<Vertex> remaining,
+      PriorityQueue<Vertex> remaining,
       ConflictGraph conflictGraph,
       Set<Vertex> currentGroup,
       int phi) {
@@ -141,22 +118,23 @@ public class LocalSearchStrategy implements AllocationStrategy {
       if (isValidClaw(currentGroup, independentSet, conflictGraph, result)) {
         return;
       }
-    }
-
-    for (Vertex vertex : new ArrayList<>(remaining)) {
-      if (isValidToAdd(currentGroup, vertex, conflictGraph)) {
-        currentGroup.add(vertex);
-        remaining.remove(vertex);
-        generateClaw(independentSet, result, remaining, conflictGraph, currentGroup, phi);
-
-        if (currentGroup.size() == phi) {
-          if (isValidClaw(currentGroup, independentSet, conflictGraph, result)) {
+    } else {
+      while (!remaining.isEmpty()) {
+        Vertex vertex = remaining.poll();
+        if (isValidToAdd(currentGroup, vertex, conflictGraph)) {
+          currentGroup.add(vertex);
+          generateClaw(
+              independentSet,
+              result,
+              new PriorityQueue<>(remaining),
+              conflictGraph,
+              currentGroup,
+              phi);
+          if (result.size() == phi) {
             return;
           }
+          currentGroup.remove(vertex);
         }
-
-        currentGroup.remove(vertex);
-        remaining.add(vertex);
       }
     }
   }
@@ -217,6 +195,7 @@ public class LocalSearchStrategy implements AllocationStrategy {
    *
    * @param currentGroup the current group of vertices
    * @param vertex the vertex to be added
+   * @param conflictGraph the conflict graph
    * @return true if the vertex can be added, false otherwise
    */
   private boolean isValidToAdd(
