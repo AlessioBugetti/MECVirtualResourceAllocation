@@ -2,6 +2,11 @@ package org.unifi.mecvirtualresourceallocation.evaluation.util;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.RenderingHints;
+import java.awt.geom.Rectangle2D;
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -11,11 +16,15 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.chart.title.LegendTitle;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+import org.jfree.graphics2d.svg.SVGGraphics2D;
+import org.jfree.graphics2d.svg.SVGUtils;
 
 /** Utility class for creating and displaying charts using the JFreeChart library. */
 public final class ChartUtils {
@@ -47,9 +56,10 @@ public final class ChartUtils {
     XYSeriesCollection dataset = new XYSeriesCollection(series);
     JFreeChart chart =
         ChartFactory.createXYLineChart(
-            title, xAxisLabel, yAxisLabel, dataset, PlotOrientation.VERTICAL, true, true, false);
+            "", xAxisLabel, yAxisLabel, dataset, PlotOrientation.VERTICAL, true, true, false);
 
     customizeChart(chart);
+    saveToSvg(chart, title.toLowerCase().replace(" ", "_") + ".svg");
     showChartFrame(title, chart);
   }
 
@@ -84,9 +94,10 @@ public final class ChartUtils {
 
     JFreeChart chart =
         ChartFactory.createXYLineChart(
-            title, xAxisLabel, yAxisLabel, dataset, PlotOrientation.VERTICAL, true, true, false);
+            "", xAxisLabel, yAxisLabel, dataset, PlotOrientation.VERTICAL, true, true, false);
 
     customizeChart(chart);
+    saveToSvg(chart, title.toLowerCase().replace(" ", "_") + ".svg");
     showChartFrame(title, chart);
   }
 
@@ -121,11 +132,12 @@ public final class ChartUtils {
 
     JFreeChart chart =
         ChartFactory.createXYLineChart(
-            title, xAxisLabel, yAxisLabel, dataset, PlotOrientation.VERTICAL, true, true, false);
+            "", xAxisLabel, yAxisLabel, dataset, PlotOrientation.VERTICAL, true, true, false);
 
     customizeChart(chart);
     customizeYAxis(chart);
     showChartFrame(title, chart);
+    saveToSvg(chart, title.toLowerCase().replace(" ", "_") + ".svg");
   }
 
   /**
@@ -134,6 +146,9 @@ public final class ChartUtils {
    * @param chart the chart to be customized
    */
   private static void customizeChart(JFreeChart chart) {
+    chart
+        .getRenderingHints()
+        .put(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
     XYPlot plot = chart.getXYPlot();
     plot.setBackgroundPaint(Color.WHITE);
     plot.setDomainGridlinesVisible(true);
@@ -180,5 +195,44 @@ public final class ChartUtils {
     ChartPanel chartPanel = new ChartPanel(chart);
     frame.setContentPane(chartPanel);
     frame.setVisible(true);
+  }
+
+  /**
+   * Saves the chart as an SVG file.
+   *
+   * @param chart the chart to be saved
+   * @param filePath the path of the SVG file
+   */
+  private static void saveToSvg(JFreeChart chart, String filePath) {
+    JFreeChart cloneChart;
+    try {
+      cloneChart = (JFreeChart) chart.clone();
+    } catch (CloneNotSupportedException e) {
+      System.err.println("Error cloning chart: " + e.getMessage());
+      return;
+    }
+    Font customFont = new Font("CMU Serif", Font.PLAIN, 12);
+    XYPlot plot = cloneChart.getXYPlot();
+
+    ValueAxis domainAxis = plot.getDomainAxis();
+    domainAxis.setLabelFont(customFont);
+    domainAxis.setTickLabelFont(customFont);
+
+    ValueAxis rangeAxis = plot.getRangeAxis();
+    rangeAxis.setLabelFont(customFont);
+    rangeAxis.setTickLabelFont(customFont);
+
+    LegendTitle legend = cloneChart.getLegend();
+    if (legend != null) {
+      legend.setItemFont(customFont);
+    }
+
+    SVGGraphics2D svgGenerator = new SVGGraphics2D(500, 350);
+    cloneChart.draw(svgGenerator, new Rectangle2D.Double(0, 0, 500, 350));
+    try {
+      SVGUtils.writeToSVG(new File(filePath), svgGenerator.getSVGElement());
+    } catch (IOException e) {
+      System.err.println("Error saving chart to SVG: " + e.getMessage());
+    }
   }
 }

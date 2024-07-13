@@ -16,6 +16,7 @@
     <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
     <jcommon.version>1.0.24</jcommon.version>
     <jfreechart.version>1.5.4</jfreechart.version>
+    <jfreesvg.version>3.4.3</jfreesvg.version>
     <junit-jupiter-api.version>5.11.0-M2</junit-jupiter-api.version>
     <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
     <maven-enforcer-plugin.version>3.5.0</maven-enforcer-plugin.version>
@@ -38,6 +39,11 @@
       <groupId>org.jfree</groupId>
       <artifactId>jfreechart</artifactId>
       <version>${jfreechart.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jfree</groupId>
+      <artifactId>jfreesvg</artifactId>
+      <version>${jfreesvg.version}</version>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
