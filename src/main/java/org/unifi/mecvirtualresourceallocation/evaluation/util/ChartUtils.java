@@ -136,8 +136,8 @@ public final class ChartUtils {
 
     customizeChart(chart);
     customizeYAxis(chart);
-    showChartFrame(title, chart);
     saveToSvg(chart, title.toLowerCase().replace(" ", "_") + ".svg");
+    showChartFrame(title, chart);
   }
 
   /**
@@ -168,6 +168,21 @@ public final class ChartUtils {
     }
 
     plot.setRenderer(renderer);
+
+    Font customFont = new Font("CMU Serif", Font.PLAIN, 12);
+
+    ValueAxis domainAxis = plot.getDomainAxis();
+    domainAxis.setLabelFont(customFont);
+    domainAxis.setTickLabelFont(customFont);
+
+    ValueAxis rangeAxis = plot.getRangeAxis();
+    rangeAxis.setLabelFont(customFont);
+    rangeAxis.setTickLabelFont(customFont);
+
+    LegendTitle legend = chart.getLegend();
+    if (legend != null) {
+      legend.setItemFont(customFont);
+    }
   }
 
   /**
@@ -204,31 +219,8 @@ public final class ChartUtils {
    * @param filePath the path of the SVG file
    */
   private static void saveToSvg(JFreeChart chart, String filePath) {
-    JFreeChart cloneChart;
-    try {
-      cloneChart = (JFreeChart) chart.clone();
-    } catch (CloneNotSupportedException e) {
-      System.err.println("Error cloning chart: " + e.getMessage());
-      return;
-    }
-    Font customFont = new Font("CMU Serif", Font.PLAIN, 12);
-    XYPlot plot = cloneChart.getXYPlot();
-
-    ValueAxis domainAxis = plot.getDomainAxis();
-    domainAxis.setLabelFont(customFont);
-    domainAxis.setTickLabelFont(customFont);
-
-    ValueAxis rangeAxis = plot.getRangeAxis();
-    rangeAxis.setLabelFont(customFont);
-    rangeAxis.setTickLabelFont(customFont);
-
-    LegendTitle legend = cloneChart.getLegend();
-    if (legend != null) {
-      legend.setItemFont(customFont);
-    }
-
     SVGGraphics2D svgGenerator = new SVGGraphics2D(500, 350);
-    cloneChart.draw(svgGenerator, new Rectangle2D.Double(0, 0, 500, 350));
+    chart.draw(svgGenerator, new Rectangle2D.Double(0, 0, 500, 350));
     try {
       SVGUtils.writeToSVG(new File(filePath), svgGenerator.getSVGElement());
     } catch (IOException e) {

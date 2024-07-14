@@ -3,10 +3,12 @@ package org.unifi.mecvirtualresourceallocation.evaluation;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Map;
 import java.util.TreeMap;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,14 +23,31 @@ public class EnergyConsumptionEvaluatorTest {
     comparisonEvaluator = new EnergyConsumptionComparisonEvaluator();
   }
 
+  @AfterEach
+  public void cleanup() {
+    File averageEnergyFile = new File("average_energy_consumption_reduction.svg");
+    if (averageEnergyFile.exists()) {
+      if (averageEnergyFile.isFile() && !averageEnergyFile.delete()) {
+        System.err.println("Failed to delete file: " + averageEnergyFile.getAbsolutePath());
+      }
+    }
+
+    File sequentialVsLocalFile = new File("sequential_vs_local_search.svg");
+    if (sequentialVsLocalFile.exists()) {
+      if (sequentialVsLocalFile.isFile() && !sequentialVsLocalFile.delete()) {
+        System.err.println("Failed to delete file: " + sequentialVsLocalFile.getAbsolutePath());
+      }
+    }
+  }
+
   @Test
   public void testReductionEvaluatorExecute() {
-    reductionEvaluator.execute(10, 5);
+    reductionEvaluator.execute(10, 5, 3);
   }
 
   @Test
   public void testComparisonEvaluatorExecute() {
-    comparisonEvaluator.execute(10, 5);
+    comparisonEvaluator.execute(10, 5, 3);
   }
 
   @Test

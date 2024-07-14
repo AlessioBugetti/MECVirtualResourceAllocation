@@ -3,9 +3,11 @@ package org.unifi.mecvirtualresourceallocation.evaluation;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.TreeMap;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -55,6 +57,16 @@ public class ExecutionTimeEvaluatorTest {
       assertTrue(avgExecutionTimeLocal.containsKey(0), "Local map should contain key 0");
     } catch (Exception e) {
       fail("Exception should not be thrown: " + e.getMessage());
+    }
+  }
+
+  @AfterEach
+  public void cleanup() {
+    File file = new File("average_execution_time.svg");
+    if (file.exists()) {
+      if (file.isFile() && !file.delete()) {
+        System.err.println("Failed to delete file: " + file.getAbsolutePath());
+      }
     }
   }
 }
