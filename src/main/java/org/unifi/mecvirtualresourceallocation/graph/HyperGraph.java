@@ -1,5 +1,6 @@
 package org.unifi.mecvirtualresourceallocation.graph;
 
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -284,10 +285,31 @@ public final class HyperGraph {
 
   /** Displays the hypergraph using a graphical user interface. */
   public void showGraph() {
+    HyperGraphPanel panel = new HyperGraphPanel(this);
+    panel.setOpaque(false);
+    Dimension graphSize = panel.getGraphSize();
     JFrame frame = new JFrame("HyperGraph");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.setSize(800, 600);
-    frame.add(new HyperGraphPanel(this));
+    int padding = 40;
+    frame.setSize(graphSize.width + padding, graphSize.height + padding + 20);
+    frame.add(panel);
     frame.setVisible(true);
+  }
+
+  /**
+   * Saves the current hypergraph visualization as an SVG file. The file is saved as
+   * "hypergraph.svg" in the current directory.
+   */
+  public void saveToSvg() {
+    HyperGraphPanel panel = new HyperGraphPanel(this);
+    Dimension graphSize = panel.getGraphSize();
+    panel.setSize(graphSize);
+    panel.setPreferredSize(graphSize);
+    panel.setOpaque(false);
+    try {
+      panel.saveToSvg();
+    } catch (Exception e) {
+      System.err.println("Error saving the HyperGraph as SVG: " + e.getMessage());
+    }
   }
 }

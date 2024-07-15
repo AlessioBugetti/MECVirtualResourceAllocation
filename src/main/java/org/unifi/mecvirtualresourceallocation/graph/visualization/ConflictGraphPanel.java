@@ -2,9 +2,11 @@ package org.unifi.mecvirtualresourceallocation.graph.visualization;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.io.IOException;
 import java.util.Map;
 import org.unifi.mecvirtualresourceallocation.graph.ConflictGraph;
 import org.unifi.mecvirtualresourceallocation.graph.Edge;
@@ -72,6 +74,8 @@ public class ConflictGraphPanel extends GraphPanel {
     g2d.setColor(Color.decode("#71c5ce"));
     g2d.setStroke(new BasicStroke(2));
     FontMetrics fm = g2d.getFontMetrics();
+    Font customFont = new Font("CMU Serif", Font.PLAIN, 14);
+    g2d.setFont(customFont);
     int vertexSize = 30;
 
     for (Map.Entry<Vertex, Point> entry : vertexPositions.entrySet()) {
@@ -89,5 +93,14 @@ public class ConflictGraphPanel extends GraphPanel {
 
       g2d.setColor(Color.decode("#71c5ce"));
     }
+  }
+
+  /**
+   * Saves the ConflictGraph visualization to an SVG file named "conflictgraph.svg".
+   *
+   * @throws IOException if an I/O error occurs during file writing
+   */
+  public void saveToSvg() throws IOException {
+    super.saveToSvg("conflictgraph.svg");
   }
 }

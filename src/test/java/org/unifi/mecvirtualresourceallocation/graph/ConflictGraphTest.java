@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -11,8 +12,10 @@ import java.util.Set;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import org.fest.swing.fixture.FrameFixture;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.unifi.mecvirtualresourceallocation.graph.visualization.ConflictGraphPanel;
 
 public class ConflictGraphTest {
 
@@ -25,6 +28,16 @@ public class ConflictGraphTest {
     vertex1 = new Vertex("1", 1.0);
     vertex2 = new Vertex("2", 2.0);
     conflictGraph = new ConflictGraph();
+  }
+
+  @AfterEach
+  public void cleanup() {
+    File conflictGraphFile = new File("conflictgraph.svg");
+    if (conflictGraphFile.exists()) {
+      if (conflictGraphFile.isFile() && !conflictGraphFile.delete()) {
+        System.err.println("Failed to delete file: " + conflictGraphFile.getAbsolutePath());
+      }
+    }
   }
 
   @Test
@@ -180,7 +193,11 @@ public class ConflictGraphTest {
       assertNotNull(conflictGraphFrame, "ConflictGraph frame should be present");
 
       frameFixture = new FrameFixture(conflictGraphFrame);
-      frameFixture.requireSize(new Dimension(800, 600));
+      Dimension requiredDimension = new ConflictGraphPanel(conflictGraph).getGraphSize();
+      int padding = 40;
+      requiredDimension.setSize(
+          requiredDimension.getWidth() + padding, requiredDimension.getHeight() + padding + 20);
+      frameFixture.requireSize(requiredDimension);
       frameFixture.requireVisible();
       assertEquals("ConflictGraph", conflictGraphFrame.getTitle());
     } catch (InvocationTargetException | InterruptedException e) {
@@ -190,5 +207,22 @@ public class ConflictGraphTest {
         frameFixture.cleanUp();
       }
     }
+  }
+
+  @Test
+  public void testSaveToSvg() {
+    conflictGraph.addVertex(vertex1);
+    conflictGraph.addVertex(vertex2);
+    conflictGraph.addEdge(vertex1, vertex2);
+    conflictGraph.saveToSvg();
+    File svgFile = new File("conflictgraph.svg");
+    assertTrue(svgFile.exists(), "SVG file should be created");
+    assertTrue(svgFile.length() > 0, "SVG file should not be empty");
+  }
+
+  @Test
+  public void testSaveToSvgException() {
+    ConflictGraph cg = null;
+    assertThrows(NullPointerException.class, () -> cg.saveToSvg());
   }
 }

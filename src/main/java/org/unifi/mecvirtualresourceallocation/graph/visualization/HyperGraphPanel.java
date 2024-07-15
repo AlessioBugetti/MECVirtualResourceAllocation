@@ -2,9 +2,11 @@ package org.unifi.mecvirtualresourceallocation.graph.visualization;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -109,6 +111,8 @@ public class HyperGraphPanel extends GraphPanel {
   @Override
   protected void drawVertices(Graphics2D g2d) {
     FontMetrics fm = g2d.getFontMetrics();
+    Font customFont = new Font("CMU Serif", Font.PLAIN, 14);
+    g2d.setFont(customFont);
     int vertexSize = 30;
 
     for (Map.Entry<Vertex, Point> entry : vertexPositions.entrySet()) {
@@ -128,5 +132,14 @@ public class HyperGraphPanel extends GraphPanel {
       int textHeight = fm.getAscent();
       g2d.drawString(vertexLabel, point.x - textWidth / 2, point.y + textHeight / 2);
     }
+  }
+
+  /**
+   * Saves the HyperGraph visualization to an SVG file named "hypergraph.svg".
+   *
+   * @throws IOException if an I/O error occurs during file writing
+   */
+  public void saveToSvg() throws IOException {
+    super.saveToSvg("hypergraph.svg");
   }
 }

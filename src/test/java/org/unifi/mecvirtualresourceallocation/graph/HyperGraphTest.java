@@ -3,10 +3,12 @@ package org.unifi.mecvirtualresourceallocation.graph;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -20,6 +22,7 @@ import org.fest.swing.fixture.FrameFixture;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.unifi.mecvirtualresourceallocation.graph.visualization.HyperGraphPanel;
 
 public class HyperGraphTest {
 
@@ -52,6 +55,16 @@ public class HyperGraphTest {
     for (Frame frame : JFrame.getFrames()) {
       if (frame.isDisplayable()) {
         frame.dispose();
+      }
+    }
+  }
+
+  @AfterEach
+  public void cleanup() {
+    File hyperGraphFile = new File("hypergraph.svg");
+    if (hyperGraphFile.exists()) {
+      if (hyperGraphFile.isFile() && !hyperGraphFile.delete()) {
+        System.err.println("Failed to delete file: " + hyperGraphFile.getAbsolutePath());
       }
     }
   }
@@ -342,7 +355,11 @@ public class HyperGraphTest {
       assertNotNull(hyperGraphFrame, "HyperGraph frame should be present");
 
       frameFixture = new FrameFixture(hyperGraphFrame);
-      frameFixture.requireSize(new Dimension(800, 600));
+      Dimension requiredDimension = new HyperGraphPanel(hyperGraph).getGraphSize();
+      int padding = 40;
+      requiredDimension.setSize(
+          requiredDimension.getWidth() + padding, requiredDimension.getHeight() + padding + 20);
+      frameFixture.requireSize(requiredDimension);
       frameFixture.requireVisible();
       assertEquals("HyperGraph", hyperGraphFrame.getTitle());
     } catch (InvocationTargetException | InterruptedException e) {
@@ -358,5 +375,19 @@ public class HyperGraphTest {
       }
     }
     return null;
+  }
+
+  @Test
+  public void testSaveToSvg() {
+    hyperGraph.saveToSvg();
+    File svgFile = new File("hypergraph.svg");
+    assertTrue(svgFile.exists(), "SVG file should be created");
+    assertTrue(svgFile.length() > 0, "SVG file should not be empty");
+  }
+
+  @Test
+  public void testSaveToSvgException() {
+    HyperGraph hg = null;
+    assertThrows(NullPointerException.class, () -> hg.saveToSvg());
   }
 }
