@@ -1,6 +1,7 @@
 package org.unifi.mecvirtualresourceallocation.graph;
 
 import java.awt.Dimension;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -152,16 +153,18 @@ public class ConflictGraph {
   /**
    * Saves the current conflict graph visualization as an SVG file. The file is saved as
    * "conflictgraph.svg" in the current directory.
+   *
+   * @param filePath The file path where the SVG file will be saved
    */
-  public void saveToSvg() {
+  public void saveToSvg(String filePath) {
     ConflictGraphPanel panel = new ConflictGraphPanel(this);
     Dimension graphSize = panel.getGraphSize();
     panel.setSize(graphSize);
     panel.setPreferredSize(graphSize);
     panel.setOpaque(false);
     try {
-      panel.saveToSvg();
-    } catch (Exception e) {
+      panel.saveToSvg(filePath);
+    } catch (IOException e) {
       System.err.println("Error saving the ConflictGraph as SVG: " + e.getMessage());
     }
   }

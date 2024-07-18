@@ -1,15 +1,22 @@
 package org.unifi.mecvirtualresourceallocation.evaluation;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.TreeMap;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.unifi.mecvirtualresourceallocation.algorithm.AllocationStrategy;
+import org.unifi.mecvirtualresourceallocation.evaluation.util.HyperGraphGenerator;
+import org.unifi.mecvirtualresourceallocation.graph.HyperGraph;
 
 public class ExecutionTimeEvaluatorTest {
 
@@ -22,7 +29,7 @@ public class ExecutionTimeEvaluatorTest {
 
   @Test
   public void testExecute() {
-    evaluator.execute(10, 5);
+    evaluator.execute(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), 5);
   }
 
   @Test
@@ -30,12 +37,32 @@ public class ExecutionTimeEvaluatorTest {
     try {
       Method method =
           ExecutionTimeEvaluator.class.getDeclaredMethod(
-              "evaluateExecutionTime", int.class, int.class, int.class);
+              "evaluateExecutionTime", List.class, int.class, int.class);
       method.setAccessible(true);
-      method.invoke(evaluator, 10, 5, 3);
+      method.invoke(evaluator, List.of(10), 5, 3);
     } catch (Exception e) {
       fail("Exception should not be thrown: " + e.getMessage());
     }
+  }
+
+  @Test
+  public void testMeasureExecutionTimeWithUnsupportedStrategy() {
+    HyperGraph hyperGraph = HyperGraphGenerator.generateRandomHyperGraph(10, 3, new Random(42));
+    AllocationStrategy unsupportedStrategy = hyperGraph1 -> Collections.emptySet();
+
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> {
+          Method method =
+              ExecutionTimeEvaluator.class.getDeclaredMethod(
+                  "measureExecutionTime", HyperGraph.class, AllocationStrategy.class, int.class);
+          method.setAccessible(true);
+          try {
+            method.invoke(evaluator, hyperGraph, unsupportedStrategy, 3);
+          } catch (InvocationTargetException e) {
+            throw e.getCause();
+          }
+        });
   }
 
   @Test
@@ -57,16 +84,6 @@ public class ExecutionTimeEvaluatorTest {
       assertTrue(avgExecutionTimeLocal.containsKey(0), "Local map should contain key 0");
     } catch (Exception e) {
       fail("Exception should not be thrown: " + e.getMessage());
-    }
-  }
-
-  @AfterEach
-  public void cleanup() {
-    File file = new File("average_execution_time.svg");
-    if (file.exists()) {
-      if (file.isFile() && !file.delete()) {
-        System.err.println("Failed to delete file: " + file.getAbsolutePath());
-      }
     }
   }
 }

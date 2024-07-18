@@ -2,6 +2,7 @@ package org.unifi.mecvirtualresourceallocation.evaluation;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -19,27 +20,26 @@ public abstract class EnergyConsumptionEvaluator implements Evaluator {
   /**
    * Executes the evaluation of energy consumption.
    *
-   * @param maxVertexSize the maximum size of vertices in the hypergraph
+   * @param numVertices a list containing the number of vertices for each hypergraph to be evaluated
    * @param numExecutions the number of times the evaluation is executed
    */
   @Override
-  public void execute(int maxVertexSize, int numExecutions, int delta) {
-    evaluateEnergyConsumption(maxVertexSize, numExecutions, delta);
+  public void execute(List<Integer> numVertices, int numExecutions, int delta) {
+    evaluateEnergyConsumption(numVertices, numExecutions, delta);
   }
 
   /**
    * Evaluates the energy consumption of the allocation strategies.
    *
-   * @param maxVertexSize the maximum size of vertices in the hypergraph
+   * @param numVertices a list containing the number of vertices for each hypergraph to be evaluated
    * @param numExecutions the number of times the evaluation is executed
    */
-  private void evaluateEnergyConsumption(int maxVertexSize, int numExecutions, int delta) {
-    int[] vertexSizes = generateVertexSizes(maxVertexSize);
+  private void evaluateEnergyConsumption(List<Integer> numVertices, int numExecutions, int delta) {
     Map<Integer, BigDecimal> avgReducedWeightsSequential = new TreeMap<>();
     Map<Integer, BigDecimal> avgReducedWeightsLocal = new TreeMap<>();
     Random rand = new Random(SEED);
 
-    for (int size : vertexSizes) {
+    for (int size : numVertices) {
       BigDecimal totalReducedWeightSequential = BigDecimal.ZERO;
       BigDecimal totalReducedWeightLocal = BigDecimal.ZERO;
 
@@ -47,9 +47,10 @@ public abstract class EnergyConsumptionEvaluator implements Evaluator {
         HyperGraph hyperGraph = HyperGraphGenerator.generateRandomHyperGraph(size, delta, rand);
         totalReducedWeightSequential =
             totalReducedWeightSequential.add(
-                calculateWeight(hyperGraph, new SequentialSearchStrategy()));
+                calculateWeight(hyperGraph, new SequentialSearchStrategy(), delta));
         totalReducedWeightLocal =
-            totalReducedWeightLocal.add(calculateWeight(hyperGraph, new LocalSearchStrategy()));
+            totalReducedWeightLocal.add(
+                calculateWeight(hyperGraph, new LocalSearchStrategy(), delta));
       }
 
       avgReducedWeightsSequential.put(
@@ -71,8 +72,17 @@ public abstract class EnergyConsumptionEvaluator implements Evaluator {
    * @param strategy the allocation strategy to be measured
    * @return the total weight reduction
    */
-  private BigDecimal calculateWeight(HyperGraph hyperGraph, AllocationStrategy strategy) {
-    Set<Vertex> initialIndependentSet = strategy.allocate(hyperGraph);
+  private BigDecimal calculateWeight(
+      HyperGraph hyperGraph, AllocationStrategy strategy, int delta) {
+    Set<Vertex> initialIndependentSet;
+    if (strategy instanceof SequentialSearchStrategy) {
+      initialIndependentSet = strategy.allocate(hyperGraph);
+    } else if (strategy instanceof LocalSearchStrategy) {
+      initialIndependentSet = ((LocalSearchStrategy) strategy).allocate(hyperGraph, delta);
+    } else {
+      throw new IllegalArgumentException(
+          "Unsupported allocation strategy: " + strategy.getClass().getName());
+    }
     return initialIndependentSet.stream()
         .map(Vertex::getNegativeWeight)
         .reduce(BigDecimal.ZERO, BigDecimal::add)

@@ -379,15 +379,9 @@ public class HyperGraphTest {
 
   @Test
   public void testSaveToSvg() {
-    hyperGraph.saveToSvg();
+    hyperGraph.saveToSvg("");
     File svgFile = new File("hypergraph.svg");
     assertTrue(svgFile.exists(), "SVG file should be created");
     assertTrue(svgFile.length() > 0, "SVG file should not be empty");
-  }
-
-  @Test
-  public void testSaveToSvgException() {
-    HyperGraph hg = null;
-    assertThrows(NullPointerException.class, () -> hg.saveToSvg());
   }
 }

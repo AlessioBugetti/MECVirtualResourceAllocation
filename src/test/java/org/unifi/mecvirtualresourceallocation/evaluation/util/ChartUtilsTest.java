@@ -4,12 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.awt.Dimension;
 import java.awt.Frame;
-import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
@@ -24,23 +22,9 @@ import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 public class ChartUtilsTest {
-
-  @AfterEach
-  public void cleanup() {
-    File dir = new File(".");
-    File[] files = dir.listFiles((d, name) -> name.startsWith("test"));
-    if (files != null) {
-      for (File file : files) {
-        if (file.isFile() && !file.delete()) {
-          System.err.println("Failed to delete file: " + file.getAbsolutePath());
-        }
-      }
-    }
-  }
 
   @Test
   public void testPrivateConstructor() throws Exception {
@@ -237,23 +221,5 @@ public class ChartUtilsTest {
         frameFixture.cleanUp();
       }
     }
-  }
-
-  @Test
-  public void testSaveToSvg() {
-    Map<Integer, BigDecimal> data1 = Map.of(1, BigDecimal.valueOf(1.0), 2, BigDecimal.valueOf(2.0));
-    Map<Integer, BigDecimal> data2 = Map.of(1, BigDecimal.valueOf(1.5), 2, BigDecimal.valueOf(2.5));
-
-    try {
-      SwingUtilities.invokeAndWait(
-          () ->
-              ChartUtils.createAndShowChart(
-                  "test", "X Axis", "Y Axis", data1, "Series 1", data2, "Series 2"));
-    } catch (InvocationTargetException | InterruptedException e) {
-      fail("Test failed due to exception: " + e.getMessage());
-    }
-    File svgFile = new File("test.svg");
-    assertTrue(svgFile.exists(), "SVG file should be created");
-    assertTrue(svgFile.length() > 0, "SVG file should not be empty");
   }
 }

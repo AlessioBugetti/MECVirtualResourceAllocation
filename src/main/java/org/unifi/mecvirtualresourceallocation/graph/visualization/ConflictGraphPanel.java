@@ -7,6 +7,8 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 import org.unifi.mecvirtualresourceallocation.graph.ConflictGraph;
 import org.unifi.mecvirtualresourceallocation.graph.Edge;
@@ -98,9 +100,12 @@ public class ConflictGraphPanel extends GraphPanel {
   /**
    * Saves the ConflictGraph visualization to an SVG file named "conflictgraph.svg".
    *
-   * @throws IOException if an I/O error occurs during file writing
+   * @param filePath The file path where the SVG file will be saved
+   * @throws IOException If an error occurs during file writing
    */
-  public void saveToSvg() throws IOException {
-    super.saveToSvg("conflictgraph.svg");
+  public void saveToSvg(String filePath) throws IOException {
+    Path basePath = Paths.get(filePath);
+    Path completePath = basePath.resolve("conflictgraph.svg");
+    super.saveToSvg(completePath.toString());
   }
 }

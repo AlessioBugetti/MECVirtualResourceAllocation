@@ -214,15 +214,9 @@ public class ConflictGraphTest {
     conflictGraph.addVertex(vertex1);
     conflictGraph.addVertex(vertex2);
     conflictGraph.addEdge(vertex1, vertex2);
-    conflictGraph.saveToSvg();
+    conflictGraph.saveToSvg("");
     File svgFile = new File("conflictgraph.svg");
     assertTrue(svgFile.exists(), "SVG file should be created");
     assertTrue(svgFile.length() > 0, "SVG file should not be empty");
-  }
-
-  @Test
-  public void testSaveToSvgException() {
-    ConflictGraph cg = null;
-    assertThrows(NullPointerException.class, () -> cg.saveToSvg());
   }
 }

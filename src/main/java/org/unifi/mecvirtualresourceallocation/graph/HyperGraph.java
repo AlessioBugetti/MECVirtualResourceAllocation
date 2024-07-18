@@ -299,15 +299,17 @@ public final class HyperGraph {
   /**
    * Saves the current hypergraph visualization as an SVG file. The file is saved as
    * "hypergraph.svg" in the current directory.
+   *
+   * @param filePath The file path where the SVG file will be saved
    */
-  public void saveToSvg() {
+  public void saveToSvg(String filePath) {
     HyperGraphPanel panel = new HyperGraphPanel(this);
     Dimension graphSize = panel.getGraphSize();
     panel.setSize(graphSize);
     panel.setPreferredSize(graphSize);
     panel.setOpaque(false);
     try {
-      panel.saveToSvg();
+      panel.saveToSvg(filePath);
     } catch (Exception e) {
       System.err.println("Error saving the HyperGraph as SVG: " + e.getMessage());
     }

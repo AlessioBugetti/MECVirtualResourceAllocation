@@ -22,7 +22,7 @@ public final class HyperGraphGenerator {
    *
    * @param numVertices the number of vertices in the hypergraph
    * @param rand the Random instance used for generating random numbers
-   * @param delta the δ value used for generating hypergraphs
+   * @param delta the delta (δ) value used for generating hypergraphs
    * @return a randomly generated HyperGraph
    */
   public static HyperGraph generateRandomHyperGraph(int numVertices, int delta, Random rand) {
@@ -51,7 +51,7 @@ public final class HyperGraphGenerator {
    * Generates a set of hyperedges connecting the vertices.
    *
    * @param numVertices the number of vertices in the hypergraph
-   * @param delta the δ value used
+   * @param delta the delta (δ) value used
    * @param rand the Random instance used for generating random numbers
    * @param vertices the set of vertices to be connected by hyperedges
    * @return a set of generated hyperedges

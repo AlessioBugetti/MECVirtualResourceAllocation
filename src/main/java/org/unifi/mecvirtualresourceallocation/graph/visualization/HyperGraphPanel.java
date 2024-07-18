@@ -7,6 +7,8 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -137,9 +139,12 @@ public class HyperGraphPanel extends GraphPanel {
   /**
    * Saves the HyperGraph visualization to an SVG file named "hypergraph.svg".
    *
-   * @throws IOException if an I/O error occurs during file writing
+   * @param filePath The file path where the SVG file will be saved
+   * @throws IOException If an error occurs during file writing
    */
-  public void saveToSvg() throws IOException {
-    super.saveToSvg("hypergraph.svg");
+  public void saveToSvg(String filePath) throws IOException {
+    Path basePath = Paths.get(filePath);
+    Path completePath = basePath.resolve("hypergraph.svg");
+    super.saveToSvg(completePath.toString());
   }
 }
