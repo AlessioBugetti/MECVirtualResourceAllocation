@@ -30,7 +30,7 @@ jobs:
         run: mvn clean install
 
       - name: Generate Javadoc
-        run: mvn javadoc:javadoc -Dadditionalparam=-private
+        run: mvn javadoc:javadoc
 
       - name: Checkout Javadoc repository
         uses: actions/checkout@v2

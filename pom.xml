@@ -119,6 +119,15 @@
         <version>${maven-javadoc-plugin.version}</version>
         <executions>
           <execution>
+            <id>generate-javadocs</id>
+            <goals>
+                <goal>javadoc</goal>
+            </goals>
+            <configuration>
+                <show>private</show>
+            </configuration>
+          </execution>
+          <execution>
             <id>attach-javadocs</id>
             <goals>
               <goal>jar</goal>
